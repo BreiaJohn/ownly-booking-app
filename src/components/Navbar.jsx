@@ -4,12 +4,12 @@ function Navbar() {
   const navigate = useNavigate()
 
   return (
-    <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
+   <nav className="flex flex-col md:flex-row items-center justify-between px-6 md:px-8 py-6 max-w-7xl mx-auto gap-4">
       <h1 className="text-3xl font-bold text-[#1E1E1E] tracking-wide">
         OWNLY
       </h1>
 
-      <div className="hidden md:flex items-center gap-8 text-[#1E1E1E] font-medium">
+     <div className="flex items-center gap-4 text-sm md:text-base flex-wrap">
         <a href="#features" className="hover:text-[#8B6F5A] transition">
           Features
         </a>
