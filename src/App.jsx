@@ -12,6 +12,7 @@ import Payments from "./pages/Payments"
 import Settings from "./pages/Settings"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { Toaster } from "react-hot-toast"
+import PublicBooking from "./pages/PublicBooking"
 
 function App() {
   return (
@@ -71,6 +72,10 @@ function App() {
       </ProtectedRoute>
     }
   />
+  <Route
+  path="/book/:username"
+  element={<PublicBooking />}
+/>
 
 </Routes>
     </div>
