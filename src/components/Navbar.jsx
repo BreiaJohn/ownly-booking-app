@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom"
+
 function Navbar() {
+  const navigate = useNavigate()
+
   return (
     <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-[#1E1E1E] tracking-wide">
@@ -18,7 +22,11 @@ function Navbar() {
           Reviews
         </a>
       </div>
-<button className="bg-[#8B6F5A] text-white px-5 py-2 rounded-xl hover:opacity-90 transition">
+
+      <button
+        onClick={() => navigate("/login")}
+        className="bg-[#8B6F5A] text-white px-5 py-2 rounded-xl hover:opacity-90 transition"
+      >
         Login
       </button>
     </nav>
