@@ -212,10 +212,6 @@ const todaysBookings = bookings.filter(
   {booking.email}
 </p>
 
-<p className="text-sm text-gray-500">
-  {booking.phone}
-</p>
-
 {booking.notes && (
   <div className="mt-4 bg-[#F7F4EF] p-4 rounded-2xl">
     <p className="text-sm text-[#8B6F5A]">
@@ -223,20 +219,6 @@ const todaysBookings = bookings.filter(
     </p>
   </div>
 )}
-
- <span
-  className={`px-4 py-2 rounded-full text-sm font-medium
-    ${
-      booking.status === "Confirmed"
-        ? "bg-green-100 text-green-700"
-        : booking.status === "Cancelled"
-        ? "bg-red-100 text-red-700"
-        : "bg-yellow-100 text-yellow-700"
-    }
-  `}
->
-  {booking.status || "Pending"}
-</span>
 
     <div className="mt-4 flex flex-col gap-2 text-[#4B4B4B]">
       <p>📅 {booking.date}</p>
