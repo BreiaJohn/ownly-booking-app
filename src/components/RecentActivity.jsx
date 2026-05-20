@@ -15,9 +15,9 @@ function RecentActivity() {
         {activities.map((activity, index) => (
           <div
             key={index}
-            className="p-4 bg-[#F7F4EF] rounded-2xl"
+           className="p-4 bg-[#0F172A] border border-[#334155] rounded-2xl"
           >
-            <p className="text-white">
+            <p className="text-[#CBD5E1]">
               {activity}
             </p>
           </div>
