@@ -8,6 +8,7 @@ function PublicBooking() {
   const [date, setDate] = useState("")
   const [time, setTime] = useState("")
   const [phone, setPhone] = useState("")
+  const [email, setEmail] = useState("")
 
   const [submitted, setSubmitted] = useState(false)
 
@@ -22,6 +23,7 @@ function PublicBooking() {
           service,
           date,
           time,
+          email,
           phone,
           status: "Pending",
         },
@@ -37,6 +39,7 @@ function PublicBooking() {
       setService("")
       setDate("")
       setTime("")
+      setEmail("")
       setPhone("")
     }
 
@@ -108,6 +111,15 @@ function PublicBooking() {
             }
             className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
           />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+  className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+/>
 
           <input
             type="text"

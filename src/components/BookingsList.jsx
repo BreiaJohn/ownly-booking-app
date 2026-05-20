@@ -204,9 +204,20 @@ const todaysBookings = bookings.filter(
         ? "bg-red-100 text-red-700"
         : "bg-yellow-100 text-yellow-700"
     }`}
+></p>
+ <span
+  className={`px-4 py-2 rounded-full text-sm font-medium
+    ${
+      booking.status === "Confirmed"
+        ? "bg-green-100 text-green-700"
+        : booking.status === "Cancelled"
+        ? "bg-red-100 text-red-700"
+        : "bg-yellow-100 text-yellow-700"
+    }
+  `}
 >
   {booking.status || "Pending"}
-</p>
+</span>
 
     <div className="mt-4 flex flex-col gap-2 text-[#4B4B4B]">
       <p>📅 {booking.date}</p>
