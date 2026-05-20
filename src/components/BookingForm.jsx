@@ -44,9 +44,9 @@ const [phone, setPhone] = useState("")
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-3xl border border-[#E7E1D9] mt-10"
+      className="bg-[#0F172A] p-6 rounded-3xl border border-[#334155] mt-10"
     >
-      <h2 className="text-2xl font-bold text-[#1E1E1E] mb-6">
+      <h2 className="text-2xl font-bold text-white mb-6">
         Create Booking
       </h2>
 
