@@ -9,6 +9,7 @@ function PublicBooking() {
   const [time, setTime] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
+  const [notes, setNotes] = useState("")
 
   const [submitted, setSubmitted] = useState(false)
 
@@ -25,6 +26,7 @@ function PublicBooking() {
           time,
           email,
           phone,
+          notes,
           status: "Pending",
         },
       ])
@@ -41,6 +43,7 @@ function PublicBooking() {
       setTime("")
       setEmail("")
       setPhone("")
+      setNotes("")
     }
 
     console.log(error)
@@ -130,7 +133,15 @@ function PublicBooking() {
             }
             className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
           />
-
+          <textarea
+  placeholder="Special requests or notes..."
+  value={notes}
+  onChange={(e) =>
+    setNotes(e.target.value)
+  }
+  rows="4"
+  className="p-4 rounded-2xl border border-[#E7E1D9] outline-none resize-none"
+/>
           <button
             type="submit"
             className="bg-[#8B6F5A] text-white py-4 rounded-2xl hover:opacity-90 transition"
