@@ -9,6 +9,8 @@ function PublicBooking() {
   const [time, setTime] = useState("")
   const [phone, setPhone] = useState("")
 
+  const [submitted, setSubmitted] = useState(false)
+
   const handleBooking = async (e) => {
     e.preventDefault()
 
@@ -29,6 +31,7 @@ function PublicBooking() {
       toast.error("Failed to create booking")
     } else {
       toast.success("Booking submitted!")
+      setSubmitted(true)
 
       setClientName("")
       setService("")
@@ -42,6 +45,18 @@ function PublicBooking() {
 
   return (
     <div className="min-h-screen bg-[#F7F4EF] flex items-center justify-center p-6">
+     {submitted ? (
+  <div className="bg-white rounded-3xl p-10 shadow-sm border border-[#E7E1D9] w-full max-w-xl text-center">
+    <h1 className="text-4xl font-bold text-[#1E1E1E]">
+      Booking Confirmed 🎉
+    </h1>
+
+    <p className="text-[#8B6F5A] mt-4">
+      Your appointment request has been submitted successfully.
+    </p>
+  </div>
+) : (
+ 
       <form
         onSubmit={handleBooking}
         className="bg-white rounded-3xl p-10 shadow-sm border border-[#E7E1D9] w-full max-w-xl"
@@ -112,9 +127,9 @@ function PublicBooking() {
           </button>
 
         </div>
-      </form>
+            </form>
+    )}
     </div>
   )
 }
-
 export default PublicBooking

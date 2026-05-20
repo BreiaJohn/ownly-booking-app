@@ -71,6 +71,22 @@ const updateBooking = async (id) => {
 }
 }
 
+const updateStatus = async (id, status) => {
+  const { error } = await supabase
+    .from("bookings")
+    .update({
+      status,
+    })
+    .eq("id", id)
+
+  if (error) {
+    toast.error("Failed to update status")
+  } else {
+    toast.success(`Booking ${status}`)
+    fetchBookings()
+  }
+}
+
   useEffect(() => {
     const channel = supabase
       .channel("bookings-channel")
@@ -226,6 +242,24 @@ const todaysBookings = bookings.filter(
   Edit
 </button>
 
+<button
+  onClick={() =>
+    updateStatus(booking.id, "Confirmed")
+  }
+  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition"
+>
+  Confirm
+</button>
+
+<button
+  onClick={() =>
+    updateStatus(booking.id, "Cancelled")
+  }
+  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl transition"
+>
+  Cancel
+</button>
+
  {editingId === booking.id && (
   <button
     onClick={() => updateBooking(booking.id)}
@@ -233,6 +267,8 @@ const todaysBookings = bookings.filter(
   >
     Save
   </button>
+
+  
 )}
 </div>
   </div>
