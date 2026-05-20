@@ -127,7 +127,7 @@ const todaysBookings = bookings.filter(
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-  <div className="bg-[#111827] border border-[#E7E1D9] rounded-3xl p-6 shadow-sm">
+  <div className="bg-[#1E293B] border border-[#E7E1D9] rounded-3xl p-6 shadow-sm">
     <p className="text-gray-500 text-sm">
       Total Bookings
     </p>
@@ -137,7 +137,7 @@ const todaysBookings = bookings.filter(
     </h3>
   </div>
 
-  <div className="bg-[#111827] border border-[#E7E1D9] rounded-3xl p-6 shadow-sm">
+  <div className="bg-[#1E293B] border border-[#E7E1D9] rounded-3xl p-6 shadow-sm">
     <p className="text-gray-500 text-sm">
       Today's Appointments
     </p>
@@ -154,11 +154,11 @@ const todaysBookings = bookings.filter(
   placeholder="Search bookings..."
   value={searchTerm}
   onChange={(e) => setSearchTerm(e.target.value)}
-  className="border border-[#E7E1D9] bg-[#111827] rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#C8B6A6]"
+  className="border border-[#1E293B] bg-[#1E293B] text-white placeholder:text-[#94A3B8] rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#C08457]"
 />
  {bookings.length === 0 ? (
-  <div className="border border-dashed border-[#D6C7B8] rounded-3xl p-12 text-center bg-[#111827]">
-    <h3 className="text-2xl font-bold text-[#1E1E1E]">
+  <div className="border border-dashed border-[#D6C7B8] rounded-3xl p-12 text-center bg-[#1E293B]">
+    <h3 className="text-2xl font-bold text-white">
       No bookings yet ✨
     </h3>
 
@@ -167,7 +167,7 @@ const todaysBookings = bookings.filter(
     </p>
   </div>
 ) : loading ? (
-  <div className="border border-[#E7E1D9] rounded-3xl p-10 bg-[#111827] animate-pulse">
+  <div className="border border-[#E7E1D9] rounded-3xl p-10 bg-[#1E293B] animate-pulse">
     <div className="h-8 bg-gray-200 rounded w-1/2 mb-4"></div>
     <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
     <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
@@ -177,7 +177,7 @@ const todaysBookings = bookings.filter(
  filteredBookings.map((booking) => (
   <div
     key={booking.id}
-    className="border border-[#E7E1D9] rounded-3xl p-6 bg-[#111827] shadow-sm hover:shadow-md transition"
+    className="border border-[#E7E1D9] rounded-3xl p-6 bg-[#1E293B] shadow-sm hover:shadow-md transition"
   >
     {editingId === booking.id ? (
       <input
