@@ -13,14 +13,29 @@ import Settings from "./pages/Settings"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { Toaster } from "react-hot-toast"
 import PublicBooking from "./pages/PublicBooking"
+import { useLocation } from "react-router-dom"
 
-function App() {
+function App(){
+
+  const location = useLocation()
+
+  const hideNavbarRoutes = [
+    "/dashboard",
+    "/bookings",
+    "/clients",
+    "/payments",
+    "/settings",
+  ]
+
+  const shouldHideNavbar =
+    hideNavbarRoutes.includes(location.pathname)
+
   return (
   <>
     <Toaster position="top-right" />
 
     <div className="bg-[#F7F4EF] min-h-screen overflow-x-hidden">
-        <Navbar />
+       {!shouldHideNavbar && <Navbar />}
 
       <Routes>
 
