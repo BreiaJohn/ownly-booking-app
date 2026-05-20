@@ -195,7 +195,7 @@ const todaysBookings = bookings.filter(
     <p className="inline-block bg-[#E8D8C4] text-[#6F4E37] px-3 py-1 rounded-full text-sm font-medium mt-2">
       {booking.service}
     </p>
-    <p
+   <p
   className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ml-2
     ${
       booking.status === "Confirmed"
@@ -204,7 +204,26 @@ const todaysBookings = bookings.filter(
         ? "bg-red-100 text-red-700"
         : "bg-yellow-100 text-yellow-700"
     }`}
-></p>
+>
+  {booking.status || "Pending"}
+</p>
+
+<p className="text-sm text-gray-500 mt-3">
+  {booking.email}
+</p>
+
+<p className="text-sm text-gray-500">
+  {booking.phone}
+</p>
+
+{booking.notes && (
+  <div className="mt-4 bg-[#F7F4EF] p-4 rounded-2xl">
+    <p className="text-sm text-[#8B6F5A]">
+      {booking.notes}
+    </p>
+  </div>
+)}
+
  <span
   className={`px-4 py-2 rounded-full text-sm font-medium
     ${
