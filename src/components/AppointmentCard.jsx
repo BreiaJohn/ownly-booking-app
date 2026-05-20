@@ -1,9 +1,9 @@
 function AppointmentCard() {
   return (
-    <div className="bg-white p-6 rounded-3xl border border-[#E7E1D9] shadow-sm mt-8">
+    <div className="bg-[#111827] p-6 rounded-3xl border border-[#E7E1D9] shadow-sm mt-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-semibold text-[#1E1E1E]">
+          <h3 className="text-2xl font-semibold text-white">
             Upcoming Appointment
           </h3>
 
@@ -13,7 +13,7 @@ function AppointmentCard() {
         </div>
 
         <div className="text-right">
-          <p className="text-[#1E1E1E] font-semibold">
+          <p className="text-white font-semibold">
             Today
           </p>
 

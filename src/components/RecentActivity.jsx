@@ -6,8 +6,8 @@ function RecentActivity() {
   ]
 
   return (
-    <div className="bg-white p-6 rounded-3xl border border-[#E7E1D9] shadow-sm mt-8">
-      <h3 className="text-2xl font-semibold text-[#1E1E1E] mb-6">
+    <div className="bg-[#111827] p-6 rounded-3xl border border-[#E7E1D9] shadow-sm mt-8">
+      <h3 className="text-2xl font-semibold text-white mb-6">
         Recent Activity
       </h3>
 
@@ -17,7 +17,7 @@ function RecentActivity() {
             key={index}
             className="p-4 bg-[#F7F4EF] rounded-2xl"
           >
-            <p className="text-[#1E1E1E]">
+            <p className="text-white">
               {activity}
             </p>
           </div>

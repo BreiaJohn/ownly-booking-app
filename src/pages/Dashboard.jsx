@@ -13,11 +13,11 @@ import BookingsList from "../components/BookingsList"
 function Dashboard() {
   return (
     <DashboardLayout>
-      <h1 className="text-3xl md:text-5xl font-bold text-[#1E1E1E]">
+      <h1 className="text-3xl md:text-5xl font-bold text-white">
         Welcome Back
       </h1>
 
-      <p className="text-[#8B6F5A] mt-3">
+      <p className="text-[#94A3B8] mt-3">
         Here’s what’s happening with your business today.
       </p>
 
