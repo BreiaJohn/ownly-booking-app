@@ -25,11 +25,11 @@ function Login() {
     }
   }
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-[#F7F4EF]">
+  return (<div className="min-h-screen flex items-start md:items-center justify-center px-4 pt-24 md:pt-0 bg-[#F7F4EF]">
+    
       <form
         onSubmit={handleLogin}
-        className="bg-white p-10 rounded-3xl shadow-sm border border-[#E7E1D9] w-full max-w-md"
+        className="bg-white w-full max-w-md p-6 md:p-10 rounded-3xl shadow-sm border border-[#E7E1D9]"
       >
         <h1 className="text-4xl font-bold text-[#1E1E1E] mb-8">
           Login
@@ -43,7 +43,7 @@ function Login() {
             onChange={(e) =>
               setEmail(e.target.value)
             }
-            className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+            className="w-full min-w-0 p-4 rounded-2xl border border-[#E7E1D9] outline-none"
           />
 
           <input
@@ -53,7 +53,7 @@ function Login() {
             onChange={(e) =>
               setPassword(e.target.value)
             }
-            className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+            className="w-full min-w-0 p-4 rounded-2xl border border-[#E7E1D9] outline-none"
           />
 
           <button

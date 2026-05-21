@@ -44,7 +44,7 @@ const [phone, setPhone] = useState("")
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#0F172A] p-6 rounded-3xl border border-[#334155] mt-10"
+      className="bg-[#0F172A] p-4 md:p-6 rounded-3xl border border-[#334155] mt-10 overflow-hidden"
     >
       <h2 className="text-2xl font-bold text-white mb-6">
         Create Booking
@@ -56,7 +56,7 @@ const [phone, setPhone] = useState("")
           placeholder="Client Name"
           value={clientName}
           onChange={(e) => setClientName(e.target.value)}
-          className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
+          className="w-full min-w-0 bg-[#020617] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
         />
 
         <input
@@ -64,21 +64,21 @@ const [phone, setPhone] = useState("")
           placeholder="Service"
           value={service}
           onChange={(e) => setService(e.target.value)}
-          className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
+          className="w-full min-w-0 bg-[#020617] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
         />
 
         <input
   type="date"
   value={date}
   onChange={(e) => setDate(e.target.value)}
-  className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
+  className="w-full min-w-0 bg-[#020617] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
 <input
   type="time"
   value={time}
   onChange={(e) => setTime(e.target.value)}
-  className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
+  className="w-full min-w-0 bg-[#020617] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
 <input
@@ -86,7 +86,7 @@ const [phone, setPhone] = useState("")
   placeholder="Phone Number"
   value={phone}
   onChange={(e) => setPhone(e.target.value)}
-  className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
+ className="w-full min-w-0 bg-[#020617] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
         <button
