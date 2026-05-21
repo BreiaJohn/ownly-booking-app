@@ -220,20 +220,45 @@ const todaysBookings = bookings.filter(
   </div>
 )}
 
-  <div className="mt-5 flex flex-wrap gap-3">
-  <div className="bg-[#E2E8F0] text-[#334155] px-4 py-2 rounded-xl text-sm font-medium">
-    {booking.date}
+  <div className="mt-5 flex flex-wrap gap-3 text-sm text-[#64748B]">
+  <div className="flex items-center gap-2">
+    <span>📅</span>
+
+    <span>
+      {new Date(booking.date).toLocaleDateString(
+        "en-US",
+        {
+          month: "2-digit",
+          day: "2-digit",
+          year: "numeric",
+        }
+      )}
+    </span>
   </div>
 
-  <div className="bg-[#E2E8F0] text-[#334155] px-4 py-2 rounded-xl text-sm font-medium">
-    {booking.time}
+  <div className="flex items-center gap-2">
+    <span>⏰</span>
+
+    <span>
+      {new Date(
+        `1970-01-01T${booking.time}`
+      ).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })}
+    </span>
   </div>
 
-  <div className="bg-[#E2E8F0] text-[#334155] px-4 py-2 rounded-xl text-sm font-medium">
-    {booking.phone.replace(
-      /(\d{3})(\d{3})(\d{4})/,
-      "$1-$2-$3"
-    )}
+  <div className="flex items-center gap-2">
+    <span>📞</span>
+
+    <span>
+      {booking.phone.replace(
+        /(\d{3})(\d{3})(\d{4})/,
+        "$1-$2-$3"
+      )}
+    </span>
   </div>
 </div>
 
