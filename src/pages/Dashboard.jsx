@@ -12,7 +12,8 @@ import BookingsList from "../components/BookingsList"
 
 function Dashboard() {
   return (
-    <DashboardLayout>
+<DashboardLayout>
+  <div className="max-w-6xl mx-auto w-full">
       <h1 className="text-3xl md:text-5xl font-bold text-white">
         Welcome Back
       </h1>
@@ -33,11 +34,13 @@ function Dashboard() {
 
       <RecentActivity />
 
-      <BookingForm />
-
       <BookingsList />
 
-    </DashboardLayout>
+      <BookingForm />
+
+
+    </div>
+</DashboardLayout>
 
   )
 }

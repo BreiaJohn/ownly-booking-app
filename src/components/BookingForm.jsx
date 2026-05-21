@@ -56,7 +56,7 @@ const [phone, setPhone] = useState("")
           placeholder="Client Name"
           value={clientName}
           onChange={(e) => setClientName(e.target.value)}
-          className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+          className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
         />
 
         <input
@@ -64,21 +64,21 @@ const [phone, setPhone] = useState("")
           placeholder="Service"
           value={service}
           onChange={(e) => setService(e.target.value)}
-          className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+          className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
         />
 
         <input
   type="date"
   value={date}
   onChange={(e) => setDate(e.target.value)}
-  className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+  className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
 <input
   type="time"
   value={time}
   onChange={(e) => setTime(e.target.value)}
-  className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+  className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
 <input
@@ -86,7 +86,7 @@ const [phone, setPhone] = useState("")
   placeholder="Phone Number"
   value={phone}
   onChange={(e) => setPhone(e.target.value)}
-  className="p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+  className="w-full bg-[#020617] border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
         <button

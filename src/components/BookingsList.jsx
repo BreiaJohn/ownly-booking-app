@@ -178,7 +178,7 @@ const todaysBookings = bookings.filter(
  filteredBookings.map((booking) => (
   <div
     key={booking.id}
-    className="border border-[#E7E1D9] rounded-3xl p-6 bg-[#F8FAFC] shadow-sm hover:shadow-md transition"
+    className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F8FAFC] shadow-sm hover:shadow-md transition"
   >
     {editingId === booking.id ? (
       <input
@@ -214,14 +214,14 @@ const todaysBookings = bookings.filter(
 </p>
 
 {booking.notes && (
-  <div className="mt-4 bg-[#F7F4EF] p-4 rounded-2xl">
+  <div className="mt-4 bg-[#F1F5F9] p-4 rounded-2xl">
     <p className="text-sm text-[#8B6F5A]">
       {booking.notes}
     </p>
   </div>
 )}
 
-    <div className="mt-4 flex flex-col gap-2 text-[#CBD5E1]">
+   <div className="mt-4 flex flex-wrap gap-4 text-sm text-[#64748B]">
       <p>📅 {booking.date}</p>
       <p>⏰ {booking.time}</p>
      <p>
@@ -233,14 +233,13 @@ const todaysBookings = bookings.filter(
 </p>
     </div>
 
-    <div className="flex gap-3 mt-6">
-
+   <div className="flex flex-wrap gap-2 mt-6">
  <button
   onClick={() => {
     setSelectedBookingId(booking.id)
     setShowDeleteModal(true)
   }}
-  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition"
+  className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 text-sm rounded-xl transition"
 >
   Delete
 </button>
