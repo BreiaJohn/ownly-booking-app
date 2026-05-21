@@ -177,7 +177,7 @@ const todaysBookings = bookings.filter(
  filteredBookings.map((booking) => (
   <div
     key={booking.id}
-    className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#111827] shadow-sm hover:shadow-md transition"
+    className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F1F5F9] shadow-sm hover:shadow-md transition"
   >
     {editingId === booking.id ? (
       <input
