@@ -220,17 +220,22 @@ const todaysBookings = bookings.filter(
   </div>
 )}
 
-   <div className="mt-4 flex flex-wrap gap-4 text-sm text-[#64748B]">
-      <p>📅 {booking.date}</p>
-      <p>⏰ {booking.time}</p>
-     <p>
-  📞{" "}
-  {booking.phone.replace(
-    /(\d{3})(\d{3})(\d{4})/,
-    "$1-$2-$3"
-  )}
-</p>
-    </div>
+  <div className="mt-5 flex flex-wrap gap-3">
+  <div className="bg-[#E2E8F0] text-[#334155] px-4 py-2 rounded-xl text-sm font-medium">
+    {booking.date}
+  </div>
+
+  <div className="bg-[#E2E8F0] text-[#334155] px-4 py-2 rounded-xl text-sm font-medium">
+    {booking.time}
+  </div>
+
+  <div className="bg-[#E2E8F0] text-[#334155] px-4 py-2 rounded-xl text-sm font-medium">
+    {booking.phone.replace(
+      /(\d{3})(\d{3})(\d{4})/,
+      "$1-$2-$3"
+    )}
+  </div>
+</div>
 
    <div className="flex flex-wrap gap-2 mt-6">
  <button
