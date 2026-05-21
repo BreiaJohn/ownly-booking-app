@@ -29,9 +29,9 @@ function Login() {
 
       <form
         onSubmit={handleLogin}
-        className="bg-white w-full max-w-md p-6 md:p-10 rounded-3xl shadow-sm border border-[#E7E1D9]"
+        className="bg-[#0F172A] w-full max-w-md p-6 md:p-10 rounded-3xl shadow-xl border border-[#334155]"
       >
-        <h1 className="text-3xl md:text-3xl md:text-4xl font-bold text-[#1E1E1E] mb-8">
+        <h1 className="text-3xl md:text-3xl md:text-4xl font-bold text-white mb-8">
           Login
         </h1>
 
@@ -43,7 +43,7 @@ function Login() {
             onChange={(e) =>
               setEmail(e.target.value)
             }
-            className="w-full min-w-0 p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+            className="w-full min-w-0 bg-[#020617] border border-[#334155] p-4 rounded-2xl text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
           />
 
           <input
@@ -53,7 +53,7 @@ function Login() {
             onChange={(e) =>
               setPassword(e.target.value)
             }
-            className="w-full min-w-0 p-4 rounded-2xl border border-[#E7E1D9] outline-none"
+            className="w-full min-w-0 bg-[#020617] border border-[#334155] p-4 rounded-2xl text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
           />
 
           <button
