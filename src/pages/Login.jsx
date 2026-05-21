@@ -25,13 +25,13 @@ function Login() {
     }
   }
 
-  return (<div className="min-h-screen flex items-start md:items-center justify-center px-4 pt-24 md:pt-0 bg-[#F7F4EF]">
-    
+  return (<div className="min-h-screen flex items-start md:items-center justify-center px-4 pt-10 md:pt-0 bg-[#F7F4EF]">
+
       <form
         onSubmit={handleLogin}
         className="bg-white w-full max-w-md p-6 md:p-10 rounded-3xl shadow-sm border border-[#E7E1D9]"
       >
-        <h1 className="text-4xl font-bold text-[#1E1E1E] mb-8">
+        <h1 className="text-3xl md:text-3xl md:text-4xl font-bold text-[#1E1E1E] mb-8">
           Login
         </h1>
 
