@@ -3,6 +3,7 @@ import DashboardLayout from "../layouts/DashboardLayout"
 import { supabase } from "../lib/supabase"
 import { useAuth } from "../context/AuthContext"
 import toast from "react-hot-toast"
+
 function Settings() {
 
   const { session } = useAuth()
@@ -15,6 +16,8 @@ function Settings() {
 
   const [appointmentLength, setAppointmentLength] =
     useState("30")
+
+  const [bufferTime, setBufferTime] = useState("0")
 
     useEffect(() => {
   fetchSettings()
@@ -31,6 +34,7 @@ const fetchSettings = async () => {
     setStartTime(data.start_time)
     setEndTime(data.end_time)
     setAppointmentLength(data.appointment_length)
+    setBufferTime(data.buffer_time || "0")
   }
 
   if (error) {
@@ -46,6 +50,7 @@ const fetchSettings = async () => {
         start_time: startTime,
         end_time: endTime,
         appointment_length: appointmentLength,
+        buffer_time: bufferTime,
       },
       {
         onConflict: "user_id",
@@ -131,7 +136,31 @@ const fetchSettings = async () => {
               </option>
             </select>
           </div>
+<div>
+  <label className="block text-sm font-medium text-[#334155] mb-2">
+    Buffer Time
+  </label>
 
+  <select
+    value={bufferTime}
+    onChange={(e) =>
+      setBufferTime(e.target.value)
+    }
+    className="w-full border border-[#CBD5E1] rounded-2xl p-4 outline-none"
+  >
+    <option value="0">
+      No Buffer
+    </option>
+
+    <option value="15">
+      15 Minutes
+    </option>
+
+    <option value="30">
+      30 Minutes
+    </option>
+  </select>
+</div>
          <button
         type="button"
         onClick={handleSaveSettings}

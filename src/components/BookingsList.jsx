@@ -238,16 +238,7 @@ const todaysBookings = bookings.filter(
 
   <div className="flex items-center gap-2">
     <span>⏰</span>
-
-    <span>
-      {new Date(
-        `1970-01-01T${booking.time}`
-      ).toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      })}
-    </span>
+      <span>{booking.time}</span>
   </div>
 
   <div className="flex items-center gap-2">

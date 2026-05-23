@@ -1,8 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 import { useAuth } from "../context/AuthContext"
 
 import toast from "react-hot-toast"
+import { generateTimeSlots } from "../utils/generateTimeSlots"
+
+
 
 function BookingForm() {
   const { session } = useAuth()
@@ -12,6 +15,60 @@ const [service, setService] = useState("")
 const [date, setDate] = useState("")
 const [time, setTime] = useState("")
 const [phone, setPhone] = useState("")
+const [businessSettings, setBusinessSettings] = useState(null)
+const [bookedTimes, setBookedTimes] = useState([])
+
+const timeSlots = businessSettings
+  ? generateTimeSlots(
+  businessSettings.start_time,
+  businessSettings.end_time,
+  businessSettings.appointment_length,
+  businessSettings.buffer_time || "0"
+).filter((slot) => !bookedTimes.includes(slot))
+  : []
+
+  useEffect(() => {
+  if (session?.user?.id) {
+    fetchBusinessSettings()
+  }
+}, [session])
+
+useEffect(() => {
+  if (date) {
+    fetchBookedTimes()
+  }
+}, [date])
+
+const fetchBusinessSettings = async () => {
+  const { data, error } = await supabase
+    .from("business_settings")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .single()
+
+  if (data) {
+    setBusinessSettings(data)
+  }
+
+  if (error) {
+    console.log(error)
+  }
+}
+
+const fetchBookedTimes = async () => {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("time")
+    .eq("date", date)
+
+  if (data) {
+    setBookedTimes(data.map((booking) => booking.time))
+  }
+
+  if (error) {
+    console.log(error)
+  }
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -95,12 +152,19 @@ if (existingBooking) {
   className="w-full min-w-0 bg-white border border-[#CBD5E1] rounded-2xl px-4 py-4 text-[#0F172A] placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
 />
 
-<input
-  type="time"
+<select
   value={time}
   onChange={(e) => setTime(e.target.value)}
-  className="w-full min-w-0 bg-white border border-[#CBD5E1] rounded-2xl px-4 py-4 text-[#0F172A] placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
-/>
+  className="w-full min-w-0 p-4 rounded-2xl border border-[#CBD5E1] bg-white outline-none"
+>
+  <option value="">Select Time</option>
+
+  {timeSlots.map((slot) => (
+    <option key={slot} value={slot}>
+      {slot}
+    </option>
+  ))}
+</select>
 
 <input
   type="text"
