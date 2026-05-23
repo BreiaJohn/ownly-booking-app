@@ -127,7 +127,7 @@ const todaysBookings = bookings.filter(
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-  <div className="bg-[#111827] border border-[#E7E1D9] rounded-3xl p-6 shadow-sm">
+  <div className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F1F5F9] shadow-sm hover:shadow-md transition">
     <p className="text-gray-500 text-sm">
       Total Bookings
     </p>
@@ -137,7 +137,7 @@ const todaysBookings = bookings.filter(
     </h3>
   </div>
 
-  <div className="bg-[#111827] border border-[#E7E1D9] rounded-3xl p-6 shadow-sm">
+  <div className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F1F5F9] shadow-sm hover:shadow-md transition">
     <p className="text-gray-500 text-sm">
       Today's Appointments
     </p>
@@ -167,7 +167,7 @@ const todaysBookings = bookings.filter(
     </p>
   </div>
 ) : loading ? (
-  <div className="border border-[#E7E1D9] rounded-3xl p-10 bg-[#111827] animate-pulse">
+  <div className="bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-4 md:p-6 shadow-sm hover:border-[#A68A72] hover:scale-[1.02] transition duration-300">
     <div className="h-8 bg-gray-200 rounded w-1/2 mb-4"></div>
     <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
     <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
@@ -177,7 +177,7 @@ const todaysBookings = bookings.filter(
  filteredBookings.map((booking) => (
   <div
     key={booking.id}
-    className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F1F5F9] shadow-sm hover:shadow-md transition"
+   className="bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-4 md:p-6 shadow-sm hover:border-[#A68A72] hover:scale-[1.02] transition duration-300"
   >
     {editingId === booking.id ? (
       <input
@@ -187,7 +187,7 @@ const todaysBookings = bookings.filter(
         className="border p-2 rounded-xl w-full"
       />
     ) : (
-      <h3 className="text-2xl font-bold">
+      <h3 className="text-2xl font-bold text-white">
         {booking.client_name}
       </h3>
     )}
@@ -208,7 +208,7 @@ const todaysBookings = bookings.filter(
   {booking.status || "Pending"}
 </p>
 
-<p className="text-sm text-gray-500 mt-3">
+<p className="text-sm text-[#94A3B8] mt-3">
   {booking.email}
 </p>
 
