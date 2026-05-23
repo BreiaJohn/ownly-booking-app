@@ -16,6 +16,27 @@ const [phone, setPhone] = useState("")
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if (
+  !clientName ||
+  !service ||
+  !date ||
+  !time ||
+  !phone
+) {
+  toast.error("Please fill out all fields")
+  return
+}
+const { data: existingBooking } = await supabase
+  .from("bookings")
+  .select("*")
+  .eq("date", date)
+  .eq("time", time)
+  .single()
+
+if (existingBooking) {
+  toast.error("That time is already booked")
+  return
+}
     const { data, error } = await supabase
   .from("bookings")
   .insert([
