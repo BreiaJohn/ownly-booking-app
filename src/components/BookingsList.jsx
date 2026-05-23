@@ -127,22 +127,22 @@ const todaysBookings = bookings.filter(
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-  <div className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F1F5F9] shadow-sm hover:shadow-md transition">
-    <p className="text-gray-500 text-sm">
+  <div className="bg-[#111C34] border border-[#334155] rounded-2xl p-4 shadow-sm hover:border-[#A68A72] transition duration-300">
+   <p className="text-[#94A3B8] text-sm font-medium">
       Total Bookings
     </p>
 
-    <h3 className="text-4xl font-bold mt-2">
+    <h3 className="text-4xl font-bold text-white mt-2">
       {totalBookings}
     </h3>
   </div>
 
-  <div className="border border-[#E7E1D9] rounded-3xl p-4 md:p-6 bg-[#F1F5F9] shadow-sm hover:shadow-md transition">
-    <p className="text-gray-500 text-sm">
+  <div className="bg-[#111C34] border border-[#334155] rounded-2xl p-4 shadow-sm hover:border-[#A68A72] transition duration-300">
+    <p className="text-[#94A3B8] text-sm font-medium">
       Today's Appointments
     </p>
 
-    <h3 className="text-4xl font-bold mt-2">
+    <h3 className="text-4xl font-bold text-white mt-2">
       {todaysBookings}
     </h3>
   </div>
@@ -187,9 +187,9 @@ const todaysBookings = bookings.filter(
         className="border p-2 rounded-xl w-full"
       />
     ) : (
-      <h3 className="text-2xl font-bold text-white">
-        {booking.client_name}
-      </h3>
+     <h3 className="text-2xl font-bold text-white">
+  {booking.client_name}
+</h3>
     )}
 
     <p className="inline-block bg-[#E8D8C4] text-[#6F4E37] px-3 py-1 rounded-full text-sm font-medium mt-2">

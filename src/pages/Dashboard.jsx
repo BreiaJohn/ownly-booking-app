@@ -58,20 +58,9 @@ function Dashboard() {
 
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-    <ActionCard
-      icon="+"
-      label="New Booking"
-    />
-
-    <ActionCard
-      icon="👥"
-      label="View Clients"
-    />
-
-    <ActionCard
-      icon="$"
-      label="View Payments"
-    />
+    <ActionCard icon="+" label="New Booking" color="bg-[#B08968]/25 text-[#F3D9C1]" />
+<ActionCard icon="👥" label="View Clients" color="bg-[#2E5E4E]/25 text-[#9EE6C3]" />
+<ActionCard icon="$" label="View Payments" color="bg-[#5B4B8A]/25 text-[#C7B8FF]" />
 
   </div>
 
@@ -128,22 +117,24 @@ function OverviewCard({ icon, value, label }) {
   )
 }
 
-function ActionCard({ icon, label }) {
+function ActionCard({ icon, label, color }) {
   return (
-   <button className="group w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 flex items-center justify-between hover:border-[#A68A72] hover:bg-[#111C33] transition duration-300">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[#A68A72]/20 flex items-center justify-center text-[#E7D3BE] text-lg">
+    <button className="group w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 flex items-center justify-between hover:border-[#A68A72] hover:bg-[#111C33] transition duration-300">
+      <div className="flex items-center gap-4">
+        <div
+          className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center text-lg`}
+        >
           {icon}
         </div>
 
-        <span className="text-white font-medium whitespace-nowrap">
+        <span className="text-white font-medium whitespace-nowrap pr-2">
           {label}
         </span>
       </div>
 
       <span className="inline-block text-[#64748B] group-hover:translate-x-1 transition-transform duration-300">
-  →
-</span>
+        →
+      </span>
     </button>
   )
 }
