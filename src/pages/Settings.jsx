@@ -23,10 +23,17 @@ function Settings() {
 const [blockedDate, setBlockedDate] = useState("")
 const [blockedTime, setBlockedTime] = useState("")
 const [blockedReason, setBlockedReason] = useState("")
+const [blockedList, setBlockedList] = useState([])
 
    useEffect(() => {
   if (session?.user?.id) {
     fetchSettings()
+  }
+}, [session])
+
+useEffect(() => {
+  if (session?.user?.id) {
+    fetchBlockedTimes()
   }
 }, [session])
 
@@ -42,6 +49,22 @@ const fetchSettings = async () => {
     setEndTime(data.end_time)
     setAppointmentLength(data.appointment_length)
     setBufferTime(data.buffer_time || "0")
+  }
+
+  if (error) {
+    console.log(error)
+  }
+}
+
+const fetchBlockedTimes = async () => {
+  const { data, error } = await supabase
+    .from("blocked_times")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .order("date", { ascending: true })
+
+  if (data) {
+    setBlockedList(data)
   }
 
   if (error) {
@@ -77,6 +100,26 @@ const handleAddBlockedTime = async () => {
     return
   }
 
+const handleDeleteBlockedTime = async (id) => {
+  const { error } = await supabase
+    .from("blocked_times")
+    .delete()
+    .eq("id", id)
+
+  if (error) {
+    toast.error("Failed to remove blocked time")
+    console.log(error)
+  } else {
+    toast.success("Blocked time removed!")
+
+    setBlockedList(
+      blockedList.filter(
+        (blocked) => blocked.id !== id
+      )
+    )
+  }
+}
+
   const { error } = await supabase
     .from("blocked_times")
     .insert([
@@ -96,6 +139,26 @@ const handleAddBlockedTime = async () => {
     setBlockedDate("")
     setBlockedTime("")
     setBlockedReason("")
+  }
+}
+
+const handleDeleteBlockedTime = async (id) => {
+  const { error } = await supabase
+    .from("blocked_times")
+    .delete()
+    .eq("id", id)
+
+  if (error) {
+    toast.error("Failed to remove blocked time")
+    console.log(error)
+  } else {
+    toast.success("Blocked time removed!")
+
+    setBlockedList(
+      blockedList.filter(
+        (blocked) => blocked.id !== id
+      )
+    )
   }
 }
 
@@ -238,6 +301,41 @@ const handleAddBlockedTime = async () => {
       Block Time
     </button>
   </div>
+</div>
+
+<div className="mt-6 flex flex-col gap-3">
+  {blockedList.map((blocked) => (
+    <div
+      key={blocked.id}
+      className="bg-white border border-[#E2E8F0] rounded-2xl p-4 flex items-center justify-between"
+    >
+      <div>
+        <p className="font-semibold text-[#0F172A]">
+          {blocked.date}
+        </p>
+
+        <p className="text-[#64748B]">
+          {blocked.time}
+        </p>
+
+        {blocked.reason && (
+          <p className="text-sm text-[#94A3B8]">
+            {blocked.reason}
+          </p>
+        )}
+      </div>
+
+      <button
+  type="button"
+  onClick={() =>
+    handleDeleteBlockedTime(blocked.id)
+  }
+  className="bg-red-500 text-white px-4 py-2 rounded-xl hover:opacity-90 transition"
+>
+  Remove
+</button>
+    </div>
+  ))}
 </div>
         </div>
       </div>
