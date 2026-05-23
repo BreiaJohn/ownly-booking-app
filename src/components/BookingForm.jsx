@@ -16,7 +16,9 @@ const [date, setDate] = useState("")
 const [time, setTime] = useState("")
 const [phone, setPhone] = useState("")
 const [businessSettings, setBusinessSettings] = useState(null)
+const [blockedTimes, setBlockedTimes] = useState([])
 const [bookedTimes, setBookedTimes] = useState([])
+
 
 const timeSlots = businessSettings
   ? generateTimeSlots(
@@ -24,7 +26,11 @@ const timeSlots = businessSettings
   businessSettings.end_time,
   businessSettings.appointment_length,
   businessSettings.buffer_time || "0"
-).filter((slot) => !bookedTimes.includes(slot))
+).filter(
+  (slot) =>
+    !bookedTimes.includes(slot) &&
+    !blockedTimes.includes(slot)
+)
   : []
 
   useEffect(() => {
@@ -39,6 +45,11 @@ useEffect(() => {
   }
 }, [date])
 
+useEffect(() => {
+  if (date) {
+    fetchBlockedTimes()
+  }
+}, [date])
 const fetchBusinessSettings = async () => {
   const { data, error } = await supabase
     .from("business_settings")
@@ -63,6 +74,22 @@ const fetchBookedTimes = async () => {
 
   if (data) {
     setBookedTimes(data.map((booking) => booking.time))
+  }
+
+  if (error) {
+    console.log(error)
+  }
+}
+
+const fetchBlockedTimes = async () => {
+  const { data, error } = await supabase
+    .from("blocked_times")
+    .select("time")
+    .eq("date", date)
+    .eq("user_id", session.user.id)
+
+  if (data) {
+    setBlockedTimes(data.map((blocked) => blocked.time))
   }
 
   if (error) {
