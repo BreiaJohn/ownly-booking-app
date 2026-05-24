@@ -175,16 +175,16 @@ const fetchBlockedTimes = async () => {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
-       <input
-  type="text"
+ <input
+  type={date ? "date" : "text"}
   placeholder="Select Date"
+  value={date}
   onFocus={(e) => (e.target.type = "date")}
   onBlur={(e) => {
-    if (!e.target.value) {
+    if (!date) {
       e.target.type = "text"
     }
   }}
-  value={date}
   onChange={(e) => setDate(e.target.value)}
   className="w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 text-white placeholder:text-slate-400 outline-none"
 />
