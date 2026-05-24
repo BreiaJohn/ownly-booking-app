@@ -93,13 +93,6 @@ function Dashboard() {
           </div>
         </section>
 
-        <div className="mt-8">
-          <BookingForm />
-        </div>
-
-        <div className="mt-8">
-          <BookingsList />
-        </div>
       </div>
     </DashboardLayout>
   )

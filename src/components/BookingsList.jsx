@@ -31,10 +31,7 @@ function BookingsList() {
   const formatPhone = (phone) => {
     if (!phone) return ""
 
-    return phone.replace(
-      /(\d{3})(\d{3})(\d{4})/,
-      "$1-$2-$3"
-    )
+    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")
   }
 
   const getInitials = (name) => {
@@ -113,6 +110,26 @@ function BookingsList() {
     }
   }
 
+  const getStatusClass = (status) => {
+    if (status === "Confirmed") {
+      return "bg-green-500/20 text-green-200 border-green-400/20"
+    }
+
+    if (status === "Pending") {
+      return "bg-yellow-500/20 text-yellow-200 border-yellow-400/20"
+    }
+
+    if (status === "Cancelled") {
+      return "bg-red-500/20 text-red-200 border-red-400/20"
+    }
+
+    if (status === "Completed") {
+      return "bg-purple-500/20 text-purple-200 border-purple-400/20"
+    }
+
+    return "bg-[#334155] text-white border-[#475569]"
+  }
+
   useEffect(() => {
     fetchBookings()
   }, [])
@@ -159,7 +176,7 @@ function BookingsList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="bg-[#111C34] border border-[#334155] rounded-2xl p-4 shadow-sm hover:border-[#A68A72] transition duration-300">
-          <p className="text-[#94A3B8] text-sm font-norma">
+          <p className="text-[#94A3B8] text-sm font-normal">
             Total Bookings
           </p>
 
@@ -211,7 +228,7 @@ function BookingsList() {
               className="relative bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-6 md:p-8 shadow-sm hover:border-[#A68A72] transition duration-300"
             >
               <div className="flex flex-col md:flex-row gap-6">
-               <div className="flex items-start gap-4 w-full md:w-1/2">
+                <div className="flex items-start gap-4 w-full md:w-1/2">
                   <div className="bg-[#111827] border border-[#334155] w-16 h-16 rounded-full flex items-center justify-center font-normal text-white text-2xl">
                     {getInitials(booking.client_name)}
                   </div>
@@ -232,12 +249,16 @@ function BookingsList() {
                       </h3>
                     )}
 
-                    <div className="flex gap-3 mt-3">
+                    <div className="flex flex-wrap gap-3 mt-3">
                       <span className="bg-purple-500/20 text-purple-200 border border-purple-400/20 px-4 py-1 rounded-full text-sm">
-                        {booking.service}
+                        {booking.service || "Service"}
                       </span>
 
-                      <span className="bg-green-500/20 text-green-200 border border-green-400/20 px-4 py-1 rounded-full text-sm">
+                      <span
+                        className={`px-4 py-1 rounded-full text-sm border ${getStatusClass(
+                          booking.status
+                        )}`}
+                      >
                         {booking.status || "Pending"}
                       </span>
                     </div>
@@ -257,12 +278,14 @@ function BookingsList() {
                 <div className="hidden md:block h-32 w-px bg-[#334155]" />
 
                 <div className="flex flex-row gap-4 w-full md:w-1/2 justify-between border-t md:border-t-0 md:border-l border-[#334155] pt-4 md:pt-0 md:pl-6">
-                 <div className="flex flex-col gap-4 text-[#94A3B8] text-base md:text-lg">
+                  <div className="flex flex-col gap-4 text-[#94A3B8] text-base md:text-lg">
                     <p>
                       📅{" "}
-                      {new Date(
-                        booking.date
-                      ).toLocaleDateString("en-US")}
+                      {booking.date
+                        ? new Date(booking.date).toLocaleDateString(
+                            "en-US"
+                          )
+                        : "No date"}
                     </p>
                     <p>🕒 {formatTime(booking.time)}</p>
                     <p>📞 {formatPhone(booking.phone)}</p>
@@ -282,41 +305,73 @@ function BookingsList() {
                       ⋮
                     </button>
 
-                {openMenuId === booking.id && (
-  <div className="absolute right-0 bottom-full mb-2 w-44 bg-[#0F172A] border border-[#334155] rounded-2xl shadow-xl z-[9999] overflow-hidden">
-    <button
-      onClick={() => {
-        setEditingId(booking.id)
-        setEditedName(booking.client_name)
-        setOpenMenuId(null)
-      }}
-      className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
-    >
-      <span>✎</span>
-      Edit
-    </button>
+                    {openMenuId === booking.id && (
+                      <div className="absolute right-0 bottom-full mb-2 w-44 bg-[#0F172A] border border-[#334155] rounded-2xl shadow-xl z-[9999] overflow-hidden">
+                        <button
+                          onClick={() => {
+                            setEditingId(booking.id)
+                            setEditedName(booking.client_name)
+                            setOpenMenuId(null)
+                          }}
+                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
+                        >
+                          <span>✎</span>
+                          Edit
+                        </button>
 
-    <button
-      onClick={() => updateStatus(booking.id, "Cancelled")}
-      className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
-    >
-      <span>×</span>
-      Cancel
-    </button>
+                        <button
+                          onClick={() =>
+                            updateStatus(booking.id, "Confirmed")
+                          }
+                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
+                        >
+                          <span>✓</span>
+                          Confirmed
+                        </button>
 
-    <button
-      onClick={() => {
-        setSelectedBookingId(booking.id)
-        setShowDeleteModal(true)
-        setOpenMenuId(null)
-      }}
-      className="flex w-full items-center gap-3 text-left px-4 py-3 text-red-300 hover:bg-[#3F1D1D] border-t border-[#334155]"
-    >
-      <span>🗑</span>
-      Delete
-    </button>
-  </div>
-)}
+                        <button
+                          onClick={() =>
+                            updateStatus(booking.id, "Completed")
+                          }
+                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
+                        >
+                          <span>✔</span>
+                          Completed
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            updateStatus(booking.id, "Pending")
+                          }
+                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
+                        >
+                          <span>⏳</span>
+                          Pending
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            updateStatus(booking.id, "Cancelled")
+                          }
+                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
+                        >
+                          <span>×</span>
+                          Cancelled
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setSelectedBookingId(booking.id)
+                            setShowDeleteModal(true)
+                            setOpenMenuId(null)
+                          }}
+                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-red-300 hover:bg-[#3F1D1D] border-t border-[#334155]"
+                        >
+                          <span>🗑</span>
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
