@@ -181,13 +181,17 @@ const fetchBlockedTimes = async () => {
   </span>
 
   <input
-    type="date"
-    value={date}
-    onChange={(e) => setDate(e.target.value)}
-    className={`w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 outline-none ${
-      date ? "text-white" : "text-transparent"
-    }`}
+  type="date"
+  value={date}
+  onChange={(e) => setDate(e.target.value)}
+  onClick={(e) => {
+    if (window.innerWidth > 768 && e.target.showPicker) {
+      e.target.showPicker()
+    }
+  }}
+  className="w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 text-white outline-none"
   />
+
 </div>
 
 <select
