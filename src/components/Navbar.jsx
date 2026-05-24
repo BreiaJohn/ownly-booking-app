@@ -5,34 +5,27 @@ function Navbar() {
   const navigate = useNavigate()
 
   return (
-<nav className="hidden md:flex items-center justify-between px-6 md:px-10 py-3 bg-[#0F172A]/70 backdrop-blur-xl border-b border-[#1E293B] relative">
-      <div className="flex items-center gap-3">
-
+<nav className="hidden md:flex items-center justify-between h-24 px-16 bg-[#0F172A] border-b border-[#1E293B]">
   <img
-  src={logo}
-  alt="Ownly Logo"
-  className="h-30 w-auto object-contain"
-/>
-</div>
+    src={logo}
+    alt="Ownly Logo"
+    className="h-20 w-auto object-contain"
+  />
 
-     <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-6 text-xs md:text-sm">
-       <a
-  href="#features"
-  className="px-4 py-2 rounded-xl text-[#64748B] hover:text-white hover:bg-white/5 hover:bg-[#111827]/5 transition-all duration-300"
->
-  Features
-</a>
+  <div className="flex items-center gap-12 text-sm text-[#94A3B8]">
+    <a href="#features" className="hover:text-white transition">
+      Features
+    </a>
 
-        <a href="#pricing" className="px-4 py-2 rounded-xl text-[#64748B] hover:text-white hover:bg-white/5 hover:bg-[#111827]/5 transition-all duration-300">
-          Pricing
-        </a>
+    <a href="#pricing" className="hover:text-white transition">
+      Pricing
+    </a>
 
-        <a href="#testimonials" className="px-4 py-2 rounded-xl text-[#64748B] hover:text-white hover:bg-white/5 hover:bg-[#111827]/5 transition-all duration-300">
-          Reviews
-        </a>
-      </div>
-
-    </nav>
+    <a href="#testimonials" className="hover:text-white transition">
+      Reviews
+    </a>
+  </div>
+</nav>
   )
 }
 

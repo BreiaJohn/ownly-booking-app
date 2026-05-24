@@ -176,18 +176,16 @@ const fetchBlockedTimes = async () => {
         />
 
  <div className="relative">
-  {!date && (
-    <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-      Select Date
-    </span>
-  )}
+  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+    {!date && "Select Date"}
+  </span>
 
   <input
     type="date"
     value={date}
     onChange={(e) => setDate(e.target.value)}
-    className={`w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 text-white outline-none ${
-      !date ? "text-transparent" : "text-white"
+    className={`w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 outline-none ${
+      date ? "text-white" : "text-transparent"
     }`}
   />
 </div>
