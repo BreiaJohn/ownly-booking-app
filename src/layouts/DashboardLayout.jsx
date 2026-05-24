@@ -2,10 +2,10 @@ import Sidebar from "../components/Sidebar"
 
 function DashboardLayout({ children }) {
   return (
-   <div className="flex flex-col md:flex-row bg-[#0F172A] min-h-screen">
+    <div className="flex bg-[#0F172A] h-screen overflow-hidden">
       <Sidebar />
 
-      <main className="flex-1 p-4 md:p-10">
+      <main className="flex-1 h-screen overflow-y-auto p-4 md:p-10">
         {children}
       </main>
     </div>

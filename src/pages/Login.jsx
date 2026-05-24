@@ -25,47 +25,49 @@ function Login() {
     }
   }
 
-  return (<div className="min-h-screen flex items-start md:items-center justify-center px-4 pt-10 md:pt-0 bg-[#F7F4EF]">
+ return (
+  <div className="relative min-h-[calc(100vh-88px)] bg-[#020817] text-white flex items-center justify-center px-4 overflow-hidden -mt-6">
 
-      <form
-        onSubmit={handleLogin}
-        className="bg-[#0F172A] w-full max-w-md p-6 md:p-10 rounded-3xl shadow-xl border border-[#334155]"
-      >
-        <h1 className="text-3xl md:text-3xl md:text-4xl font-bold text-white mb-8">
+    <div className="absolute w-[500px] h-[500px] bg-[#4B5563]/20 blur-[140px] rounded-full"></div>
+
+   <form
+  onSubmit={handleLogin}
+  className="relative bg-[#0F172A]/70 backdrop-blur-xl w-full max-w-md p-8 md:p-10 rounded-[2rem] shadow-[0_0_40px_rgba(0,0,0,0.35)] border border-[#334155] hover:border-[#4B5563] transition-all duration-500"
+>
+  <h1 className="text-4xl font-semibold tracking-tight text-white mb-3">
+Login
+</h1>
+      <p className="text-[#64748B] mb-8">
+        Welcome back to Ownly.
+      </p>
+
+      <div className="flex flex-col gap-4">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full bg-[#0B1220] border border-[#334155] px-5 py-4 rounded-2xl text-white placeholder:text-[#64748B] focus:outline-none focus:border-[#4B5563] transition-all duration-300"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full bg-[#0B1220] border border-[#334155] px-5 py-4 rounded-2xl text-white placeholder:text-[#64748B] focus:outline-none focus:border-[#4B5563] transition-all duration-300"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-[#4B5563] text-white py-4 rounded-2xl hover:bg-[#5B6472] hover:shadow-[0_0_25px_rgba(75,85,99,0.45)] hover:-translate-y-0.5 transition-all duration-300 font-medium"
+        >
           Login
-        </h1>
-
-        <div className="flex flex-col gap-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            className="w-full min-w-0 bg-[#020617] border border-[#334155] p-4 rounded-2xl text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-            className="w-full min-w-0 bg-[#020617] border border-[#334155] p-4 rounded-2xl text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#C08457]"
-          />
-
-          <button
-            type="submit"
-            className="bg-[#8B6F5A] text-white py-4 rounded-2xl hover:opacity-90 transition"
-          >
-            Login
-          </button>
-        </div>
-      </form>
-    </div>
-  )
+        </button>
+      </div>
+    </form>
+  </div>
+)
 }
 
 export default Login

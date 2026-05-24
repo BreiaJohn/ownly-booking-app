@@ -8,9 +8,7 @@ function Dashboard() {
       <div className="min-h-screen bg-[#0F172A] text-white">
         <div className="flex items-center justify-between mb-6">
           
-          <button className="border border-[#334155] rounded-2xl p-4 text-2xl">
-            ☰
-          </button>
+      
         </div>
 
         <div className="bg-white/5 backdrop-blur-md border border-[#1E293B] rounded-2xl px-5 py-4 mb-6">
@@ -127,7 +125,7 @@ function ActionCard({ icon, label, color }) {
           {icon}
         </div>
 
-        <span className="text-white font-medium whitespace-nowrap pr-2">
+        <span className="text-white font-medium whitespace-nowrap">
           {label}
         </span>
       </div>
