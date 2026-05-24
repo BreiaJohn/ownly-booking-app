@@ -179,7 +179,7 @@ const fetchBlockedTimes = async () => {
   type="date"
   value={date}
   onChange={(e) => setDate(e.target.value)}
-  className="w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 text-white placeholder:text-slate-400"
+  className="block w-full min-w-0 max-w-full box-border rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 text-white placeholder:text-slate-400"
   style={{ colorScheme: "dark" }}
 />
 
