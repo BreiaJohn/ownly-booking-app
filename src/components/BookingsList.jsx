@@ -211,7 +211,7 @@ function BookingsList() {
               className="relative bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-6 md:p-8 shadow-sm hover:border-[#A68A72] transition duration-300"
             >
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex items-start gap-2">
+               <div className="flex items-start gap-2 w-full md:w-1/2">
                   <div className="bg-[#111827] border border-[#334155] w-16 h-16 rounded-full flex items-center justify-center font-normal text-white text-2xl">
                     {getInitials(booking.client_name)}
                   </div>
@@ -256,8 +256,8 @@ function BookingsList() {
 
                 <div className="hidden md:block h-32 w-px bg-[#334155]" />
 
-                <div className="flex items-start gap-4">
-                  <div className="flex flex-col gap-5 text-[#94A3B8] text-lg">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex flex-col gap-5 text-[#94A3B8] text-lg w-full md:w-1/2">
                     <p>
                       📅{" "}
                       {new Date(
