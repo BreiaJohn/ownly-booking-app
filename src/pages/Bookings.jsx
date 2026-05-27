@@ -226,7 +226,7 @@ function Bookings() {
                             onClick={() =>
                               setSelectedBooking(booking)
                             }
-                            className={`w-full text-left border rounded-xl p-3 hover:border-[#A68A72] hover:bg-white/10 transition ${getBookingCardClass(
+                            className={`w-full text-left border rounded-xl p-3 hover:border-[#A68A72] hover:bg-white/10 hover:scale-[1.02] transition duration-300 ${getBookingCardClass(
   booking.status
 )}`}
                           >
