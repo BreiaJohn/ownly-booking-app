@@ -187,7 +187,11 @@ function Bookings() {
                     return (
                       <div
                         key={date + time}
-                        className="min-h-[90px] border border-[#334155] rounded-2xl bg-[#0F172A] p-2"
+                       className={`min-h-[90px] border rounded-2xl p-2 ${
+  date === new Date().toISOString().split("T")[0]
+    ? "border-[#A68A72] bg-[#1E293B]/70 shadow-[0_0_20px_rgba(166,138,114,0.12)]"
+    : "border-[#334155] bg-[#0F172A]"
+}`}
                       >
                         {booking && (
                           <button
