@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import DashboardLayout from "../layouts/DashboardLayout"
 import BookingForm from "../components/BookingForm"
 import BookingsList from "../components/BookingsList"
-import logo from "../assets/ownly-logo.png"
+// import logo from "../assets/ownly-logo.png"
 import { supabase } from "../lib/supabase"
 
 function Bookings() {
@@ -111,11 +111,11 @@ function Bookings() {
       <div className="min-h-screen bg-[#0F172A] text-white">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <img
+            {/* <img
               src={logo}
               alt="Ownly Logo"
               className="h-16 w-auto object-contain mb-4"
-            />
+            /> */}
 
             <h1 className="text-3xl font-semibold tracking-tight">
               Bookings
@@ -181,78 +181,73 @@ function Bookings() {
       : "max-h-0 opacity-0"
   }`}
 >
-          <div className="min-w-[1100px]">
-            <div className="grid grid-cols-8 gap-4 mb-4">
-              <div />
+        <div className="space-y-6">
+  <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
+    {weekDates.map((date) => {
+      const isSelected = date === selectedDate
 
-              {weekDates.map((date) => (
-                <div
-                  key={date}
-                  className="text-center font-semibold text-sm"
-                >
-                  {formatDay(date)}
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-4">
-              {timeGrid.map((time) => (
-                <div
-                  key={time}
-                  className="grid grid-cols-8 gap-4"
-                >
-                  <div className="text-[#94A3B8] text-sm pt-4">
-                    {convertTime(time)}
-                  </div>
-
-                  {weekDates.map((date) => {
-                    const booking = weekBookings.find(
-                      (booking) =>
-                        booking.date === date &&
-                        booking.time?.startsWith(time.split(":")[0])
-                    )
-
-                    return (
-                      <div
-                        key={date + time}
-                       className={`min-h-[90px] border rounded-2xl p-2 ${
-  date === new Date().toISOString().split("T")[0]
-    ? "border-[#A68A72] bg-[#1E293B]/70 shadow-[0_0_20px_rgba(166,138,114,0.12)]"
-    : "border-[#334155] bg-[#0F172A]"
-}`}
-                      >
-                        {booking && (
-                          <button
-                            onClick={() =>
-                              setSelectedBooking(booking)
-                            }
-                            className={`w-full text-left border rounded-xl p-3 hover:border-[#A68A72] hover:bg-white/10 hover:scale-[1.02] transition duration-300 ${getBookingCardClass(
-  booking.status
-)}`}
-                          >
-                            <p className="font-medium text-sm">
-                              {booking.client_name}
-                            </p>
-
-                            <p className="text-[#94A3B8] text-xs mt-1">
-                              {booking.service}
-                            </p>
-
-                            <p className="text-[#94A3B8] text-xs mt-2">
-                              🕒 {booking.time}
-                            </p>
-                          </button>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              ))}
-            </div>
-          </div>
+      return (
+        <button
+          key={date}
+          onClick={() => setSelectedDate(date)}
+          className={`rounded-2xl border p-4 text-left transition ${
+            isSelected
+              ? "border-[#A68A72] bg-[#A68A72]/20 text-white"
+              : "border-[#334155] bg-[#0F172A] text-[#94A3B8] hover:border-[#A68A72]"
+          }`}
+        >
+          <p className="font-semibold">
+            {formatDay(date)}
+          </p>
+        </button>
+      )
+    })}
   </div>
-     
- </div>
+
+  <div className="bg-[#0F172A] border border-[#334155] rounded-3xl p-5">
+    <h3 className="text-xl font-semibold mb-4">
+      Bookings for {formatDay(selectedDate)}
+    </h3>
+
+    <div className="space-y-3">
+      {weekBookings.filter((booking) => booking.date === selectedDate).length === 0 ? (
+        <p className="text-[#94A3B8]">
+          No bookings for this day.
+        </p>
+      ) : (
+        weekBookings
+          .filter((booking) => booking.date === selectedDate)
+          .map((booking) => (
+            <button
+              key={booking.id}
+              onClick={() => setSelectedBooking(booking)}
+              className={`w-full text-left border rounded-2xl p-4 hover:border-[#A68A72] hover:scale-[1.01] transition duration-300 ${getBookingCardClass(
+                booking.status
+              )}`}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="font-semibold">
+                    {booking.client_name}
+                  </p>
+
+                  <p className="text-sm opacity-80 mt-1">
+                    {booking.service}
+                  </p>
+                </div>
+
+                <p className="text-sm opacity-80">
+                  🕒 {booking.time}
+                </p>
+              </div>
+            </button>
+          ))
+      )}
+    </div>
+  </div>
+</div>
+
+</div>
 
         {selectedBooking && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
@@ -317,6 +312,8 @@ function Bookings() {
                   value={`$${selectedBooking.amount || 0}`}
                 />
               </div>
+              </div>
+           
 
               {selectedBooking.notes && (
                 <div className="bg-white/5 border border-[#334155] rounded-2xl p-4 mt-4">
@@ -330,8 +327,9 @@ function Bookings() {
                 </div>
               )}
             </div>
-          </div>
-        )}
+       )}
+</div>
+
 
         <BookingForm />
 
