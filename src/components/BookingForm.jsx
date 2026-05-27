@@ -19,6 +19,7 @@ const [businessSettings, setBusinessSettings] = useState(null)
 const [blockedTimes, setBlockedTimes] = useState([])
 const [bookedTimes, setBookedTimes] = useState([])
 const [isSaved, setIsSaved] = useState(false)
+const [email, setEmail] = useState("")
 
 
 const timeSlots = businessSettings
@@ -127,6 +128,7 @@ const fetchBlockedTimes = async () => {
         date,
         time,
         phone,
+        email,
         user_id: session.user.id,
       },
     ])
@@ -146,6 +148,7 @@ const fetchBlockedTimes = async () => {
     setDate("")
     setTime("")
     setPhone("")
+    setEmail("")
   }
 }
 
@@ -215,6 +218,14 @@ className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 
   value={phone}
   onChange={(e) => setPhone(e.target.value)}
 className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
+/>
+
+<input
+  type="email"
+  placeholder="Email Address"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
 />
 
         <button

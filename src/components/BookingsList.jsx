@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 import toast from "react-hot-toast"
 
+
 function BookingsList() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
@@ -11,6 +12,8 @@ function BookingsList() {
   const [selectedBookingId, setSelectedBookingId] = useState(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [openMenuId, setOpenMenuId] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [selectedBooking, setSelectedBooking] = useState(null)
 
   const formatTime = (time) => {
     if (!time) return ""
@@ -109,6 +112,30 @@ function BookingsList() {
       fetchBookings()
     }
   }
+
+  const updateFullBooking = async () => {
+  const { error } = await supabase
+    .from("bookings")
+    .update({
+      client_name: selectedBooking.client_name,
+      service: selectedBooking.service,
+      date: selectedBooking.date,
+      time: selectedBooking.time,
+      phone: selectedBooking.phone,
+      status: selectedBooking.status,
+      notes: selectedBooking.notes,
+    })
+    .eq("id", selectedBooking.id)
+
+  if (error) {
+    toast.error("Failed to update booking")
+  } else {
+    toast.success("Booking updated!")
+    setShowEditModal(false)
+    setSelectedBooking(null)
+    fetchBookings()
+  }
+}
 
   const getStatusClass = (status) => {
     if (status === "Confirmed") {
@@ -308,16 +335,16 @@ function BookingsList() {
                     {openMenuId === booking.id && (
                       <div className="absolute right-0 bottom-full mb-2 w-44 bg-[#0F172A] border border-[#334155] rounded-2xl shadow-xl z-[9999] overflow-hidden">
                         <button
-                          onClick={() => {
-                            setEditingId(booking.id)
-                            setEditedName(booking.client_name)
-                            setOpenMenuId(null)
-                          }}
-                          className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
-                        >
-                          <span>✎</span>
-                          Edit
-                        </button>
+  onClick={() => {
+    setSelectedBooking(booking)
+    setShowEditModal(true)
+    setOpenMenuId(null)
+  }}
+  className="flex w-full items-center gap-3 text-left px-4 py-3 text-white hover:bg-[#1E293B]"
+>
+  <span>✎</span>
+  Edit
+</button>
 
                         <button
                           onClick={() =>
@@ -388,6 +415,128 @@ function BookingsList() {
           ))
         )}
       </div>
+  
+
+      {showEditModal && selectedBooking && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-[#0F172A] border border-[#334155] rounded-3xl shadow-xl w-full max-w-2xl p-6">
+            <h2 className="text-2xl font-bold text-white mb-6">
+              Edit Booking
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                value={selectedBooking.client_name || ""}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    client_name: e.target.value,
+                  })
+                }
+                className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+              />
+
+              <input
+                type="text"
+                value={selectedBooking.service || ""}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    service: e.target.value,
+                  })
+                }
+                className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+              />
+
+              <input
+                type="date"
+                value={selectedBooking.date || ""}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    date: e.target.value,
+                  })
+                }
+                style={{ colorScheme: "dark" }}
+                className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+              />
+
+              <input
+                type="time"
+                value={selectedBooking.time || ""}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    time: e.target.value,
+                  })
+                }
+                style={{ colorScheme: "dark" }}
+                className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+              />
+
+              <input
+                type="text"
+                value={selectedBooking.phone || ""}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    phone: e.target.value,
+                  })
+                }
+                className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+              />
+
+              <select
+                value={selectedBooking.status || "Pending"}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    status: e.target.value,
+                  })
+                }
+                className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+              >
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+
+              <textarea
+                value={selectedBooking.notes || ""}
+                onChange={(e) =>
+                  setSelectedBooking({
+                    ...selectedBooking,
+                    notes: e.target.value,
+                  })
+                }
+                placeholder="Notes"
+                className="md:col-span-2 bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none min-h-28"
+              />
+            </div>
+
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={() => {
+                  setShowEditModal(false)
+                  setSelectedBooking(null)
+                }}
+                className="flex-1 border border-[#334155] text-white py-3 rounded-2xl"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={updateFullBooking}
+                className="flex-1 bg-[#4B5563] hover:bg-[#5B6472] text-white py-3 rounded-2xl transition"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
