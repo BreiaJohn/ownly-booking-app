@@ -21,19 +21,17 @@ const [bookedTimes, setBookedTimes] = useState([])
 const [isSaved, setIsSaved] = useState(false)
 const [email, setEmail] = useState("")
 
-
-const timeSlots = businessSettings
-  ? generateTimeSlots(
-  businessSettings.start_time,
-  businessSettings.end_time,
-  businessSettings.appointment_length,
-  businessSettings.buffer_time || "0"
+const timeSlots = generateTimeSlots(
+  businessSettings?.start_time || "09:00",
+  businessSettings?.end_time || "17:00",
+  businessSettings?.appointment_length || 60,
+  businessSettings?.buffer_time || 0
 ).filter(
   (slot) =>
     !bookedTimes.includes(slot) &&
     !blockedTimes.includes(slot)
 )
-  : []
+
 
   useEffect(() => {
   if (session?.user?.id) {
@@ -66,6 +64,11 @@ const fetchBusinessSettings = async () => {
   if (error) {
     console.log(error)
   }
+
+  console.log("businessSettings:", businessSettings)
+console.log("timeSlots:", timeSlots)
+console.log("bookedTimes:", bookedTimes)
+console.log("blockedTimes:", blockedTimes)
 }
 
 const fetchBookedTimes = async () => {
