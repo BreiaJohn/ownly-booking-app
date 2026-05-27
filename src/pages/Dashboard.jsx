@@ -1,16 +1,51 @@
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import DashboardLayout from "../layouts/DashboardLayout"
-import BookingForm from "../components/BookingForm"
-import BookingsList from "../components/BookingsList"
+import { supabase } from "../lib/supabase"
 
 function Dashboard() {
+  const [bookings, setBookings] = useState([])
+
+  useEffect(() => {
+    fetchBookings()
+  }, [])
+
+  const fetchBookings = async () => {
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      console.log(error)
+      return
+    }
+
+    setBookings(data)
+  }
+
+  const today = new Date().toISOString().split("T")[0]
+
+  const appointmentsToday = bookings.filter(
+    (booking) => booking.date === today
+  ).length
+
+  const clientsTotal = new Set(
+    bookings.map((booking) => booking.client_name)
+  ).size
+
+  const revenueThisMonth = bookings.reduce(
+    (sum, booking) => sum + Number(booking.amount || 0),
+    0
+  )
+
+  const bookingsThisMonth = bookings.length
+
+  const recentBookings = bookings.slice(0, 3)
+
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-[#0F172A] text-white">
-        <div className="flex items-center justify-between mb-6">
-          
-      
-        </div>
-
         <div className="bg-white/5 backdrop-blur-md border border-[#1E293B] rounded-2xl px-5 py-4 mb-6">
           <input
             type="text"
@@ -41,28 +76,60 @@ function Dashboard() {
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <OverviewCard icon="📅" value="2" label="Appointments Today" />
-            <OverviewCard icon="👥" value="8" label="Clients Total" />
-            <OverviewCard icon="💳" value="$340" label="Revenue This Month" />
-            <OverviewCard icon="🕒" value="12" label="Bookings This Month" />
+            <OverviewCard
+              icon="📅"
+              value={appointmentsToday}
+              label="Appointments Today"
+            />
+
+            <OverviewCard
+              icon="👥"
+              value={clientsTotal}
+              label="Clients Total"
+            />
+
+            <OverviewCard
+              icon="💳"
+              value={`$${revenueThisMonth}`}
+              label="Revenue Total"
+            />
+
+            <OverviewCard
+              icon="🕒"
+              value={bookingsThisMonth}
+              label="Total Bookings"
+            />
           </div>
         </section>
 
-       <section className="bg-white/5 backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
+        <section className="bg-white/5 backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
+          <h3 className="text-[#94A3B8] font-semibold mb-5">
+            Quick Actions
+          </h3>
 
-  <h3 className="text-[#94A3B8] font-semibold mb-5">
-    Quick Actions
-  </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <ActionCard
+              to="/bookings"
+              icon="+"
+              label="New Booking"
+              color="bg-[#B08968]/25 text-[#F3D9C1]"
+            />
 
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <ActionCard
+              to="/clients"
+              icon="👥"
+              label="View Clients"
+              color="bg-[#2E5E4E]/25 text-[#9EE6C3]"
+            />
 
-    <ActionCard icon="+" label="New Booking" color="bg-[#B08968]/25 text-[#F3D9C1]" />
-<ActionCard icon="👥" label="View Clients" color="bg-[#2E5E4E]/25 text-[#9EE6C3]" />
-<ActionCard icon="$" label="View Payments" color="bg-[#5B4B8A]/25 text-[#C7B8FF]" />
-
-  </div>
-
-</section>
+            <ActionCard
+              to="/payments"
+              icon="$"
+              label="View Payments"
+              color="bg-[#5B4B8A]/25 text-[#C7B8FF]"
+            />
+          </div>
+        </section>
 
         <section className="bg-white/5 backdrop-blur-md border border-[#1E293B] rounded-3xl p-6">
           <h3 className="text-[#94A3B8] font-semibold mb-5">
@@ -70,29 +137,25 @@ function Dashboard() {
           </h3>
 
           <div className="space-y-5">
-            <ActivityItem
-              color="bg-green-400"
-              title="New booking from Breia m John"
-              subtitle="Hair appointment on May 22, 2026"
-              time="2m ago"
-            />
-
-            <ActivityItem
-              color="bg-blue-400"
-              title="Payment received"
-              subtitle="$120 for Nail appointment"
-              time="1h ago"
-            />
-
-            <ActivityItem
-              color="bg-purple-400"
-              title="Client Breia m John updated"
-              subtitle="Contact information updated"
-              time="3h ago"
-            />
+            {recentBookings.length === 0 ? (
+              <p className="text-[#94A3B8]">
+                No recent activity yet.
+              </p>
+            ) : (
+              recentBookings.map((booking) => (
+                <ActivityItem
+                  key={booking.id}
+                  color="bg-green-400"
+                  title={`New booking from ${booking.client_name}`}
+                  subtitle={`${booking.service || "Service"} on ${
+                    booking.date || "No date"
+                  }`}
+                  time={booking.status || "Pending"}
+                />
+              ))
+            )}
           </div>
         </section>
-
       </div>
     </DashboardLayout>
   )
@@ -108,9 +171,12 @@ function OverviewCard({ icon, value, label }) {
   )
 }
 
-function ActionCard({ icon, label, color }) {
+function ActionCard({ to, icon, label, color }) {
   return (
-    <button className="group w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 flex items-center justify-between hover:border-[#A68A72] hover:bg-[#111C33] transition duration-300">
+    <Link
+      to={to}
+      className="group w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 flex items-center justify-between hover:border-[#A68A72] hover:bg-[#111C33] transition duration-300"
+    >
       <div className="flex items-center gap-4">
         <div
           className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center text-lg`}
@@ -126,39 +192,7 @@ function ActionCard({ icon, label, color }) {
       <span className="inline-block text-[#64748B] group-hover:translate-x-1 transition-transform duration-300">
         →
       </span>
-    </button>
-  )
-}
-
-function AppointmentRow({ name, service, status, date, time }) {
-  return (
-    <div className="bg-[#0F172A] border border-[#334155] rounded-2xl p-4 flex items-center justify-between gap-4">
-      <div className="flex items-center gap-4">
-        <div className="bg-[#A68A72] w-12 h-12 rounded-full flex items-center justify-center font-bold">
-          BJ
-        </div>
-
-        <div>
-          <p className="font-semibold">{name}</p>
-          <div className="flex gap-2 mt-1">
-            <span className="bg-[#E8D8C4] text-[#6F4E37] px-3 py-1 rounded-full text-xs">
-              {service}
-            </span>
-
-            <span className="bg-green-900/50 text-green-300 px-3 py-1 rounded-full text-xs">
-              {status}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="hidden md:flex items-center gap-6 text-[#94A3B8]">
-        <span>📅 {date}</span>
-        <span>🕒 {time}</span>
-      </div>
-
-      <span className="text-[#94A3B8]">›</span>
-    </div>
+    </Link>
   )
 }
 
