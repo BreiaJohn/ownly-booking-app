@@ -170,7 +170,21 @@ function Bookings() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InfoCard label="Date" value={selectedBooking.date || "No date"} />
+        <InfoCard
+  label="Date"
+  value={
+    selectedBooking.date
+      ? new Date(selectedBooking.date).toLocaleDateString(
+          "en-US",
+          {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }
+        )
+      : "No date"
+  }
+/>
         <InfoCard label="Time" value={selectedBooking.time || "No time"} />
         <InfoCard label="Phone" value={selectedBooking.phone || "No phone"} />
         <InfoCard label="Email" value={selectedBooking.email || "No email"} />
