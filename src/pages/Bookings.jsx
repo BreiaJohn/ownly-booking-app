@@ -146,17 +146,7 @@ function Bookings() {
     {showCalendar ? "Hide Calendar" : "Show Calendar"}
   </button>
 </div>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <div>
-              <h2 className="text-2xl font-semibold">
-                Weekly Calendar
-              </h2>
-
-              <p className="text-[#94A3B8] mt-1">
-                View bookings for the selected week.
-              </p>
-            </div>
-
+          <div className="flex items-center gap-4">
             <input
               type="date"
               value={selectedDate}
