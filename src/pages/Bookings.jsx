@@ -146,7 +146,13 @@ function Bookings() {
               className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
             />
           </div>
-          {showCalendar && (
+<div
+  className={`transition-all duration-500 ease-in-out overflow-hidden ${
+    showCalendar
+      ? "max-h-[2000px] opacity-100 mt-6"
+      : "max-h-0 opacity-0"
+  }`}
+>
           <div className="min-w-[1100px]">
             <div className="grid grid-cols-8 gap-4 mb-4">
               <div />
@@ -210,7 +216,7 @@ function Bookings() {
               ))}
             </div>
           </div>
-         )}
+  </div>
      
  </div>
 
