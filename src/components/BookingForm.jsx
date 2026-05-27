@@ -179,18 +179,19 @@ const fetchBlockedTimes = async () => {
   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
     {!date && "Select Date"}
   </span>
-
+  
+<div className="relative">
   <input
-  type="date"
-  value={date}
-  onChange={(e) => setDate(e.target.value)}
-  onClick={(e) => {
-    if (window.innerWidth > 768 && e.target.showPicker) {
-      e.target.showPicker()
-    }
-  }}
-  className="w-full rounded-2xl border border-slate-700 bg-[#0f172a] px-4 py-4 text-white outline-none"
+    type="date"
+    value={date}
+    onChange={(e) => setDate(e.target.value)}
+    style={{
+      colorScheme: "dark",
+      WebkitAppearance: "none",
+    }}
+    className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:ring-[#A68A72]"
   />
+</div>
 
 </div>
 
