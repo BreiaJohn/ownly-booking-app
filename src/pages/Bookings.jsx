@@ -87,6 +87,25 @@ function Bookings() {
     })
   }
 
+  const getBookingCardClass = (status) => {
+  if (status === "Confirmed") {
+    return "bg-green-500/20 border-green-400/30 text-green-100"
+  }
+
+  if (status === "Pending") {
+    return "bg-yellow-500/20 border-yellow-400/30 text-yellow-100"
+  }
+
+  if (status === "Completed") {
+    return "bg-purple-500/20 border-purple-400/30 text-purple-100"
+  }
+
+  if (status === "Cancelled") {
+    return "bg-red-500/20 border-red-400/30 text-red-100"
+  }
+
+  return "bg-white/5 border-[#334155] text-white"
+}
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-[#0F172A] text-white">
@@ -198,7 +217,9 @@ function Bookings() {
                             onClick={() =>
                               setSelectedBooking(booking)
                             }
-                            className="w-full text-left bg-[#1E293B] border border-[#334155] rounded-xl p-3 hover:border-[#A68A72] transition"
+                            className={`w-full text-left border rounded-xl p-3 hover:border-[#A68A72] hover:bg-white/10 transition ${getBookingCardClass(
+  booking.status
+)}`}
                           >
                             <p className="font-medium text-sm">
                               {booking.client_name}
