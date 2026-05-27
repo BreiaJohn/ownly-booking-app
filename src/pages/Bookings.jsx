@@ -139,12 +139,31 @@ function Bookings() {
     </p>
   </div>
 
-  <button
-    onClick={() => setShowCalendar(!showCalendar)}
-    className="bg-[#020617] border border-[#334155] px-4 py-2 rounded-xl hover:border-[#A68A72] transition"
-  >
+<button
+  onClick={() => setShowCalendar(!showCalendar)}
+  className="flex items-center gap-2 bg-[#020617] border border-[#334155] px-4 py-2 rounded-xl hover:border-[#A68A72] transition"
+>
+  <span>
     {showCalendar ? "Hide Calendar" : "Show Calendar"}
-  </button>
+  </span>
+
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`w-5 h-5 transition-transform duration-300 ${
+      showCalendar ? "rotate-180" : ""
+    }`}
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M19 9l-7 7-7-7"
+    />
+  </svg>
+</button>
 </div>
           <div className="flex items-center gap-4">
             <input
