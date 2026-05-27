@@ -9,17 +9,35 @@ function Bookings() {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   )
-  const [dayBookings, setDayBookings] = useState([])
+  const [weekBookings, setWeekBookings] = useState([])
+
+  const getWeekDates = (dateString) => {
+    const date = new Date(dateString)
+    const day = date.getDay()
+    const sunday = new Date(date)
+    sunday.setDate(date.getDate() - day)
+
+    return Array.from({ length: 7 }, (_, index) => {
+      const current = new Date(sunday)
+      current.setDate(sunday.getDate() + index)
+
+      return current.toISOString().split("T")[0]
+    })
+  }
+
+  const weekDates = getWeekDates(selectedDate)
 
   useEffect(() => {
-    fetchDayBookings()
+    fetchWeekBookings()
   }, [selectedDate])
 
-  const fetchDayBookings = async () => {
+  const fetchWeekBookings = async () => {
     const { data, error } = await supabase
       .from("bookings")
       .select("*")
-      .eq("date", selectedDate)
+      .gte("date", weekDates[0])
+      .lte("date", weekDates[6])
+      .order("date", { ascending: true })
       .order("time", { ascending: true })
 
     if (error) {
@@ -27,7 +45,15 @@ function Bookings() {
       return
     }
 
-    setDayBookings(data)
+    setWeekBookings(data)
+  }
+
+  const formatDay = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    })
   }
 
   return (
@@ -55,11 +81,11 @@ function Bookings() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h2 className="text-2xl font-semibold">
-                Calendar View
+                Weekly Calendar
               </h2>
 
               <p className="text-[#94A3B8] mt-1">
-                View bookings by selected date.
+                View bookings for the selected week.
               </p>
             </div>
 
@@ -72,41 +98,50 @@ function Bookings() {
             />
           </div>
 
-          <div className="space-y-4">
-            {dayBookings.length === 0 ? (
-              <div className="border border-dashed border-[#334155] rounded-2xl p-8 text-center">
-                <p className="text-[#94A3B8]">
-                  No bookings for this date.
-                </p>
-              </div>
-            ) : (
-              dayBookings.map((booking) => (
+          <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
+            {weekDates.map((date) => {
+              const bookingsForDay = weekBookings.filter(
+                (booking) => booking.date === date
+              )
+
+              return (
                 <div
-                  key={booking.id}
-                  className="bg-[#0F172A] border border-[#334155] rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                  key={date}
+                  className="bg-[#0F172A] border border-[#334155] rounded-2xl p-4 min-h-40"
                 >
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      {booking.client_name}
-                    </h3>
+                  <h3 className="font-semibold mb-4">
+                    {formatDay(date)}
+                  </h3>
 
-                    <p className="text-[#94A3B8]">
-                      {booking.service}
-                    </p>
-                  </div>
+                  <div className="space-y-3">
+                    {bookingsForDay.length === 0 ? (
+                      <p className="text-[#64748B] text-sm">
+                        No bookings
+                      </p>
+                    ) : (
+                      bookingsForDay.map((booking) => (
+                        <div
+                          key={booking.id}
+                          className="bg-white/5 border border-[#334155] rounded-xl p-3"
+                        >
+                          <p className="font-medium text-sm">
+                            {booking.client_name}
+                          </p>
 
-                  <div className="flex items-center gap-3">
-                    <span className="text-[#94A3B8]">
-                      🕒 {booking.time}
-                    </span>
+                          <p className="text-[#94A3B8] text-xs mt-1">
+                            {booking.service}
+                          </p>
 
-                    <span className="bg-green-500/20 text-green-200 border border-green-400/20 px-3 py-1 rounded-full text-sm">
-                      {booking.status || "Pending"}
-                    </span>
+                          <p className="text-[#94A3B8] text-xs mt-2">
+                            🕒 {booking.time}
+                          </p>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
-              ))
-            )}
+              )
+            })}
           </div>
         </section>
 
