@@ -26,6 +26,7 @@ function Bookings() {
   }
 
   const weekDates = getWeekDates(selectedDate)
+  const [selectedBooking, setSelectedBooking] = useState(null)
 
   useEffect(() => {
     fetchWeekBookings()
@@ -120,10 +121,11 @@ function Bookings() {
                       </p>
                     ) : (
                       bookingsForDay.map((booking) => (
-                        <div
-                          key={booking.id}
-                          className="bg-white/5 border border-[#334155] rounded-xl p-3"
-                        >
+                        <button
+  key={booking.id}
+  onClick={() => setSelectedBooking(booking)}
+  className="w-full text-left bg-white/5 border border-[#334155] rounded-xl p-3 hover:border-[#A68A72] hover:bg-white/10 transition"
+>
                           <p className="font-medium text-sm">
                             {booking.client_name}
                           </p>
@@ -135,7 +137,7 @@ function Bookings() {
                           <p className="text-[#94A3B8] text-xs mt-2">
                             🕒 {booking.time}
                           </p>
-                        </div>
+                     </button>
                       ))
                     )}
                   </div>
@@ -145,6 +147,49 @@ function Bookings() {
           </div>
         </section>
 
+            {selectedBooking && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+    <div className="bg-[#0F172A] border border-[#334155] rounded-3xl shadow-xl w-full max-w-xl p-6">
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold">
+            {selectedBooking.client_name}
+          </h2>
+
+          <p className="text-[#94A3B8] mt-1">
+            {selectedBooking.service}
+          </p>
+        </div>
+
+        <button
+          onClick={() => setSelectedBooking(null)}
+          className="text-[#94A3B8] hover:text-white text-2xl"
+        >
+          ×
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InfoCard label="Date" value={selectedBooking.date || "No date"} />
+        <InfoCard label="Time" value={selectedBooking.time || "No time"} />
+        <InfoCard label="Phone" value={selectedBooking.phone || "No phone"} />
+        <InfoCard label="Email" value={selectedBooking.email || "No email"} />
+        <InfoCard label="Status" value={selectedBooking.status || "Pending"} />
+        <InfoCard
+          label="Amount"
+          value={`$${selectedBooking.amount || 0}`}
+        />
+      </div>
+
+      {selectedBooking.notes && (
+        <div className="bg-white/5 border border-[#334155] rounded-2xl p-4 mt-4">
+          <p className="text-[#94A3B8] text-sm">Notes</p>
+          <p className="text-white mt-1">{selectedBooking.notes}</p>
+        </div>
+      )}
+    </div>
+  </div>
+)}
         <BookingForm />
 
         <div className="mt-8">
@@ -152,6 +197,15 @@ function Bookings() {
         </div>
       </div>
     </DashboardLayout>
+  )
+}
+
+function InfoCard({ label, value }) {
+  return (
+    <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
+      <p className="text-[#94A3B8] text-sm">{label}</p>
+      <p className="text-white mt-1">{value}</p>
+    </div>
   )
 }
 
