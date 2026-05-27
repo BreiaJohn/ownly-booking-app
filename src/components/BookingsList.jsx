@@ -124,6 +124,9 @@ function BookingsList() {
       phone: selectedBooking.phone,
       status: selectedBooking.status,
       notes: selectedBooking.notes,
+      amount: selectedBooking.amount,
+payment_status: selectedBooking.payment_status,
+payment_method: selectedBooking.payment_method,
     })
     .eq("id", selectedBooking.id)
 
@@ -502,6 +505,52 @@ function BookingsList() {
                 <option value="Completed">Completed</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
+
+              <input
+  type="number"
+  placeholder="Amount"
+  value={selectedBooking.amount || ""}
+  onChange={(e) =>
+    setSelectedBooking({
+      ...selectedBooking,
+      amount: e.target.value,
+    })
+  }
+  className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+/>
+
+<select
+  value={selectedBooking.payment_status || "Pending"}
+  onChange={(e) =>
+    setSelectedBooking({
+      ...selectedBooking,
+      payment_status: e.target.value,
+    })
+  }
+  className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+>
+  <option value="Pending">Pending</option>
+  <option value="Paid">Paid</option>
+  <option value="Unpaid">Unpaid</option>
+</select>
+
+<select
+  value={selectedBooking.payment_method || ""}
+  onChange={(e) =>
+    setSelectedBooking({
+      ...selectedBooking,
+      payment_method: e.target.value,
+    })
+  }
+  className="bg-[#020617] border border-[#334155] text-white rounded-2xl px-4 py-3 outline-none"
+>
+  <option value="">Payment Method</option>
+  <option value="Cash">Cash</option>
+  <option value="Card">Card</option>
+  <option value="Apple Pay">Apple Pay</option>
+  <option value="Cash App">Cash App</option>
+  <option value="Zelle">Zelle</option>
+</select>
 
               <textarea
                 value={selectedBooking.notes || ""}
