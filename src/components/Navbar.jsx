@@ -8,13 +8,18 @@ function Navbar() {
 
   return (
     <nav className="bg-[#0F172A] border-b border-[#1E293B] px-6 md:px-16 relative z-50">
-      <div className="flex items-center justify-between h-24">
-        <img
-          src={logo}
-          alt="Ownly Logo"
-          className="h-24 w-auto object-contain cursor-pointer"
+      <div className="flex items-center justify-between h-28">
+        <div
           onClick={() => navigate("/")}
-        />
+          className="flex items-center gap-3 cursor-pointer"
+        >
+         <img
+  src={logo}
+  alt="Ownly"
+  className="h-32 w-auto"
+/>
+
+        </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm text-[#94A3B8]">
           <a href="#features" className="hover:text-white transition">
@@ -31,7 +36,7 @@ function Navbar() {
 
           <button
             onClick={() => navigate("/login")}
-            className="bg-[#A68A72] text-white px-5 py-3 rounded-2xl hover:opacity-90 transition"
+            className="border border-blue-500/30 bg-blue-500/10 text-blue-300 px-4 py-2 rounded-full text-sm transition-all duration-300 hover:bg-blue-500/20 hover:border-blue-400/50 hover:text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.25)]"
           >
             Login
           </button>
@@ -76,7 +81,7 @@ function Navbar() {
               navigate("/login")
               setMenuOpen(false)
             }}
-            className="bg-[#A68A72] text-white py-3 rounded-2xl"
+            className="border border-blue-500/30 bg-blue-500/10 text-blue-300 py-3 rounded-full text-sm transition-all duration-300 hover:bg-blue-500/20 hover:text-white"
           >
             Login
           </button>

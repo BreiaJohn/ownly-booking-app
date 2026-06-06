@@ -9,8 +9,8 @@ function Home() {
     <>
       <Hero />
       <Features />
-      <Testimonials />
       <Pricing />
+      <Testimonials />
       <Footer />
     </>
   )

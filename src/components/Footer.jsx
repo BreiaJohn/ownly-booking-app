@@ -1,14 +1,42 @@
+import logo from "../assets/ownly-logo.png"
+
 function Footer() {
   return (
-    <footer className="border-t border-[#E7E1D9] mt-24">
-      <div className="max-w-7xl mx-auto px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-[#1E1E1E]">
-          OWNLY
-        </h2>
+    <footer className="border-t border-[#334155] bg-[#020617]">
+      <div className="max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
 
-        <p className="text-[#8B6F5A] text-sm">
+        <div className="flex items-center gap-3">
+          <img
+            src={logo}
+            alt="Ownly Logo"
+            className="h-10 w-auto"
+          />
+
+          <div>
+            <h2 className="text-white font-semibold">
+              OWNLY
+            </h2>
+
+            <p className="text-xs text-[#94A3B8]">
+              Own your bookings. Own your business.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs bg-blue-500/10 text-blue-300 border border-blue-500/20 px-3 py-1 rounded-full">
+            Booking Platform
+          </span>
+
+          <span className="text-xs bg-green-500/10 text-green-300 border border-green-500/20 px-3 py-1 rounded-full">
+            Live
+          </span>
+        </div>
+
+        <p className="text-sm text-[#94A3B8]">
           © 2026 Ownly. All rights reserved.
         </p>
+
       </div>
     </footer>
   )
