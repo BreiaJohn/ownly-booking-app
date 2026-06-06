@@ -27,9 +27,14 @@ function App(){
     "/settings",
   ]
 
-  const shouldHideNavbar =
-    hideNavbarRoutes.includes(location.pathname)
-
+ const shouldHideNavbar =
+  location.pathname.startsWith("/login") ||
+  location.pathname.startsWith("/dashboard") ||
+  location.pathname.startsWith("/bookings") ||
+  location.pathname.startsWith("/clients") ||
+  location.pathname.startsWith("/payments") ||
+  location.pathname.startsWith("/settings") ||
+  location.pathname.startsWith("/book")
   return (
   <>
     <Toaster position="top-right" />
@@ -87,6 +92,12 @@ function App(){
       </ProtectedRoute>
     }
   />
+
+<Route
+  path="/book"
+  element={<PublicBooking />}
+/>
+
   <Route
   path="/book/:username"
   element={<PublicBooking />}

@@ -28,7 +28,7 @@ function DashboardLayout({ children }) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <Sidebar />
+        <Sidebar closeSidebar={() => setSidebarOpen(false)} />
       </div>
 
       <main className="flex-1 h-screen overflow-y-auto p-4 md:p-10 pt-20 md:pt-10">

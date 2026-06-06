@@ -3,7 +3,7 @@ import logo from "../assets/ownly-logo.png"
 
 function Sidebar() {
   return (
-<aside className="hidden md:flex md:flex-col md:w-72 h-screen overflow-y-auto bg-[#111827] border-r border-[#1E293B] px-6 py-8">
+<aside className="flex flex-col w-72 h-screen overflow-y-auto bg-[#111827] border-r border-[#1E293B] px-6 py-8">
   <div className="mb-14 flex items-center justify-center md:justify-start">
   <img
     src={logo}
