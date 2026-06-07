@@ -2,11 +2,10 @@ import { useEffect, useState } from "react"
 import DashboardLayout from "../layouts/DashboardLayout"
 import { supabase } from "../lib/supabase"
 
-
 function Clients() {
   const [clients, setClients] = useState([])
   const [selectedClient, setSelectedClient] = useState(null)
-
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
     fetchClients()
@@ -26,9 +25,12 @@ function Clients() {
     const groupedClients = Object.values(
       data.reduce((acc, booking) => {
         const name = booking.client_name || "Unknown Client"
+        const phone = booking.phone || "No phone"
+        const email = booking.email || "No email"
+        const clientKey = `${name}-${phone}-${email}`
 
-        if (!acc[name]) {
-          acc[name] = {
+        if (!acc[clientKey]) {
+          acc[clientKey] = {
             name,
             phone: booking.phone,
             email: booking.email,
@@ -39,11 +41,15 @@ function Clients() {
           }
         }
 
-        acc[name].totalBookings += 1
-        acc[name].bookings.push(booking)
+        acc[clientKey].totalBookings += 1
+        acc[clientKey].bookings.push(booking)
 
-        if (booking.service && !acc[name].services.includes(booking.service)) {
-          acc[name].services.push(booking.service)
+        if (booking.service && !acc[clientKey].services.includes(booking.service)) {
+          acc[clientKey].services.push(booking.service)
+        }
+
+        if (booking.date && booking.date > acc[clientKey].lastAppointment) {
+          acc[clientKey].lastAppointment = booking.date
         }
 
         return acc
@@ -62,43 +68,175 @@ function Clients() {
       .toUpperCase()
   }
 
+  const formatPhone = (phone) => {
+    if (!phone) return "No phone"
+
+    const cleaned = String(phone).replace(/\D/g, "")
+
+    if (cleaned.length === 10) {
+      return `${cleaned.slice(0, 3)} - ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`
+    }
+
+    return String(phone)
+  }
+
+  const getClientStatus = (client) => {
+    if (client.totalBookings >= 5) return "VIP"
+    if (client.totalBookings > 1) return "Returning"
+    return "New"
+  }
+
+  const getFavoriteService = (client) => {
+    return client.services[0] || "No favorite yet"
+  }
+
+  const filteredClients = clients.filter((client) => {
+    const search = searchTerm.toLowerCase()
+
+    return (
+      client.name?.toLowerCase().includes(search) ||
+      client.phone?.toLowerCase().includes(search) ||
+      client.email?.toLowerCase().includes(search)
+    )
+  })
+
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-[#0F172A] text-white">
-        <h1 className="text-3xl font-semibold mb-2">
-          Clients
-        </h1>
+        <h1 className="text-3xl font-semibold mb-2">Clients</h1>
 
         <p className="text-[#94A3B8] mb-8">
           View your client list and booking history.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {clients.map((client) => (
-            <button
-              key={client.name}
-              onClick={() => setSelectedClient(client)}
-              className="text-left bg-white/5 border border-[#334155] rounded-3xl p-6 hover:border-[#A68A72] hover:bg-white/10 transition duration-300"
-            >
-              <div className="flex items-center gap-5">
-                <div className="w-20 h-20 rounded-full bg-[#111827] border border-[#334155] flex items-center justify-center text-3xl font-semibold text-white">
-                  {getInitials(client.name)}
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="bg-white/5 border border-[#334155] rounded-3xl p-5">
+            <p className="text-[#94A3B8] text-sm">Total Clients</p>
+            <p className="text-3xl font-semibold mt-2">{clients.length}</p>
+          </div>
 
-                <div>
-                  <h2 className="text-2xl font-semibold text-white">
-                    {client.name}
-                  </h2>
+          <div className="bg-white/5 border border-[#334155] rounded-3xl p-5">
+            <p className="text-[#94A3B8] text-sm">Total Bookings</p>
+            <p className="text-3xl font-semibold mt-2">
+              {clients.reduce((sum, client) => sum + client.totalBookings, 0)}
+            </p>
+          </div>
 
-                  <p className="text-[#94A3B8] text-lg mt-1">
-                    {client.totalBookings} booking
-                    {client.totalBookings !== 1 ? "s" : ""}
-                  </p>
-                </div>
-              </div>
-            </button>
-          ))}
+          <div className="bg-white/5 border border-[#334155] rounded-3xl p-5">
+            <p className="text-[#94A3B8] text-sm">Returning Clients</p>
+            <p className="text-3xl font-semibold mt-2">
+              {clients.filter((client) => client.totalBookings > 1).length}
+            </p>
+          </div>
         </div>
+
+        <div className="mb-6">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search clients by name, phone, or email..."
+            className="w-full bg-white/5 border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#64748B] outline-none focus:border-[#A68A72] transition"
+          />
+        </div>
+
+        <div className="bg-white/5 border border-[#334155] rounded-3xl overflow-hidden">
+          {filteredClients.map((client, index) => {
+            const status = getClientStatus(client)
+            const favoriteService = getFavoriteService(client)
+
+            return (
+              <button
+                key={`${client.name}-${client.phone}-${client.email}`}
+                onClick={() => setSelectedClient(client)}
+                className={`w-full text-left px-6 py-6 hover:bg-white/5 transition ${
+                  index !== filteredClients.length - 1
+                    ? "border-b border-[#334155]"
+                    : ""
+                }`}
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.8fr_1fr_0.7fr] gap-6 items-center">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="w-14 h-14 rounded-full bg-[#111827] border border-[#334155] flex items-center justify-center text-lg font-semibold text-white shrink-0">
+                      {getInitials(client.name)}
+                    </div>
+
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold text-white truncate">
+                        {client.name}
+                      </h3>
+
+                      <p className="text-sm text-[#94A3B8] mt-1">
+                        {client.totalBookings} booking
+                        {client.totalBookings !== 1 ? "s" : ""} • Last visit{" "}
+                        {client.lastAppointment || "No date"}
+                      </p>
+
+                      <p className="text-sm text-[#94A3B8] mt-2">
+                        Favorite:{" "}
+                        <span className="text-purple-300 font-medium">
+                          {favoriteService}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span
+                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border ${
+                        status === "VIP"
+                          ? "bg-blue-500/20 text-blue-300 border-blue-400/30"
+                          : status === "Returning"
+                          ? "bg-green-500/20 text-green-300 border-green-400/30"
+                          : "bg-yellow-500/20 text-yellow-300 border-yellow-400/30"
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-current" />
+                      {status}
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between text-sm text-[#94A3B8] mb-2">
+                      <span>Client Loyalty</span>
+                      <span>{client.totalBookings}</span>
+                    </div>
+
+                    <div className="h-2 bg-[#111827] rounded-full overflow-hidden border border-[#334155]">
+                      <div
+                        className="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full"
+                        style={{
+                          width: `${Math.min(client.totalBookings * 20, 100)}%`,
+                        }}
+                      />
+                    </div>
+
+                    <p className="text-xs text-[#64748B] mt-2">
+                      Keep it up! Building loyalty ✨
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between lg:justify-end gap-4">
+                    <p className="text-xs text-[#64748B] bg-white/5 border border-[#334155] px-3 py-2 rounded-full">
+                      Last visit: {client.lastAppointment || "No date"}
+                    </p>
+
+                    <span className="text-[#94A3B8] text-2xl">›</span>
+                  </div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+
+        {filteredClients.length === 0 && (
+          <div className="bg-white/5 border border-[#334155] rounded-3xl p-10 text-center mt-6">
+            <p className="text-2xl mb-2">No clients found</p>
+            <p className="text-[#94A3B8]">
+              Try searching by a different name, phone number, or email.
+            </p>
+          </div>
+        )}
 
         {selectedClient && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
@@ -133,7 +271,7 @@ function Clients() {
                 <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
                   <p className="text-[#94A3B8] text-sm">Phone</p>
                   <p className="text-white mt-1">
-                    {selectedClient.phone || "No phone"}
+                    {formatPhone(selectedClient.phone)}
                   </p>
                 </div>
 
@@ -171,9 +309,7 @@ function Clients() {
                 </div>
               </div>
 
-              <h3 className="text-lg font-semibold mb-3">
-                Booking History
-              </h3>
+              <h3 className="text-lg font-semibold mb-3">Booking History</h3>
 
               <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                 {selectedClient.bookings.map((booking) => (
