@@ -65,7 +65,7 @@ const fetchBusinessSettings = async () => {
     console.log(error)
   }
 
-  console.log("businessSettings:", businessSettings)
+  // console.log("businessSettings:", businessSettings)
 console.log("timeSlots:", timeSlots)
 console.log("bookedTimes:", bookedTimes)
 console.log("blockedTimes:", blockedTimes)
@@ -181,24 +181,25 @@ const fetchBlockedTimes = async () => {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
- <div className="relative">
-  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-    {!date && "Select Date"}
-  </span>
-  
 <div className="relative">
   <input
-    type="date"
+    type={date ? "date" : "text"}
     value={date}
+    placeholder="Select Date"
+    onFocus={(e) => {
+      e.target.type = "date"
+      e.target.showPicker?.()
+    }}
+    onBlur={(e) => {
+      if (!date) e.target.type = "text"
+    }}
     onChange={(e) => setDate(e.target.value)}
     style={{
       colorScheme: "dark",
       WebkitAppearance: "none",
     }}
-    className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:ring-[#A68A72]"
+    className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-[#A68A72]"
   />
-</div>
-
 </div>
 
 <select

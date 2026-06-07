@@ -163,14 +163,19 @@ function Dashboard() {
 
 function OverviewCard({ icon, value, label }) {
   return (
-    <div className="bg-[#0F172A] border border-[#334155] rounded-2xl p-5">
-      <div className="mb-5 text-2xl">{icon}</div>
-      <p className="text-3xl font-bold">{value}</p>
-      <p className="text-[#94A3B8] mt-2">{label}</p>
+    <div className="bg-[#0F172A] border border-[#334155] rounded-2xl p-4 min-w-0 overflow-hidden">
+      <div className="mb-4 text-2xl">{icon}</div>
+
+      <p className="text-2xl sm:text-3xl font-bold truncate whitespace-nowrap">
+        {value}
+      </p>
+
+      <p className="text-[#94A3B8] mt-2 text-sm leading-tight">
+        {label}
+      </p>
     </div>
   )
 }
-
 function ActionCard({ to, icon, label, color }) {
   return (
     <Link

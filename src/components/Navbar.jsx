@@ -8,17 +8,16 @@ function Navbar() {
 
   return (
     <nav className="bg-[#0F172A] border-b border-[#1E293B] px-6 md:px-16 relative z-50">
-      <div className="flex items-center justify-between h-28">
+      <div className="relative flex items-center justify-center md:justify-between h-28">
         <div
           onClick={() => navigate("/")}
-          className="flex items-center gap-3 cursor-pointer"
+          className="flex items-center justify-center cursor-pointer"
         >
-         <img
-  src={logo}
-  alt="Ownly"
-  className="h-32 w-auto"
-/>
-
+          <img
+            src={logo}
+            alt="Ownly"
+            className="h-24 md:h-32 w-auto"
+          />
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm text-[#94A3B8]">
@@ -44,35 +43,23 @@ function Navbar() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-white text-3xl"
+          className="md:hidden absolute right-0 text-white text-3xl"
         >
           ☰
         </button>
       </div>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col gap-6 pb-6 text-[#94A3B8] text-sm">
-          <a
-            href="#features"
-            className="hover:text-white transition"
-            onClick={() => setMenuOpen(false)}
-          >
+        <div className="md:hidden flex flex-col gap-6 pb-6 text-[#94A3B8] text-sm text-center">
+          <a href="#features" onClick={() => setMenuOpen(false)}>
             Features
           </a>
 
-          <a
-            href="#pricing"
-            className="hover:text-white transition"
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href="#pricing" onClick={() => setMenuOpen(false)}>
             Pricing
           </a>
 
-          <a
-            href="#testimonials"
-            className="hover:text-white transition"
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href="#testimonials" onClick={() => setMenuOpen(false)}>
             Reviews
           </a>
 
