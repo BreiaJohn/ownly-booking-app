@@ -80,6 +80,16 @@ function Clients() {
     return String(phone)
   }
 
+  const formatDate = (date) => {
+    if (!date) return "No date"
+
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
   const getClientStatus = (client) => {
     if (client.totalBookings >= 5) return "VIP"
     if (client.totalBookings > 1) return "Returning"
@@ -155,7 +165,7 @@ function Clients() {
                     : ""
                 }`}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.8fr_1fr_0.7fr] gap-6 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.8fr_1fr_0.8fr] gap-6 items-center">
                   <div className="flex items-center gap-4 min-w-0">
                     <div className="w-14 h-14 rounded-full bg-[#111827] border border-[#334155] flex items-center justify-center text-lg font-semibold text-white shrink-0">
                       {getInitials(client.name)}
@@ -169,7 +179,7 @@ function Clients() {
                       <p className="text-sm text-[#94A3B8] mt-1">
                         {client.totalBookings} booking
                         {client.totalBookings !== 1 ? "s" : ""} • Last visit{" "}
-                        {client.lastAppointment || "No date"}
+                        {formatDate(client.lastAppointment)}
                       </p>
 
                       <p className="text-sm text-[#94A3B8] mt-2">
@@ -217,9 +227,13 @@ function Clients() {
                   </div>
 
                   <div className="flex items-center justify-between lg:justify-end gap-4">
-                    <p className="text-xs text-[#64748B] bg-white/5 border border-[#334155] px-3 py-2 rounded-full">
-                      Last visit: {client.lastAppointment || "No date"}
-                    </p>
+                    <div className="flex items-center gap-3 border border-[#334155] bg-white/5 px-4 py-3 rounded-2xl">
+                      <span className="text-lg">📅</span>
+
+                      <p className="text-sm text-white font-medium whitespace-nowrap">
+                        Last visit: {formatDate(client.lastAppointment)}
+                      </p>
+                    </div>
 
                     <span className="text-[#94A3B8] text-2xl">›</span>
                   </div>
@@ -285,7 +299,7 @@ function Clients() {
                 <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
                   <p className="text-[#94A3B8] text-sm">Last Visit</p>
                   <p className="text-white mt-1">
-                    {selectedClient.lastAppointment || "No date"}
+                    {formatDate(selectedClient.lastAppointment)}
                   </p>
                 </div>
 
