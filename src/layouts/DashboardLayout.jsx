@@ -1,15 +1,28 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Sidebar from "../components/Sidebar"
 
 function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
+
+  useEffect(() => {
+  const handleScroll = () => {
+    setShowScrollTop(window.scrollY > 300)
+  }
+
+  window.addEventListener("scroll", handleScroll)
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll)
+  }
+}, [])
 
   return (
-    <div className="relative flex bg-[#0F172A] h-screen overflow-hidden">
+    <div className="relative flex min-h-screen bg-[#0F172A] overflow-x-hidden">
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-50 md:hidden bg-[#020617] border border-[#334155] text-white px-4 py-3 rounded-2xl"
+        className="fixed bottom-6 left-4 z-50 md:hidden bg-[#020617] border border-[#334155] text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
       >
         ☰
       </button>
@@ -24,16 +37,32 @@ function DashboardLayout({ children }) {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:static inset-y-0 left-0 z-50 transform transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed md:sticky md:top-0 inset-y-0 left-0 z-50 transform transition-transform duration-300 md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <Sidebar closeSidebar={() => setSidebarOpen(false)} />
       </div>
 
-      <main className="flex-1 h-screen overflow-y-auto p-4 md:p-10 pt-20 md:pt-10">
-        {children}
-      </main>
+      {/* Main content */}
+      {/* Main content */}
+<main className="flex-1 min-h-screen overflow-y-auto overflow-x-hidden px-4 py-6 pb-28 md:p-6">
+  {children}
+</main>
+
+{showScrollTop && (
+  <button
+    onClick={() =>
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
+    }
+    className="fixed bottom-6 right-4 z-50 md:hidden bg-[#020617] border border-[#334155] text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
+  >
+    ↑
+  </button>
+)}
     </div>
   )
 }

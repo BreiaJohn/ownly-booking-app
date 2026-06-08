@@ -169,24 +169,15 @@ function BookingForm() {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
-        <div className="relative">
-          {!date && (
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] z-10">
-              Select Date
-            </span>
-          )}
-
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            style={{
-              colorScheme: "dark",
-            }}
-            className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:ring-[#A68A72]"
-          />
-        </div>
-
+        <input
+  type="date"
+  value={date}
+  onChange={(e) => setDate(e.target.value)}
+  style={{ colorScheme: "dark" }}
+  className={`w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 outline-none focus:ring-2 focus:ring-blue-400 ${
+    date ? "text-white" : "text-[#94A3B8]"
+  }`}
+/>
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
