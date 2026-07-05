@@ -169,23 +169,27 @@ function BookingForm() {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
-<div className="relative w-full">
-  {!date && (
-    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none z-10">
-      Choose Date
-    </span>
-  )}
+<button
+  type="button"
+  onClick={() => document.getElementById("booking-date")?.showPicker?.()}
+  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-left text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400"
+>
+  {date
+    ? new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "Choose Date"}
+</button>
 
-  <input
-    type="date"
-    value={date}
-    onChange={(e) => setDate(e.target.value)}
-    style={{ colorScheme: "dark" }}
-    className={`block w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 outline-none focus:ring-2 focus:ring-blue-400 ${
-      date ? "text-white" : "text-transparent"
-    }`}
-  />
-</div>
+<input
+  id="booking-date"
+  type="date"
+  value={date}
+  onChange={(e) => setDate(e.target.value)}
+  className="sr-only"
+/>
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
