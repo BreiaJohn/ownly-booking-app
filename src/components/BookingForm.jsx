@@ -146,7 +146,7 @@ function BookingForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-[#334155] mt-10 shadow-sm"
+      className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md p-5 sm:p-6 rounded-3xl border border-[#334155] mt-10 shadow-sm"
     >
       <h2 className="text-2xl font-bold text-white mb-6">
         Create Booking
@@ -169,12 +169,12 @@ function BookingForm() {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
-        <input
+<input
   type="date"
   value={date}
   onChange={(e) => setDate(e.target.value)}
   style={{ colorScheme: "dark" }}
-  className={`w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 outline-none focus:ring-2 focus:ring-blue-400 ${
+  className={`block w-full max-w-full min-w-0 box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 outline-none focus:ring-2 focus:ring-blue-400 ${
     date ? "text-white" : "text-[#94A3B8]"
   }`}
 />
