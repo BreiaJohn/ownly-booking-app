@@ -170,6 +170,9 @@ function BookingForm() {
         />
 
 <div className="relative w-full">
+  <label className="block text-sm text-[#94A3B8] mb-2">
+    Choose Date
+  </label>
   <input
     type="date"
     value={date}
