@@ -3,6 +3,8 @@ import { supabase } from "../lib/supabase"
 import { useAuth } from "../context/AuthContext"
 import toast from "react-hot-toast"
 import { generateTimeSlots } from "../utils/generateTimeSlots"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 function BookingForm() {
   const { session } = useAuth()
@@ -169,26 +171,15 @@ function BookingForm() {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
-<button
-  type="button"
-  onClick={() => document.getElementById("booking-date")?.showPicker?.()}
-  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-left text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400"
->
-  {date
-    ? new Date(date).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "Choose Date"}
-</button>
-
-<input
-  id="booking-date"
-  type="date"
-  value={date}
-  onChange={(e) => setDate(e.target.value)}
-  className="sr-only"
+<DatePicker
+  selected={date ? new Date(date) : null}
+  onChange={(selectedDate) => {
+    if (!selectedDate) return
+    setDate(selectedDate.toISOString().split("T")[0])
+  }}
+  placeholderText="Choose Date"
+  dateFormat="MMM d, yyyy"
+  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400"
 />
         <select
           value={time}
