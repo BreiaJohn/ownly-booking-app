@@ -144,11 +144,14 @@ function BookingForm() {
     setPhone("")
     setEmail("")
   }
+  const inputStyle =
+  "w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
 
   return (
-    <form
-      onSubmit={handleSubmit}
-className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-300/50 transition">
+  <form
+  onSubmit={handleSubmit}
+  className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-blue-400/20 mt-6 shadow-[0_0_40px_rgba(59,130,246,0.10)]"
+>
       <h2 className="text-2xl font-bold text-white mb-6">
         Create Booking
       </h2>
@@ -159,7 +162,7 @@ className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-
           placeholder="Client Name"
           value={clientName}
           onChange={(e) => setClientName(e.target.value)}
-          className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
+          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
         />
 
         <input
@@ -167,7 +170,7 @@ className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-
           placeholder="Service"
           value={service}
           onChange={(e) => setService(e.target.value)}
-    className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-300/50 transition"
+  className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
         />
 
 <DatePicker
@@ -178,12 +181,12 @@ className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-
   }}
   placeholderText="Choose Date"
   dateFormat="MMM d, yyyy"
-  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400"
+ className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
 />
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-300/50 transition"
+          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
         >
           <option value="">Select Time</option>
 
@@ -199,7 +202,7 @@ className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-
           placeholder="Phone Number"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
+          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
         />
 
         <input
@@ -207,7 +210,7 @@ className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-
           placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
+          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
         />
 
         <button
