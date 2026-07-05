@@ -341,10 +341,10 @@ const getStatusDot = (status) => {
               </div>
 
               <div className="mt-6">
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <h3 className="text-lg font-semibold">
-                    Bookings for {selectedDayLabel}
-                  </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                 <h3 className="text-xl sm:text-lg font-semibold leading-tight break-words">
+  Bookings for {selectedDayLabel}
+</h3>
 
                   <button
                     onClick={() => {
@@ -447,9 +447,9 @@ const getStatusDot = (status) => {
           </div>
         )}
 
-        <div id="create-booking">
-          <BookingForm />
-        </div>
+       <div id="create-booking" className="w-full max-w-full overflow-hidden">
+  <BookingForm />
+</div>
 
 
       </div>
