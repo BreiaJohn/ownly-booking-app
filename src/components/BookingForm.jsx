@@ -146,7 +146,7 @@ function BookingForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md p-5 sm:p-6 rounded-3xl border border-[#334155] mt-10 shadow-sm"
+   className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-[#334155] mt-6 shadow-sm"
     >
       <h2 className="text-2xl font-bold text-white mb-6">
         Create Booking

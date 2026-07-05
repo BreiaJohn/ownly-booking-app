@@ -395,7 +395,7 @@ function Bookings() {
           </div>
         )}
 
-        <div id="create-booking" className="w-full overflow-hidden">
+        <div id="create-booking" className="w-full max-w-full overflow-hidden">
           <BookingForm />
         </div>
       </div>
