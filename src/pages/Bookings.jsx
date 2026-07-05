@@ -297,9 +297,15 @@ function Bookings() {
 
               <div className="mt-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-                  <h3 className="text-xl font-semibold leading-tight">
-                    Bookings for {selectedDayLabel}
-                  </h3>
+                <div>
+  <p className="text-[#94A3B8] text-sm mb-1">
+    Selected day
+  </p>
+
+  <h3 className="text-xl font-semibold leading-tight break-words">
+    {selectedDayLabel}
+  </h3>
+</div>
 
                   <button
                     onClick={() => {
