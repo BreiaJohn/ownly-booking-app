@@ -170,16 +170,19 @@ function BookingForm() {
         />
 
 <div className="relative w-full">
-  <label className="block text-sm text-[#94A3B8] mb-2">
-    Choose Date
-  </label>
+  {!date && (
+    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none z-10">
+      Choose Date
+    </span>
+  )}
+
   <input
     type="date"
     value={date}
     onChange={(e) => setDate(e.target.value)}
     style={{ colorScheme: "dark" }}
-    className={`w-full appearance-none bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 pr-12 outline-none focus:ring-2 focus:ring-blue-400 ${
-      date ? "text-white" : "text-[#94A3B8]"
+    className={`block w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 outline-none focus:ring-2 focus:ring-blue-400 ${
+      date ? "text-white" : "text-transparent"
     }`}
   />
 </div>
