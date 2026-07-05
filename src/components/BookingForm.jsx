@@ -169,16 +169,17 @@ function BookingForm() {
           className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
         />
 
-<input
-type="text"
-placeholder="Select Date"
-  value={date}
-  onChange={(e) => setDate(e.target.value)}
-  style={{ colorScheme: "dark" }}
-  className={`block w-full max-w-full min-w-0 box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 outline-none focus:ring-2 focus:ring-blue-400 ${
-    date ? "text-white" : "text-[#94A3B8]"
-  }`}
-/>
+<div className="relative w-full">
+  <input
+    type="date"
+    value={date}
+    onChange={(e) => setDate(e.target.value)}
+    style={{ colorScheme: "dark" }}
+    className={`w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 pr-12 outline-none focus:ring-2 focus:ring-blue-400 ${
+      date ? "text-white" : "text-[#94A3B8]"
+    }`}
+  />
+</div>
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
