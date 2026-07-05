@@ -186,7 +186,7 @@ const getStatusDot = (status) => {
 
   return (
     <DashboardLayout>
-      <div className="w-full max-w-full min-h-screen bg-[#0F172A] text-white overflow-x-hidden">
+  <div className="w-full max-w-full min-h-screen bg-[#0F172A] text-white overflow-x-hidden px-4 sm:px-0 pt-20 md:pt-0 pb-10">
         <div className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight">
             Bookings
