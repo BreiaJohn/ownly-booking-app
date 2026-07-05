@@ -148,8 +148,7 @@ function BookingForm() {
   return (
     <form
       onSubmit={handleSubmit}
-   className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-[#334155] mt-6 shadow-sm"
-    >
+className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-300/50 transition">
       <h2 className="text-2xl font-bold text-white mb-6">
         Create Booking
       </h2>
@@ -168,7 +167,7 @@ function BookingForm() {
           placeholder="Service"
           value={service}
           onChange={(e) => setService(e.target.value)}
-          className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-[#A68A72]"
+    className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-300/50 transition"
         />
 
 <DatePicker
@@ -184,7 +183,7 @@ function BookingForm() {
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="w-full min-w-0 bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white appearance-none outline-none focus:ring-2 focus:ring-[#A68A72]"
+          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-300/50 transition"
         >
           <option value="">Select Time</option>
 
@@ -213,11 +212,11 @@ function BookingForm() {
 
         <button
           type="submit"
-          className={`w-full py-4 rounded-2xl font-semibold border backdrop-blur-md transition duration-300 ${
-            isSaved
-              ? "bg-emerald-500/20 border-emerald-400/40 text-emerald-200 shadow-[0_0_25px_rgba(16,185,129,0.25)]"
-              : "bg-white/10 border-white/20 text-white hover:bg-white/15 hover:border-[#A68A72]/60 hover:shadow-[0_0_25px_rgba(166,138,114,0.22)] hover:scale-[1.01]"
-          }`}
+       className={`w-full py-4 rounded-2xl font-semibold border backdrop-blur-md transition duration-300 ${
+  isSaved
+    ? "bg-emerald-500/20 border-emerald-400/40 text-emerald-200 shadow-[0_0_25px_rgba(16,185,129,0.25)]"
+    : "bg-blue-500/10 border-blue-400/30 text-[#93C5FD] hover:bg-blue-500/20 hover:border-blue-300/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]"
+}`}
         >
           {isSaved ? "Booking Saved ✓" : "Save Booking"}
         </button>
