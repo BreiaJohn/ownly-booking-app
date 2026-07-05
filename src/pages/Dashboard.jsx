@@ -90,8 +90,9 @@ function Dashboard() {
 
             <OverviewCard
               icon="💳"
-              value={`$${revenueThisMonth}`}
+              value={`$${revenueThisMonth.toLocaleString()}`}
               label="Revenue Total"
+              isRevenue
             />
 
             <OverviewCard
@@ -161,12 +162,22 @@ function Dashboard() {
   )
 }
 
-function OverviewCard({ icon, value, label }) {
+function OverviewCard({ icon, value, label, isRevenue }) {
   return (
-    <div className="bg-[#0F172A] border border-[#334155] rounded-2xl p-4 min-w-0 overflow-hidden">
+    <div
+      className={`bg-[#0F172A] border border-[#334155] rounded-2xl p-4 min-w-0 overflow-hidden ${
+        isRevenue ? "bg-emerald-500/10 border-emerald-500/30" : ""
+      }`}
+    >
       <div className="mb-4 text-2xl">{icon}</div>
 
-      <p className="text-2xl sm:text-3xl font-bold truncate whitespace-nowrap">
+      {isRevenue && (
+        <span className="inline-block mb-3 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+          +18%
+        </span>
+      )}
+
+      <p className="text-2xl sm:text-3xl font-bold leading-none break-words">
         {value}
       </p>
 
