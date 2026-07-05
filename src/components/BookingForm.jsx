@@ -170,7 +170,8 @@ function BookingForm() {
         />
 
 <input
-  type="date"
+type="text"
+placeholder="Select Date"
   value={date}
   onChange={(e) => setDate(e.target.value)}
   style={{ colorScheme: "dark" }}
