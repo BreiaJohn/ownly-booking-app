@@ -46,8 +46,10 @@ function DashboardLayout({ children }) {
 
       {/* Main content */}
       {/* Main content */}
-<main className="flex-1 min-h-screen overflow-y-auto overflow-x-hidden px-4 pt-12 pb-28 md:p-6">
-  {children}
+<main className="relative z-0 flex-1 min-h-screen overflow-y-auto overflow-x-hidden px-4 pt-16 pb-28 md:p-6">
+  <div className="w-full max-w-full">
+    {children}
+  </div>
 </main>
 {showScrollTop && (
   <button
