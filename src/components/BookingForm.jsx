@@ -175,7 +175,7 @@ function BookingForm() {
     value={date}
     onChange={(e) => setDate(e.target.value)}
     style={{ colorScheme: "dark" }}
-    className={`w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 pr-12 outline-none focus:ring-2 focus:ring-blue-400 ${
+    className={`w-full appearance-none bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 pr-12 outline-none focus:ring-2 focus:ring-blue-400 ${
       date ? "text-white" : "text-[#94A3B8]"
     }`}
   />
