@@ -21,7 +21,7 @@ function DashboardPreview() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-[#0F172A] rounded-2xl p-4 border border-[#334155]">
           <p className="text-sm text-[#94A3B8]">
             Appointments
@@ -36,13 +36,11 @@ function DashboardPreview() {
           <p className="text-[#94A3B8] text-sm mb-3">
             Revenue
           </p>
-
-         <div className="flex items-center gap-3">
+<div className="flex flex-col items-start gap-3">
   <span className="text-xs bg-green-500/10 text-green-300 border border-green-500/20 px-2 py-1 rounded-full">
     +18%
   </span>
-
-<h2 className="text-3xl font-bold text-[#CBD5E1]">
+<h2 className="text-2xl sm:text-3xl font-bold text-[#CBD5E1] leading-none">
   $1,840
 </h2>
 </div>
