@@ -17,6 +17,12 @@ function Settings() {
   const [blockedReason, setBlockedReason] = useState("")
   const [blockedList, setBlockedList] = useState([])
 
+  const fieldClass =
+    "block w-full min-w-0 appearance-none rounded-2xl border border-[#334155] bg-[#020617]/60 px-4 py-4 text-white outline-none transition placeholder:text-[#94A3B8] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+
+  const buttonClass =
+    "w-full rounded-2xl border border-white/20 bg-white/10 py-4 font-semibold text-white transition duration-300 hover:border-blue-400/50 hover:bg-white/15 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]"
+
   useEffect(() => {
     if (session?.user?.id) {
       fetchSettings()
@@ -60,20 +66,18 @@ function Settings() {
   }
 
   const handleSaveSettings = async () => {
-    const { error } = await supabase
-      .from("business_settings")
-      .upsert(
-        {
-          user_id: session.user.id,
-          start_time: startTime,
-          end_time: endTime,
-          appointment_length: appointmentLength,
-          buffer_time: bufferTime,
-        },
-        {
-          onConflict: "user_id",
-        }
-      )
+    const { error } = await supabase.from("business_settings").upsert(
+      {
+        user_id: session.user.id,
+        start_time: startTime,
+        end_time: endTime,
+        appointment_length: appointmentLength,
+        buffer_time: bufferTime,
+      },
+      {
+        onConflict: "user_id",
+      }
+    )
 
     if (error) {
       toast.error("Failed to save settings")
@@ -113,10 +117,7 @@ function Settings() {
   }
 
   const handleDeleteBlockedTime = async (id) => {
-    const { error } = await supabase
-      .from("blocked_times")
-      .delete()
-      .eq("id", id)
+    const { error } = await supabase.from("blocked_times").delete().eq("id", id)
 
     if (error) {
       toast.error("Failed to remove blocked time")
@@ -125,33 +126,32 @@ function Settings() {
     }
 
     toast.success("Blocked time removed!")
-    setBlockedList((prev) =>
-      prev.filter((blocked) => blocked.id !== id)
-    )
+    setBlockedList((prev) => prev.filter((blocked) => blocked.id !== id))
   }
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-[#0F172A] text-white overflow-x-hidden">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-         <section className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-5 sm:p-6 md:p-8 shadow-sm">
+      <div className="min-h-screen w-full overflow-x-hidden bg-[#0F172A] px-4 py-6 text-white sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+          <section className="w-full overflow-hidden rounded-3xl border border-[#334155] bg-white/5 p-5 shadow-sm backdrop-blur-md sm:p-6 md:p-8">
             <div className="mb-8">
-<p className="text-blue-300 text-sm font-semibold mb-2 tracking-wide">
-  Availability
-</p>
-              <h1 className="text-3xl md:text-5xl font-bold text-white">
+              <p className="mb-2 text-sm font-semibold tracking-wide text-blue-300">
+                Availability
+              </p>
+
+              <h1 className="text-3xl font-bold text-white md:text-5xl">
                 Settings
               </h1>
 
-              <p className="text-[#94A3B8] mt-3 max-w-xl">
+              <p className="mt-3 max-w-xl text-[#94A3B8]">
                 Customize your booking hours, appointment length, buffer time,
                 and unavailable slots.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-[#CBD5E1] mb-2">
+            <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
                   Start Time
                 </label>
 
@@ -160,12 +160,12 @@ function Settings() {
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                   style={{ colorScheme: "dark" }}
-                  className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:ring-[#B79A82"
+                  className={fieldClass}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[#CBD5E1] mb-2">
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
                   End Time
                 </label>
 
@@ -174,31 +174,19 @@ function Settings() {
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                   style={{ colorScheme: "dark" }}
-                  className="
-  w-full
-  bg-[#0F172A]
-  border
-  border-[#334155]
-  rounded-2xl
-  px-4
-  py-4
-  text-white
-  outline-none
-  focus:border-blue-400
-  focus:ring-2
-  focus:ring-blue-400/30"
+                  className={fieldClass}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[#CBD5E1] mb-2">
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
                   Appointment Length
                 </label>
 
                 <select
                   value={appointmentLength}
                   onChange={(e) => setAppointmentLength(e.target.value)}
-                  className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                  className={fieldClass}
                 >
                   <option value="15">15 Minutes</option>
                   <option value="30">30 Minutes</option>
@@ -206,15 +194,15 @@ function Settings() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[#CBD5E1] mb-2">
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
                   Buffer Time
                 </label>
 
                 <select
                   value={bufferTime}
                   onChange={(e) => setBufferTime(e.target.value)}
-                  className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                  className={fieldClass}
                 >
                   <option value="0">No Buffer</option>
                   <option value="15">15 Minutes</option>
@@ -226,77 +214,96 @@ function Settings() {
             <button
               type="button"
               onClick={handleSaveSettings}
-              className="w-full mt-8 bg-white/10 border border-white/20 text-white py-4 rounded-2xl font-semibold hover:bg-white/15 hover:border-[#B79A82]/60 hover:shadow-[0_0_25px_rgba(183,154,130,0.22)] transition duration-300">
+              className={`${buttonClass} mt-8`}
+            >
               Save Settings
             </button>
           </section>
 
-          <section className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-5 sm:p-6 md:p-8 shadow-sm">
+          <section className="w-full overflow-hidden rounded-3xl border border-[#334155] bg-white/5 p-5 shadow-sm backdrop-blur-md sm:p-6 md:p-8">
             <div className="mb-6">
+              <p className="mb-2 text-sm font-semibold tracking-wide text-blue-300">
+                Calendar Control
+              </p>
 
-
-              <h2 className="text-2xl md:text-3xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-white md:text-3xl">
                 Block Time
               </h2>
 
-              <p className="text-[#94A3B8] mt-2">
+              <p className="mt-2 text-[#94A3B8]">
                 Block specific dates and times so clients cannot book them.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <input
-                type="date"
-                value={blockedDate}
-                onChange={(e) => setBlockedDate(e.target.value)}
-                style={{ colorScheme: "dark" }}
-                className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
-              />
+            <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
+                  Date
+                </label>
 
-              <input
-                type="time"
-                value={blockedTime}
-                onChange={(e) => setBlockedTime(e.target.value)}
-                style={{ colorScheme: "dark" }}
-                className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
-              />
+                <input
+                  type="date"
+                  value={blockedDate}
+                  onChange={(e) => setBlockedDate(e.target.value)}
+                  style={{ colorScheme: "dark" }}
+                  className={fieldClass}
+                />
+              </div>
 
-              <input
-                type="text"
-                placeholder="Reason optional"
-                value={blockedReason}
-                onChange={(e) => setBlockedReason(e.target.value)}
-                className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
-              />
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
+                  Time
+                </label>
+
+                <input
+                  type="time"
+                  value={blockedTime}
+                  onChange={(e) => setBlockedTime(e.target.value)}
+                  style={{ colorScheme: "dark" }}
+                  className={fieldClass}
+                />
+              </div>
+
+              <div className="min-w-0">
+                <label className="mb-2 block text-sm font-medium text-[#CBD5E1]">
+                  Reason
+                </label>
+
+                <input
+                  type="text"
+                  placeholder="Reason optional"
+                  value={blockedReason}
+                  onChange={(e) => setBlockedReason(e.target.value)}
+                  className={fieldClass}
+                />
+              </div>
             </div>
 
             <button
               type="button"
               onClick={handleAddBlockedTime}
-              className="w-full mt-5 bg-white/10 border border-white/20 text-white py-4 rounded-2xl font-semibold hover:bg-white/15 hover:border-[#B79A82]/60 transition"
+              className={`${buttonClass} mt-5`}
             >
               Block Time
             </button>
 
             <div className="mt-6 space-y-3">
               {blockedList.length === 0 ? (
-                <p className="text-[#94A3B8] text-sm">
+                <p className="text-sm text-[#94A3B8]">
                   No blocked times yet.
                 </p>
               ) : (
                 blockedList.map((blocked) => (
                   <div
                     key={blocked.id}
-                    className="bg-[#0F172A] border border-[#334155] rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                    className="flex flex-col gap-4 rounded-2xl border border-[#334155] bg-[#020617]/60 p-4 md:flex-row md:items-center md:justify-between"
                   >
                     <div>
                       <p className="font-semibold text-white">
                         {blocked.date}
                       </p>
 
-                      <p className="text-[#94A3B8]">
-                        {blocked.time}
-                      </p>
+                      <p className="text-[#94A3B8]">{blocked.time}</p>
 
                       {blocked.reason && (
                         <p className="text-sm text-[#64748B]">
@@ -308,7 +315,7 @@ function Settings() {
                     <button
                       type="button"
                       onClick={() => handleDeleteBlockedTime(blocked.id)}
-                      className="bg-red-500/15 border border-red-500/30 text-red-300 px-4 py-2 rounded-xl hover:bg-red-500/25 transition"
+                      className="rounded-xl border border-red-500/30 bg-red-500/15 px-4 py-2 text-red-300 transition hover:bg-red-500/25"
                     >
                       Remove
                     </button>
