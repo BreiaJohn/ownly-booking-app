@@ -134,7 +134,7 @@ function Settings() {
     <DashboardLayout>
       <div className="min-h-screen bg-[#0F172A] text-white overflow-x-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <section className="bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-6 md:p-8 shadow-sm">
+         <section className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-5 sm:p-6 md:p-8 shadow-sm">
             <div className="mb-8">
 <p className="text-blue-300 text-sm font-semibold mb-2 tracking-wide">
   Availability
@@ -160,7 +160,7 @@ function Settings() {
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                   style={{ colorScheme: "dark" }}
-                  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:ring-[#B79A82"
+                  className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:ring-[#B79A82"
                 />
               </div>
 
@@ -198,7 +198,7 @@ function Settings() {
                 <select
                   value={appointmentLength}
                   onChange={(e) => setAppointmentLength(e.target.value)}
-                  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                  className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
                 >
                   <option value="15">15 Minutes</option>
                   <option value="30">30 Minutes</option>
@@ -214,7 +214,7 @@ function Settings() {
                 <select
                   value={bufferTime}
                   onChange={(e) => setBufferTime(e.target.value)}
-                  className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                  className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
                 >
                   <option value="0">No Buffer</option>
                   <option value="15">15 Minutes</option>
@@ -231,7 +231,7 @@ function Settings() {
             </button>
           </section>
 
-          <section className="bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-6 md:p-8 shadow-sm">
+          <section className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-md border border-[#334155] rounded-3xl p-5 sm:p-6 md:p-8 shadow-sm">
             <div className="mb-6">
 
 
@@ -250,7 +250,7 @@ function Settings() {
                 value={blockedDate}
                 onChange={(e) => setBlockedDate(e.target.value)}
                 style={{ colorScheme: "dark" }}
-                className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
               />
 
               <input
@@ -258,7 +258,7 @@ function Settings() {
                 value={blockedTime}
                 onChange={(e) => setBlockedTime(e.target.value)}
                 style={{ colorScheme: "dark" }}
-                className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
               />
 
               <input
@@ -266,7 +266,7 @@ function Settings() {
                 placeholder="Reason optional"
                 value={blockedReason}
                 onChange={(e) => setBlockedReason(e.target.value)}
-                className="w-full bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+                className="w-full max-w-full box-border bg-[#0F172A] border border-[#334155] rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none focus:ring-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
               />
             </div>
 
