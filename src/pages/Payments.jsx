@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react"
 import DashboardLayout from "../layouts/DashboardLayout"
 import { supabase } from "../lib/supabase"
+import {
+  pageClass,
+  containerClass,
+  cardClass,
+  smallCardClass,
+  pillClass,
+  mutedTextClass,
+} from "../styles/theme"
 
 function Payments() {
   const [payments, setPayments] = useState([])
@@ -56,9 +64,9 @@ function Payments() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen w-full overflow-x-hidden bg-[#0F172A] px-4 py-6 text-white sm:px-6 lg:px-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-          <section className="overflow-hidden rounded-3xl border border-[#334155] bg-white/5 p-5 shadow-sm backdrop-blur-md sm:p-6 md:p-8">
+     <div className={pageClass}>
+       <div className={containerClass}>
+         <section className={cardClass}>
             <p className="mb-2 text-sm font-semibold tracking-wide text-blue-300">
               Revenue
             </p>
@@ -88,7 +96,7 @@ function Payments() {
             {statCards.map((card) => (
               <div
                 key={card.label}
-                className="rounded-3xl border border-[#334155] bg-white/5 p-6 shadow-sm backdrop-blur-md"
+               className={smallCardClass}
               >
                 <p className="text-sm text-[#94A3B8]">{card.label}</p>
 
