@@ -1,8 +1,8 @@
 :root {
-  --ownly-background: #f8fafc;
+  --ownly-background: #f4f7fb;
   --ownly-surface: #ffffff;
-  --ownly-surface-soft: #f1f5f9;
-  --ownly-border: #e2e8f0;
+  --ownly-surface-soft: #f8fafc;
+  --ownly-border: #d7e0ec;
   --ownly-text: #0f172a;
   --ownly-muted: #64748b;
   --ownly-subtle: #94a3b8;

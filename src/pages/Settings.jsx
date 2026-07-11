@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase"
 import { useAuth } from "../context/AuthContext"
 import toast from "react-hot-toast"
 import { useTheme } from "../context/ThemeContext"
+import Card from "../components/ui/Card"
 
 function Settings() {
   const { session } = useAuth()
@@ -20,8 +21,8 @@ function Settings() {
 
   const { theme, toggleTheme } = useTheme()
 
-  const fieldClass =
-    "block w-full min-w-0 appearance-none rounded-2xl border border-[#334155] bg-[#020617]/60 px-4 py-4 text-[var(--ownly-text)] outline-none transition placeholder:text-[var(--ownly-muted)] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+const fieldClass =
+  "block w-full min-w-0 appearance-none rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
 
   const buttonClass =
     "w-full rounded-2xl border border-white/20 bg-white/10 py-4 font-semibold text-[var(--ownly-text)] transition duration-300 hover:border-blue-400/50 hover:bg-white/15 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]"

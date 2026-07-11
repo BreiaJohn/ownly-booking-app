@@ -1,52 +1,45 @@
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import logo from "../assets/ownly-logo.png"
 
 function Sidebar() {
+  const linkClass = ({ isActive }) =>
+    `rounded-2xl px-4 py-3 transition-all duration-300 ${
+      isActive
+        ? "border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] text-[var(--ownly-text)] shadow-sm"
+        : "text-[var(--ownly-muted)] hover:translate-x-1 hover:bg-[var(--ownly-surface-soft)] hover:text-[var(--ownly-text)] hover:shadow-lg"
+    }`
+
   return (
-<aside className="flex flex-col w-72 h-screen overflow-y-auto bg-[#111827] border-r border-[#1E293B] px-6 py-8">
-  <div className="mb-14 flex items-center justify-center md:justify-start">
-  <img
-    src={logo}
-    alt="Ownly Logo"
-    className="h-24 w-auto object-contain"
-  />
-</div>
-      <nav className="flex flex-col gap-3 text-sm pb-20">
-  <Link
-    to="/dashboard"
-    className="px-4 py-3 rounded-2xl text-white bg-white/5 border border-[#334155] hover:bg-white/10 transition-all duration-200"
-  >
-    Dashboard
-  </Link>
+    <aside className="flex h-screen w-72 flex-col overflow-y-auto border-r border-[var(--ownly-border)] bg-[var(--ownly-surface)] px-6 py-8 text-[var(--ownly-text)] transition-colors duration-200">
+      <div className="mb-14 flex items-center justify-center md:justify-start">
+        <img
+          src={logo}
+          alt="Ownly Logo"
+          className="h-24 w-auto object-contain"
+        />
+      </div>
 
-  <Link
-    to="/bookings"
-    className="px-4 py-3 rounded-2xl text-[#94A3B8] hover:text-white hover:bg-white/5 hover:translate-x-1 hover:shadow-lg transition-all duration-300"
-  >
-    Bookings
-  </Link>
+      <nav className="flex flex-col gap-3 pb-20 text-sm">
+        <NavLink to="/dashboard" className={linkClass}>
+          Dashboard
+        </NavLink>
 
-  <Link
-    to="/clients"
-    className="px-4 py-3 rounded-2xl text-[#94A3B8] hover:text-white hover:bg-white/5 hover:translate-x-1 hover:shadow-lg transition-all duration-300"
-  >
-    Clients
-  </Link>
+        <NavLink to="/bookings" className={linkClass}>
+          Bookings
+        </NavLink>
 
-  <Link
-    to="/payments"
-    className="px-4 py-3 rounded-2xl text-[#94A3B8] hover:text-white hover:bg-white/5 hover:translate-x-1 hover:shadow-lg transition-all duration-300"
-  >
-    Payments
-  </Link>
+        <NavLink to="/clients" className={linkClass}>
+          Clients
+        </NavLink>
 
-  <Link
-    to="/settings"
-    className="px-4 py-3 rounded-2xl text-[#94A3B8] hover:text-white hover:bg-white/5 hover:translate-x-1 hover:shadow-lg transition-all duration-300"
-  >
-    Settings
-  </Link>
-</nav>
+        <NavLink to="/payments" className={linkClass}>
+          Payments
+        </NavLink>
+
+        <NavLink to="/settings" className={linkClass}>
+          Settings
+        </NavLink>
+      </nav>
     </aside>
   )
 }

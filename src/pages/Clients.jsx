@@ -23,7 +23,7 @@ function Clients() {
     }
 
     const groupedClients = Object.values(
-      data.reduce((acc, booking) => {
+      (data || []).reduce((acc, booking) => {
         const name = booking.client_name || "Unknown Client"
         const phone = booking.phone || "No phone"
         const email = booking.email || "No email"
@@ -44,11 +44,17 @@ function Clients() {
         acc[clientKey].totalBookings += 1
         acc[clientKey].bookings.push(booking)
 
-        if (booking.service && !acc[clientKey].services.includes(booking.service)) {
+        if (
+          booking.service &&
+          !acc[clientKey].services.includes(booking.service)
+        ) {
           acc[clientKey].services.push(booking.service)
         }
 
-        if (booking.date && booking.date > acc[clientKey].lastAppointment) {
+        if (
+          booking.date &&
+          booking.date > acc[clientKey].lastAppointment
+        ) {
           acc[clientKey].lastAppointment = booking.date
         }
 
@@ -60,6 +66,8 @@ function Clients() {
   }
 
   const getInitials = (name) => {
+    if (!name) return "?"
+
     return name
       .split(" ")
       .map((part) => part[0])
@@ -74,7 +82,10 @@ function Clients() {
     const cleaned = String(phone).replace(/\D/g, "")
 
     if (cleaned.length === 10) {
-      return `${cleaned.slice(0, 3)} - ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(
+        3,
+        6
+      )}-${cleaned.slice(6)}`
     }
 
     return String(phone)
@@ -83,7 +94,7 @@ function Clients() {
   const formatDate = (date) => {
     if (!date) return "No date"
 
-    return new Date(date).toLocaleDateString("en-US", {
+    return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -100,6 +111,34 @@ function Clients() {
     return client.services[0] || "No favorite yet"
   }
 
+  const getStatusClass = (status) => {
+    if (status === "VIP") {
+      return "border-purple-500/30 bg-purple-500/10 text-purple-600 dark:text-purple-300"
+    }
+
+    if (status === "Returning") {
+      return "border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-300"
+    }
+
+    return "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
+  }
+
+  const getBookingStatusClass = (status) => {
+    if (status === "Confirmed") {
+      return "border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-300"
+    }
+
+    if (status === "Cancelled") {
+      return "border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-300"
+    }
+
+    if (status === "Completed") {
+      return "border-purple-500/30 bg-purple-500/10 text-purple-600 dark:text-purple-300"
+    }
+
+    return "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
+  }
+
   const filteredClients = clients.filter((client) => {
     const search = searchTerm.toLowerCase()
 
@@ -110,163 +149,184 @@ function Clients() {
     )
   })
 
+  const totalBookings = clients.reduce(
+    (sum, client) => sum + client.totalBookings,
+    0
+  )
+
+  const returningClients = clients.filter(
+    (client) => client.totalBookings > 1
+  ).length
+
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-[#0F172A] text-white">
-        <h1 className="text-3xl font-semibold mb-2">Clients</h1>
+      <div className="min-h-screen w-full overflow-x-hidden bg-[var(--ownly-background)] text-[var(--ownly-text)] transition-colors duration-200">
+        <header className="mb-8">
+          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+            Relationships
+          </p>
 
-        <p className="text-[#94A3B8] mb-8">
-          View your client list and booking history.
-        </p>
+          <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
+            Clients
+          </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white/5 border border-[#334155] rounded-3xl p-5">
-            <p className="text-[#94A3B8] text-sm">Total Clients</p>
-            <p className="text-3xl font-semibold mt-2">{clients.length}</p>
-          </div>
+          <p className="mt-3 text-[var(--ownly-muted)]">
+            View your client list, loyalty, and booking history.
+          </p>
+        </header>
 
-          <div className="bg-white/5 border border-[#334155] rounded-3xl p-5">
-            <p className="text-[#94A3B8] text-sm">Total Bookings</p>
-            <p className="text-3xl font-semibold mt-2">
-              {clients.reduce((sum, client) => sum + client.totalBookings, 0)}
-            </p>
-          </div>
+        <section className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <StatCard label="Total Clients" value={clients.length} />
 
-          <div className="bg-white/5 border border-[#334155] rounded-3xl p-5">
-            <p className="text-[#94A3B8] text-sm">Returning Clients</p>
-            <p className="text-3xl font-semibold mt-2">
-              {clients.filter((client) => client.totalBookings > 1).length}
-            </p>
-          </div>
-        </div>
+          <StatCard label="Total Bookings" value={totalBookings} />
 
-        <div className="mb-6">
+          <StatCard label="Returning Clients" value={returningClients} />
+        </section>
+
+        <section className="mb-6">
           <input
-            type="text"
+            type="search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search clients by name, phone, or email..."
-            className="w-full bg-white/5 border border-[#334155] rounded-2xl px-5 py-4 text-white placeholder:text-[#64748B] outline-none focus:border-[#A68A72] transition"
+            className="block w-full rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] px-5 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
           />
-        </div>
+        </section>
 
-        <div className="bg-white/5 border border-[#334155] rounded-3xl overflow-hidden">
-          {filteredClients.map((client, index) => {
-            const status = getClientStatus(client)
-            const favoriteService = getFavoriteService(client)
+        {filteredClients.length > 0 ? (
+          <section className="overflow-hidden rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] shadow-sm transition-colors duration-200">
+            {filteredClients.map((client, index) => {
+              const status = getClientStatus(client)
+              const favoriteService = getFavoriteService(client)
+              const loyaltyPercentage = Math.min(
+                client.totalBookings * 20,
+                100
+              )
 
-            return (
-              <button
-                key={`${client.name}-${client.phone}-${client.email}`}
-                onClick={() => setSelectedClient(client)}
-                className={`w-full text-left px-6 py-6 hover:bg-white/5 transition ${
-                  index !== filteredClients.length - 1
-                    ? "border-b border-[#334155]"
-                    : ""
-                }`}
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.8fr_1fr_0.8fr] gap-6 items-center">
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-14 h-14 rounded-full bg-[#111827] border border-[#334155] flex items-center justify-center text-lg font-semibold text-white shrink-0">
-                      {getInitials(client.name)}
-                    </div>
-
-                    <div className="min-w-0">
-                      <h3 className="text-lg font-semibold text-white truncate">
-                        {client.name}
-                      </h3>
-
-                      <p className="text-sm text-[#94A3B8] mt-1">
-                        {client.totalBookings} booking
-                        {client.totalBookings !== 1 ? "s" : ""} • Last visit{" "}
-                        {formatDate(client.lastAppointment)}
-                      </p>
-
-                      <p className="text-sm text-[#94A3B8] mt-2">
-                        Favorite:{" "}
-                        <span className="text-purple-300 font-medium">
-                          {favoriteService}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <span
-                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border ${
-                        status === "VIP"
-                          ? "bg-blue-500/20 text-blue-300 border-blue-400/30"
-                          : status === "Returning"
-                          ? "bg-green-500/20 text-green-300 border-green-400/30"
-                          : "bg-yellow-500/20 text-yellow-300 border-yellow-400/30"
-                      }`}
-                    >
-                      <span className="w-2 h-2 rounded-full bg-current" />
-                      {status}
-                    </span>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between text-sm text-[#94A3B8] mb-2">
-                      <span>Client Loyalty</span>
-                      <span>{client.totalBookings}</span>
-                    </div>
-
-                    <div className="h-2 bg-[#111827] rounded-full overflow-hidden border border-[#334155]">
-                      <div
-                        className="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full"
-                        style={{
-                          width: `${Math.min(client.totalBookings * 20, 100)}%`,
-                        }}
+              return (
+                <button
+                  type="button"
+                  key={`${client.name}-${client.phone}-${client.email}`}
+                  onClick={() => setSelectedClient(client)}
+                  className={`w-full px-5 py-6 text-left transition-colors duration-200 hover:bg-[var(--ownly-surface-soft)] sm:px-6 ${
+                    index !== filteredClients.length - 1
+                      ? "border-b border-[var(--ownly-border)]"
+                      : ""
+                  }`}
+                >
+                  <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1.4fr_0.7fr_1fr_auto]">
+                    <div className="flex min-w-0 items-center gap-4">
+                      <Avatar
+                        name={client.name}
+                        getInitials={getInitials}
                       />
+
+                      <div className="min-w-0">
+                        <h3 className="truncate text-lg font-semibold text-[var(--ownly-text)]">
+                          {client.name}
+                        </h3>
+
+                        <p className="mt-1 text-sm text-[var(--ownly-muted)]">
+                          {client.totalBookings} booking
+                          {client.totalBookings !== 1 ? "s" : ""} · Last
+                          visit {formatDate(client.lastAppointment)}
+                        </p>
+
+                        <p className="mt-2 text-sm text-[var(--ownly-muted)]">
+                          Favorite:{" "}
+                          <span className="font-medium text-purple-600 dark:text-purple-300">
+                            {favoriteService}
+                          </span>
+                        </p>
+                      </div>
                     </div>
 
-                    <p className="text-xs text-[#64748B] mt-2">
-                      Keep it up! Building loyalty ✨
-                    </p>
-                  </div>
+                    <div>
+                      <span
+                        className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${getStatusClass(
+                          status
+                        )}`}
+                      >
+                        <span className="h-2 w-2 rounded-full bg-current" />
+                        {status}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center justify-between lg:justify-end gap-4">
-                    <div className="flex items-center gap-3 border border-[#334155] bg-white/5 px-4 py-3 rounded-2xl">
-                      <span className="text-lg">📅</span>
+                    <div>
+                      <div className="mb-2 flex items-center justify-between text-sm text-[var(--ownly-muted)]">
+                        <span>Client Loyalty</span>
+                        <span>{client.totalBookings}</span>
+                      </div>
 
-                      <p className="text-sm text-white font-medium whitespace-nowrap">
-                        Last visit: {formatDate(client.lastAppointment)}
+                      <div className="h-2 overflow-hidden rounded-full border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)]">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-green-400 to-blue-500"
+                          style={{
+                            width: `${loyaltyPercentage}%`,
+                          }}
+                        />
+                      </div>
+
+                      <p className="mt-2 text-xs text-[var(--ownly-subtle)]">
+                        {loyaltyPercentage >= 100
+                          ? "Top client status achieved ✨"
+                          : "Keep it up! Building loyalty ✨"}
                       </p>
                     </div>
 
-                    <span className="text-[#94A3B8] text-2xl">›</span>
-                  </div>
-                </div>
-              </button>
-            )
-          })}
-        </div>
+                    <div className="flex items-center justify-between gap-4 lg:justify-end">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-3">
+                        <span className="text-lg">📅</span>
 
-        {filteredClients.length === 0 && (
-          <div className="bg-white/5 border border-[#334155] rounded-3xl p-10 text-center mt-6">
-            <p className="text-2xl mb-2">No clients found</p>
-            <p className="text-[#94A3B8]">
+                        <p className="whitespace-nowrap text-sm font-medium text-[var(--ownly-text)]">
+                          {formatDate(client.lastAppointment)}
+                        </p>
+                      </div>
+
+                      <span className="text-2xl text-[var(--ownly-muted)]">
+                        ›
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+          </section>
+        ) : (
+          <section className="rounded-3xl border border-dashed border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-10 text-center">
+            <p className="text-xl font-semibold text-[var(--ownly-text)]">
+              No clients found
+            </p>
+
+            <p className="mt-2 text-[var(--ownly-muted)]">
               Try searching by a different name, phone number, or email.
             </p>
-          </div>
+          </section>
         )}
 
         {selectedClient && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-            <div className="bg-[#0F172A] border border-[#334155] rounded-3xl shadow-xl w-full max-w-2xl p-6">
-              <div className="flex items-start justify-between gap-4 mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-[#111827] border border-[#334155] flex items-center justify-center text-2xl font-semibold text-white">
-                    {getInitials(selectedClient.name)}
-                  </div>
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+            onClick={() => setSelectedClient(null)}
+          >
+            <div
+              className="max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 text-[var(--ownly-text)] shadow-2xl transition-colors duration-200 sm:p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-4">
+                  <Avatar
+                    name={selectedClient.name}
+                    getInitials={getInitials}
+                    large
+                  />
 
-                  <div>
-                    <h2 className="text-2xl font-bold">
+                  <div className="min-w-0">
+                    <h2 className="truncate text-2xl font-bold">
                       {selectedClient.name}
                     </h2>
 
-                    <p className="text-[#94A3B8]">
+                    <p className="mt-1 text-[var(--ownly-muted)]">
                       {selectedClient.totalBookings} booking
                       {selectedClient.totalBookings !== 1 ? "s" : ""}
                     </p>
@@ -274,75 +334,87 @@ function Clients() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setSelectedClient(null)}
-                  className="text-[#94A3B8] hover:text-white text-2xl"
+                  aria-label="Close client details"
+                  className="text-2xl text-[var(--ownly-muted)] transition hover:text-[var(--ownly-text)]"
                 >
                   ×
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
-                  <p className="text-[#94A3B8] text-sm">Phone</p>
-                  <p className="text-white mt-1">
-                    {formatPhone(selectedClient.phone)}
+              <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <DetailCard
+                  label="Phone"
+                  value={formatPhone(selectedClient.phone)}
+                />
+
+                <DetailCard
+                  label="Email"
+                  value={selectedClient.email || "No email"}
+                />
+
+                <DetailCard
+                  label="Last Visit"
+                  value={formatDate(selectedClient.lastAppointment)}
+                />
+
+                <div className="rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
+                  <p className="text-sm text-[var(--ownly-muted)]">
+                    Services
                   </p>
-                </div>
 
-                <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
-                  <p className="text-[#94A3B8] text-sm">Email</p>
-                  <p className="text-white mt-1">
-                    {selectedClient.email || "No email"}
-                  </p>
-                </div>
-
-                <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
-                  <p className="text-[#94A3B8] text-sm">Last Visit</p>
-                  <p className="text-white mt-1">
-                    {formatDate(selectedClient.lastAppointment)}
-                  </p>
-                </div>
-
-                <div className="bg-white/5 border border-[#334155] rounded-2xl p-4">
-                  <p className="text-[#94A3B8] text-sm">Services</p>
-
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {selectedClient.services.length > 0 ? (
                       selectedClient.services.map((service) => (
                         <span
                           key={service}
-                          className="bg-purple-500/20 text-purple-200 border border-purple-400/20 px-3 py-1 rounded-full text-sm"
+                          className="rounded-full border border-purple-500/20 bg-purple-500/10 px-3 py-1 text-sm text-purple-600 dark:text-purple-300"
                         >
                           {service}
                         </span>
                       ))
                     ) : (
-                      <p className="text-white">No services</p>
+                      <p className="text-[var(--ownly-text)]">
+                        No services
+                      </p>
                     )}
                   </div>
                 </div>
               </div>
 
-              <h3 className="text-lg font-semibold mb-3">Booking History</h3>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h3 className="text-lg font-semibold">
+                  Booking History
+                </h3>
 
-              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                <span className="text-sm text-[var(--ownly-muted)]">
+                  {selectedClient.bookings.length} total
+                </span>
+              </div>
+
+              <div className="max-h-64 space-y-3 overflow-y-auto pr-1">
                 {selectedClient.bookings.map((booking) => (
                   <div
                     key={booking.id}
-                    className="bg-white/5 border border-[#334155] rounded-2xl p-4 flex items-center justify-between gap-4"
+                    className="flex flex-col gap-4 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
-                      <p className="font-medium">
+                      <p className="font-medium text-[var(--ownly-text)]">
                         {booking.service || "Service"}
                       </p>
 
-                      <p className="text-[#94A3B8] text-sm mt-1">
-                        {booking.date || "No date"} at{" "}
+                      <p className="mt-1 text-sm text-[var(--ownly-muted)]">
+                        {formatDate(booking.date)} at{" "}
                         {booking.time || "No time"}
                       </p>
                     </div>
 
-                    <span className="bg-green-500/20 text-green-200 border border-green-400/20 px-3 py-1 rounded-full text-sm">
+                    <span
+                      className={`w-fit rounded-full border px-3 py-1 text-sm ${getBookingStatusClass(
+                        booking.status
+                      )}`}
+                    >
                       {booking.status || "Pending"}
                     </span>
                   </div>
@@ -353,6 +425,42 @@ function Clients() {
         )}
       </div>
     </DashboardLayout>
+  )
+}
+
+function StatCard({ label, value }) {
+  return (
+    <div className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 shadow-sm transition-colors duration-200">
+      <p className="text-sm text-[var(--ownly-muted)]">{label}</p>
+
+      <p className="mt-2 text-3xl font-bold text-[var(--ownly-text)]">
+        {value}
+      </p>
+    </div>
+  )
+}
+
+function Avatar({ name, getInitials, large = false }) {
+  return (
+    <div
+      className={`flex shrink-0 items-center justify-center rounded-full border border-blue-500/30 bg-blue-500/10 font-semibold text-[var(--ownly-primary)] ${
+        large ? "h-16 w-16 text-2xl" : "h-14 w-14 text-lg"
+      }`}
+    >
+      {getInitials(name)}
+    </div>
+  )
+}
+
+function DetailCard({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
+      <p className="text-sm text-[var(--ownly-muted)]">{label}</p>
+
+      <p className="mt-1 break-words text-[var(--ownly-text)]">
+        {value}
+      </p>
+    </div>
   )
 }
 

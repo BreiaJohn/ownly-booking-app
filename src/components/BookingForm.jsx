@@ -20,15 +20,16 @@ function BookingForm() {
   const [bookedTimes, setBookedTimes] = useState([])
   const [isSaved, setIsSaved] = useState(false)
 
+  const fieldClass =
+    "block w-full min-w-0 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+
   const timeSlots = generateTimeSlots(
     businessSettings?.start_time || "09:00",
     businessSettings?.end_time || "17:00",
     businessSettings?.appointment_length || 60,
     businessSettings?.buffer_time || 0
   ).filter(
-    (slot) =>
-      !bookedTimes.includes(slot) &&
-      !blockedTimes.includes(slot)
+    (slot) => !bookedTimes.includes(slot) && !blockedTimes.includes(slot)
   )
 
   useEffect(() => {
@@ -75,7 +76,7 @@ function BookingForm() {
       return
     }
 
-    setBookedTimes(data.map((booking) => booking.time))
+    setBookedTimes((data || []).map((booking) => booking.time))
   }
 
   const fetchBlockedTimes = async () => {
@@ -90,14 +91,14 @@ function BookingForm() {
       return
     }
 
-    setBlockedTimes(data.map((blocked) => blocked.time))
+    setBlockedTimes((data || []).map((blocked) => blocked.time))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!clientName || !service || !date || !time || !phone) {
-      toast.error("Please fill out all fields")
+      toast.error("Please fill out all required fields")
       return
     }
 
@@ -127,6 +128,7 @@ function BookingForm() {
 
     if (error) {
       toast.error("Failed to create booking")
+      console.log(error)
       return
     }
 
@@ -144,17 +146,25 @@ function BookingForm() {
     setPhone("")
     setEmail("")
   }
-  const inputStyle =
-  "w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
 
   return (
-  <form
-  onSubmit={handleSubmit}
-  className="w-full max-w-full overflow-hidden bg-white/5 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-blue-400/20 mt-6 shadow-[0_0_40px_rgba(59,130,246,0.10)]"
->
-      <h2 className="text-2xl font-bold text-white mb-6">
-        Create Booking
-      </h2>
+    <form
+      onSubmit={handleSubmit}
+      className="mt-6 w-full max-w-full overflow-hidden rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 text-[var(--ownly-text)] shadow-sm transition-colors duration-200 sm:p-6"
+    >
+      <div className="mb-6">
+        <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+          New Appointment
+        </p>
+
+        <h2 className="text-2xl font-bold text-[var(--ownly-text)]">
+          Create Booking
+        </h2>
+
+        <p className="mt-2 text-sm text-[var(--ownly-muted)]">
+          Add a new client appointment to your calendar.
+        </p>
+      </div>
 
       <div className="flex flex-col gap-4">
         <input
@@ -162,7 +172,7 @@ function BookingForm() {
           placeholder="Client Name"
           value={clientName}
           onChange={(e) => setClientName(e.target.value)}
-          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
+          className={fieldClass}
         />
 
         <input
@@ -170,23 +180,36 @@ function BookingForm() {
           placeholder="Service"
           value={service}
           onChange={(e) => setService(e.target.value)}
-  className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
+          className={fieldClass}
         />
 
-<DatePicker
-  selected={date ? new Date(date) : null}
-  onChange={(selectedDate) => {
-    if (!selectedDate) return
-    setDate(selectedDate.toISOString().split("T")[0])
-  }}
-  placeholderText="Choose Date"
-  dateFormat="MMM d, yyyy"
- className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
-/>
+        <div className="w-full">
+          <DatePicker
+            selected={date ? new Date(`${date}T00:00:00`) : null}
+            onChange={(selectedDate) => {
+              if (!selectedDate) {
+                setDate("")
+                return
+              }
+
+              const year = selectedDate.getFullYear()
+              const month = String(selectedDate.getMonth() + 1).padStart(2, "0")
+              const day = String(selectedDate.getDate()).padStart(2, "0")
+
+              setDate(`${year}-${month}-${day}`)
+            }}
+            placeholderText="Choose Date"
+            dateFormat="MMM d, yyyy"
+            className={fieldClass}
+            wrapperClassName="w-full"
+            calendarClassName="ownly-datepicker"
+          />
+        </div>
+
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
+          className={`${fieldClass} appearance-none`}
         >
           <option value="">Select Time</option>
 
@@ -198,11 +221,11 @@ function BookingForm() {
         </select>
 
         <input
-          type="text"
+          type="tel"
           placeholder="Phone Number"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
+          className={fieldClass}
         />
 
         <input
@@ -210,16 +233,16 @@ function BookingForm() {
           placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-[#020617]/60 border border-blue-400/20 rounded-2xl px-4 py-4 text-white placeholder:text-[#94A3B8] outline-none transition duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40"
+          className={fieldClass}
         />
 
         <button
           type="submit"
-       className={`w-full py-4 rounded-2xl font-semibold border backdrop-blur-md transition duration-300 ${
-  isSaved
-    ? "bg-emerald-500/20 border-emerald-400/40 text-emerald-200 shadow-[0_0_25px_rgba(16,185,129,0.25)]"
-    : "bg-blue-500/10 border-blue-400/30 text-[#93C5FD] hover:bg-blue-500/20 hover:border-blue-300/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]"
-}`}
+          className={`w-full rounded-2xl border px-5 py-4 font-semibold transition-all duration-300 ${
+            isSaved
+              ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-600 shadow-[0_0_25px_rgba(16,185,129,0.18)] dark:text-emerald-300"
+              : "border-blue-600 bg-blue-600 text-white hover:border-blue-700 hover:bg-blue-700 hover:shadow-[0_0_25px_rgba(37,99,235,0.20)]"
+          }`}
         >
           {isSaved ? "Booking Saved ✓" : "Save Booking"}
         </button>

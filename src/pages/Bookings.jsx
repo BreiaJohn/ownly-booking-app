@@ -41,12 +41,19 @@ function Bookings() {
 
   const selectedMonthLabel = new Date(selectedDate).toLocaleDateString(
     "en-US",
-    { month: "long", year: "numeric" }
+    {
+      month: "long",
+      year: "numeric",
+    }
   )
 
   const selectedDayLabel = new Date(selectedDate).toLocaleDateString(
     "en-US",
-    { weekday: "long", month: "long", day: "numeric" }
+    {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    }
   )
 
   const fetchMonthBookings = async () => {
@@ -107,6 +114,7 @@ function Bookings() {
 
   const getInitials = (name) => {
     if (!name) return "?"
+
     return name
       .split(" ")
       .map((word) => word[0])
@@ -127,22 +135,22 @@ function Bookings() {
 
   const getStatusPillClass = (status) => {
     if (status === "Confirmed") {
-      return "bg-green-500/10 border-green-400/30 text-green-300"
+      return "border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-300"
     }
 
     if (status === "Pending") {
-      return "bg-yellow-500/10 border-yellow-400/30 text-yellow-300"
+      return "border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"
     }
 
     if (status === "Cancelled") {
-      return "bg-red-500/10 border-red-400/30 text-red-300"
+      return "border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-300"
     }
 
     if (status === "Completed") {
-      return "bg-purple-500/10 border-purple-400/30 text-purple-300"
+      return "border-purple-500/30 bg-purple-500/10 text-purple-600 dark:text-purple-300"
     }
 
-    return "bg-blue-500/10 border-blue-400/30 text-blue-300"
+    return "border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-300"
   }
 
   const getStatusDot = (status) => {
@@ -154,11 +162,23 @@ function Bookings() {
   }
 
   const getBookingCardClass = (status) => {
-    if (status === "Confirmed") return "border-green-400/30 bg-green-500/5"
-    if (status === "Pending") return "border-yellow-400/30 bg-yellow-500/5"
-    if (status === "Cancelled") return "border-red-400/30 bg-red-500/5"
-    if (status === "Completed") return "border-purple-400/30 bg-purple-500/5"
-    return "border-blue-400/30 bg-blue-500/5"
+    if (status === "Confirmed") {
+      return "border-green-500/25 bg-green-500/5"
+    }
+
+    if (status === "Pending") {
+      return "border-yellow-500/25 bg-yellow-500/5"
+    }
+
+    if (status === "Cancelled") {
+      return "border-red-500/25 bg-red-500/5"
+    }
+
+    if (status === "Completed") {
+      return "border-purple-500/25 bg-purple-500/5"
+    }
+
+    return "border-blue-500/25 bg-blue-500/5"
   }
 
   const selectedDayBookings = getBookingsForDate(selectedDate)
@@ -173,36 +193,42 @@ function Bookings() {
 
   return (
     <DashboardLayout>
-      <div className="w-full min-h-screen bg-[#0F172A] text-white overflow-x-hidden">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight">
+      <div className="min-h-screen w-full overflow-x-hidden bg-[var(--ownly-background)] text-[var(--ownly-text)] transition-colors duration-200">
+        <header className="mb-8">
+          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+            Schedule
+          </p>
+
+          <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
             Bookings
           </h1>
 
-          <p className="text-[#94A3B8] mt-2">
+          <p className="mt-3 text-[var(--ownly-muted)]">
             Manage your appointments and clients.
           </p>
-        </div>
+        </header>
 
-        <section className="w-full bg-white/5 border border-blue-400/20 rounded-3xl p-3 sm:p-5 mb-8 backdrop-blur-xl">
-          <div className="grid grid-cols-2 gap-2 bg-[#020617]/60 border border-blue-400/10 rounded-2xl p-1 mb-5">
+        <section className="w-full rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-4 shadow-sm transition-colors duration-200 sm:p-6">
+          <div className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-1">
             <button
+              type="button"
               onClick={() => setActiveTab("availability")}
-              className={`rounded-xl px-3 py-3 text-sm font-medium transition ${
+              className={`rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${
                 activeTab === "availability"
-                  ? "bg-blue-500/20 border border-blue-300/40 text-[#DBEAFE]"
-                  : "text-[#CBD5E1] hover:bg-blue-500/10"
+                  ? "border border-blue-500/40 bg-blue-500/15 text-[var(--ownly-text)] shadow-sm"
+                  : "text-[var(--ownly-muted)] hover:bg-blue-500/10 hover:text-[var(--ownly-text)]"
               }`}
             >
               Availability
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab("recent")}
-              className={`rounded-xl px-3 py-3 text-sm font-medium transition ${
+              className={`rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${
                 activeTab === "recent"
-                  ? "bg-blue-500/20 border border-blue-300/40 text-[#DBEAFE]"
-                  : "text-[#CBD5E1] hover:bg-blue-500/10"
+                  ? "border border-blue-500/40 bg-blue-500/15 text-[var(--ownly-text)] shadow-sm"
+                  : "text-[var(--ownly-muted)] hover:bg-blue-500/10 hover:text-[var(--ownly-text)]"
               }`}
             >
               Recent
@@ -211,28 +237,33 @@ function Bookings() {
 
           {activeTab === "availability" && (
             <>
-              <div className="bg-[#020617]/40 border border-blue-400/20 rounded-3xl p-3 sm:p-6 backdrop-blur-xl">
-                <div className="grid grid-cols-[44px_1fr_44px] items-center gap-3 mb-6">
+              <div className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-3 transition-colors duration-200 sm:p-6">
+                <div className="mb-6 grid grid-cols-[44px_1fr_44px] items-center gap-3">
                   <button
+                    type="button"
                     onClick={goToPreviousMonth}
-                    className="bg-white/5 border border-blue-400/20 w-11 h-11 rounded-2xl"
+                    aria-label="Previous month"
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] transition hover:border-blue-500/50 hover:bg-blue-500/10"
                   >
                     ←
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => setCalendarOpen(!calendarOpen)}
-                    className="text-lg sm:text-xl font-semibold text-center"
+                    className="rounded-xl px-3 py-2 text-center text-lg font-semibold text-[var(--ownly-text)] transition hover:bg-blue-500/10 sm:text-xl"
                   >
                     {selectedMonthLabel}{" "}
-                    <span className="text-[#93C5FD]">
+                    <span className="text-[var(--ownly-primary)]">
                       {calendarOpen ? "⌃" : "⌄"}
                     </span>
                   </button>
 
                   <button
+                    type="button"
                     onClick={goToNextMonth}
-                    className="bg-white/5 border border-blue-400/20 w-11 h-11 rounded-2xl"
+                    aria-label="Next month"
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] transition hover:border-blue-500/50 hover:bg-blue-500/10"
                   >
                     →
                   </button>
@@ -240,7 +271,7 @@ function Bookings() {
 
                 {calendarOpen && (
                   <>
-                    <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs text-[#94A3B8] mb-3">
+                    <div className="mb-3 grid grid-cols-7 gap-1 text-center text-xs text-[var(--ownly-muted)] sm:gap-2">
                       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                         (day) => (
                           <p key={day}>{day}</p>
@@ -255,33 +286,34 @@ function Bookings() {
 
                         return (
                           <button
+                            type="button"
                             key={date}
                             onClick={() => selectDay(date)}
-                            className={`min-h-12 sm:min-h-14 rounded-xl sm:rounded-2xl p-1 sm:p-2 flex flex-col items-center justify-center transition ${
+                            className={`flex min-h-12 flex-col items-center justify-center rounded-xl border p-1 transition-all duration-200 sm:min-h-14 sm:rounded-2xl sm:p-2 ${
                               selected
-                                ? "bg-blue-500/20 border border-blue-300/50 text-white"
-                                : "border border-transparent hover:bg-blue-500/10"
+                                ? "border-blue-500/60 bg-blue-500/15 text-[var(--ownly-text)] shadow-sm"
+                                : "border-transparent hover:border-blue-500/20 hover:bg-blue-500/10"
                             } ${
                               isCurrentMonth(date)
-                                ? "text-white"
-                                : "text-[#64748B] opacity-60"
+                                ? "text-[var(--ownly-text)]"
+                                : "text-[var(--ownly-subtle)] opacity-60"
                             }`}
                           >
                             <span
-                              className={`text-sm font-semibold ${
+                              className={`flex text-sm font-semibold ${
                                 isToday(date) && !selected
-                                  ? "bg-blue-500/10 border border-blue-400/40 rounded-full w-7 h-7 flex items-center justify-center text-[#93C5FD]"
+                                  ? "h-7 w-7 items-center justify-center rounded-full border border-blue-500/40 bg-blue-500/10 text-[var(--ownly-primary)]"
                                   : ""
                               }`}
                             >
                               {new Date(date).getDate()}
                             </span>
 
-                            <div className="flex gap-1 mt-1 min-h-2">
+                            <div className="mt-1 flex min-h-2 gap-1">
                               {bookingsForDay.slice(0, 3).map((booking) => (
                                 <span
                                   key={booking.id}
-                                  className={`w-2 h-2 rounded-full ${getStatusDot(
+                                  className={`h-2 w-2 rounded-full ${getStatusDot(
                                     booking.status
                                   )}`}
                                 />
@@ -296,23 +328,24 @@ function Bookings() {
               </div>
 
               <div className="mt-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-                <div>
-  <p className="text-[#94A3B8] text-sm mb-1">
-    Selected day
-  </p>
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="mb-1 text-sm text-[var(--ownly-muted)]">
+                      Selected day
+                    </p>
 
-  <h3 className="text-xl font-semibold leading-tight break-words">
-    {selectedDayLabel}
-  </h3>
-</div>
+                    <h3 className="break-words text-xl font-semibold leading-tight text-[var(--ownly-text)]">
+                      {selectedDayLabel}
+                    </h3>
+                  </div>
 
                   <button
+                    type="button"
                     onClick={() => {
                       const form = document.getElementById("create-booking")
                       form?.scrollIntoView({ behavior: "smooth" })
                     }}
-                    className="w-full sm:w-auto bg-blue-500/10 border border-blue-400/30 text-[#93C5FD] px-4 py-3 rounded-2xl text-sm hover:bg-blue-500/20 transition"
+                    className="w-full rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm font-semibold text-[var(--ownly-primary)] transition hover:border-blue-500/50 hover:bg-blue-500/20 sm:w-auto"
                   >
                     + Booking
                   </button>
@@ -332,12 +365,12 @@ function Bookings() {
           )}
 
           {activeTab === "recent" && (
-            <div className="bg-[#020617]/40 border border-blue-400/20 rounded-3xl p-4 sm:p-6 backdrop-blur-xl">
-              <h2 className="text-2xl font-semibold">
+            <div className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4 transition-colors duration-200 sm:p-6">
+              <h2 className="text-2xl font-semibold text-[var(--ownly-text)]">
                 Recent Appointments
               </h2>
 
-              <p className="text-[#94A3B8] mt-1 mb-5">
+              <p className="mb-5 mt-1 text-[var(--ownly-muted)]">
                 Your most recent bookings.
               </p>
 
@@ -355,47 +388,75 @@ function Bookings() {
         </section>
 
         {selectedBooking && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-            <div className="bg-[#0F172A]/95 border border-blue-400/20 rounded-3xl shadow-xl w-full max-w-xl max-h-[85vh] overflow-y-auto p-5 sm:p-6">
-              <div className="flex items-start justify-between gap-4 mb-6">
-                <div className="flex items-center gap-4 min-w-0">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+            <div className="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 text-[var(--ownly-text)] shadow-2xl transition-colors duration-200 sm:p-6">
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-4">
                   <Avatar
                     name={selectedBooking.client_name}
                     getInitials={getInitials}
                   />
 
                   <div className="min-w-0">
-                    <h2 className="text-2xl font-bold truncate">
+                    <h2 className="truncate text-2xl font-bold">
                       {selectedBooking.client_name}
                     </h2>
 
-                    <p className="text-[#94A3B8] mt-1 truncate">
+                    <p className="mt-1 truncate text-[var(--ownly-muted)]">
                       {selectedBooking.service}
                     </p>
                   </div>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setSelectedBooking(null)}
-                  className="text-[#94A3B8] hover:text-white text-2xl"
+                  aria-label="Close booking details"
+                  className="text-2xl text-[var(--ownly-muted)] transition hover:text-[var(--ownly-text)]"
                 >
                   ×
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <InfoCard label="Date" value={formatShortDate(selectedBooking.date)} />
-                <InfoCard label="Time" value={selectedBooking.time || "No time"} />
-                <InfoCard label="Phone" value={selectedBooking.phone || "No phone"} />
-                <InfoCard label="Email" value={selectedBooking.email || "No email"} />
-                <InfoCard label="Status" value={selectedBooking.status || "Pending"} />
-                <InfoCard label="Amount" value={`$${selectedBooking.amount || 0}`} />
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <InfoCard
+                  label="Date"
+                  value={formatShortDate(selectedBooking.date)}
+                />
+
+                <InfoCard
+                  label="Time"
+                  value={selectedBooking.time || "No time"}
+                />
+
+                <InfoCard
+                  label="Phone"
+                  value={selectedBooking.phone || "No phone"}
+                />
+
+                <InfoCard
+                  label="Email"
+                  value={selectedBooking.email || "No email"}
+                />
+
+                <InfoCard
+                  label="Status"
+                  value={selectedBooking.status || "Pending"}
+                />
+
+                <InfoCard
+                  label="Amount"
+                  value={`$${selectedBooking.amount || 0}`}
+                />
               </div>
             </div>
           </div>
         )}
 
-        <div id="create-booking" className="w-full max-w-full overflow-hidden">
+        <div
+          id="create-booking"
+          className="mt-8 w-full max-w-full overflow-hidden"
+        >
           <BookingForm />
         </div>
       </div>
@@ -405,7 +466,7 @@ function Bookings() {
 
 function Avatar({ name, getInitials }) {
   return (
-    <div className="shrink-0 w-14 h-14 rounded-full bg-blue-500/10 border border-blue-400/40 text-[#93C5FD] flex items-center justify-center text-xl font-semibold">
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-blue-500/30 bg-blue-500/10 text-xl font-semibold text-[var(--ownly-primary)]">
       {getInitials(name)}
     </div>
   )
@@ -422,9 +483,15 @@ function BookingCards({
 }) {
   if (bookings.length === 0) {
     return (
-      <p className="text-[#94A3B8] bg-[#020617]/50 border border-blue-400/10 rounded-2xl p-4">
-        {emptyMessage}
-      </p>
+      <div className="rounded-2xl border border-dashed border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-5 text-center">
+        <p className="font-semibold text-[var(--ownly-text)]">
+          Nothing scheduled
+        </p>
+
+        <p className="mt-1 text-sm text-[var(--ownly-muted)]">
+          {emptyMessage}
+        </p>
+      </div>
     )
   }
 
@@ -432,40 +499,44 @@ function BookingCards({
     <div className="space-y-3">
       {bookings.map((booking) => (
         <button
+          type="button"
           key={booking.id}
           onClick={() => setSelectedBooking(booking)}
-          className={`w-full text-left rounded-2xl border p-4 backdrop-blur-xl hover:border-blue-400/50 hover:bg-blue-500/10 transition ${getBookingCardClass(
+          className={`w-full rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-500/40 hover:shadow-md ${getBookingCardClass(
             booking.status
           )}`}
         >
           <div className="flex items-center gap-4">
-            <Avatar name={booking.client_name} getInitials={getInitials} />
+            <Avatar
+              name={booking.client_name}
+              getInitials={getInitials}
+            />
 
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold truncate">
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-semibold text-[var(--ownly-text)]">
                 {booking.client_name || "No name"}
               </p>
 
-              <p className="text-[#94A3B8] text-sm truncate">
+              <p className="truncate text-sm text-[var(--ownly-muted)]">
                 {booking.service || "No service"}
               </p>
 
-              <div className="flex flex-col gap-2 mt-2 text-xs text-[#94A3B8]">
+              <div className="mt-2 flex flex-col gap-1 text-xs text-[var(--ownly-muted)]">
                 <span>{formatShortDate(booking.date)}</span>
                 <span>{booking.time || "No time"}</span>
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-2 shrink-0">
+            <div className="flex shrink-0 flex-col items-end gap-2">
               <span
-                className={`text-xs px-3 py-1.5 rounded-xl border ${getStatusPillClass(
+                className={`rounded-xl border px-3 py-1.5 text-xs ${getStatusPillClass(
                   booking.status
                 )}`}
               >
                 {booking.status || "Pending"}
               </span>
 
-              <span className="text-[#94A3B8] text-xl">›</span>
+              <span className="text-xl text-[var(--ownly-muted)]">›</span>
             </div>
           </div>
         </button>
@@ -476,9 +547,10 @@ function BookingCards({
 
 function InfoCard({ label, value }) {
   return (
-    <div className="bg-white/5 border border-blue-400/20 rounded-2xl p-4">
-      <p className="text-[#94A3B8] text-sm">{label}</p>
-      <p className="text-white mt-1 break-words">{value}</p>
+    <div className="rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
+      <p className="text-sm text-[var(--ownly-muted)]">{label}</p>
+
+      <p className="mt-1 break-words text-[var(--ownly-text)]">{value}</p>
     </div>
   )
 }

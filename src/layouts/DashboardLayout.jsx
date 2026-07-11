@@ -6,23 +6,25 @@ function DashboardLayout({ children }) {
   const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
-  const handleScroll = () => {
-    setShowScrollTop(window.scrollY > 300)
-  }
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300)
+    }
 
-  window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll)
 
-  return () => {
-    window.removeEventListener("scroll", handleScroll)
-  }
-}, [])
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
 
   return (
-    <div className="relative flex min-h-screen bg-[#0F172A] overflow-x-hidden">
+    <div className="relative flex min-h-screen overflow-x-hidden bg-[var(--ownly-background)] text-[var(--ownly-text)] transition-colors duration-200">
       {/* Mobile menu button */}
       <button
+        type="button"
         onClick={() => setSidebarOpen(true)}
-        className="fixed bottom-6 left-4 z-50 md:hidden bg-[#020617] border border-[#334155] text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
+        aria-label="Open navigation menu"
+        className="fixed bottom-6 left-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] shadow-lg transition-colors duration-200 md:hidden"
       >
         ☰
       </button>
@@ -31,13 +33,13 @@ function DashboardLayout({ children }) {
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed md:sticky md:top-0 inset-y-0 left-0 z-50 transform transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 md:sticky md:top-0 md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -45,25 +47,27 @@ function DashboardLayout({ children }) {
       </div>
 
       {/* Main content */}
-      {/* Main content */}
-<main className="flex-1 min-h-screen overflow-x-hidden px-4 pt-8 pb-28 md:p-6">
-  <div className="w-full max-w-full overflow-x-hidden">
-    {children}
-  </div>
-</main>
-{showScrollTop && (
-  <button
-    onClick={() =>
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      })
-    }
-    className="fixed bottom-6 right-4 z-50 md:hidden bg-[#020617] border border-[#334155] text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
-  >
-    ↑
-  </button>
-)}
+      <main className="min-h-screen min-w-0 flex-1 overflow-x-hidden bg-[var(--ownly-background)] px-4 pb-28 pt-8 transition-colors duration-200 md:p-6">
+        <div className="w-full max-w-full overflow-x-hidden">
+          {children}
+        </div>
+      </main>
+
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            })
+          }
+          aria-label="Scroll to top"
+          className="fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] shadow-lg transition-colors duration-200 md:hidden"
+        >
+          ↑
+        </button>
+      )}
     </div>
   )
 }
