@@ -1,3 +1,4 @@
+@import "./styles/globals.css";
 @import "tailwindcss";
 .react-datepicker {
   background-color: #0f172a !important;
