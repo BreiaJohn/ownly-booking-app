@@ -43,6 +43,8 @@ function PublicBooking() {
   const [loading, setLoading] = useState(false)
   const [businessError, setBusinessError] = useState("")
 
+  const [submittedBooking, setSubmittedBooking] = useState(null)
+
   const today = new Date().toISOString().split("T")[0]
 
   const fieldClass =
@@ -84,6 +86,31 @@ const fetchBusiness = async () => {
   }
 
   setBusiness(data)
+}
+
+const formatBookingDate = (dateString) => {
+  if (!dateString) return ""
+
+  return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  })
+}
+
+const formatBookingTime = (timeString) => {
+  if (!timeString) return ""
+
+  const [hours, minutes] = timeString.split(":")
+  const date = new Date()
+
+  date.setHours(Number(hours), Number(minutes))
+
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  })
 }
 
   const handleBooking = async (e) => {
@@ -133,6 +160,15 @@ const { data: existingBooking, error: bookingCheckError } =
   },
 ])
 
+    setSubmittedBooking({
+      clientName,
+      service,
+      date,
+      time,
+      email,
+      phone,
+})
+
     setLoading(false)
 
     if (error) {
@@ -146,42 +182,83 @@ const { data: existingBooking, error: bookingCheckError } =
     resetForm()
   }
 
-  if (submitted) {
-    return (
-      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--ownly-background)] px-4 py-10 text-[var(--ownly-text)] transition-colors duration-200">
-        <div className="pointer-events-none absolute left-[-8rem] top-[-8rem] h-96 w-96 rounded-full bg-blue-500/10 blur-[120px]" />
+if (submitted && submittedBooking) {
+  return (
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--ownly-background)] px-4 py-10 text-[var(--ownly-text)] transition-colors duration-200">
+      <div className="pointer-events-none absolute left-[-8rem] top-[-8rem] h-96 w-96 rounded-full bg-blue-500/10 blur-[120px]" />
 
-        <div className="pointer-events-none absolute bottom-[-10rem] right-[-8rem] h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-[-10rem] right-[-8rem] h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-[140px]" />
 
-        <section className="relative w-full max-w-xl rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-7 text-center shadow-2xl transition-colors duration-200 sm:p-10">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-4xl text-green-600 dark:text-green-300">
-            ✓
+      <section className="relative w-full max-w-xl rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-7 text-center shadow-2xl transition-colors duration-200 sm:p-10">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-4xl text-green-600 dark:text-green-300">
+          ✓
+        </div>
+
+        <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+          Appointment Requested
+        </p>
+
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          Request received!
+        </h1>
+
+        <p className="mx-auto mt-4 max-w-md text-[var(--ownly-muted)]">
+          Your request was sent to {business.business_name}. You’ll be
+          contacted once the appointment is confirmed.
+        </p>
+
+        <div className="mt-8 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-5 text-left">
+          <h2 className="mb-4 font-semibold text-[var(--ownly-text)]">
+            Appointment details
+          </h2>
+
+          <div className="space-y-4">
+            <ConfirmationRow
+              label="Business"
+              value={business.business_name}
+            />
+
+            <ConfirmationRow
+              label="Service"
+              value={submittedBooking.service}
+            />
+
+            <ConfirmationRow
+              label="Date"
+              value={formatBookingDate(submittedBooking.date)}
+            />
+
+            <ConfirmationRow
+              label="Time"
+              value={formatBookingTime(submittedBooking.time)}
+            />
+
+            <ConfirmationRow
+              label="Name"
+              value={submittedBooking.clientName}
+            />
+
+            <ConfirmationRow
+              label="Email"
+              value={submittedBooking.email}
+            />
           </div>
+        </div>
 
-          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
-            Appointment Requested
-          </p>
-
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            You’re booked!
-          </h1>
-
-          <p className="mx-auto mt-4 max-w-md text-[var(--ownly-muted)]">
-            Your appointment request was submitted successfully. The business
-            will confirm your appointment shortly.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => setSubmitted(false)}
-            className="mt-8 w-full rounded-2xl bg-blue-600 px-5 py-4 font-semibold text-white transition hover:bg-blue-700"
-          >
-            Book Another Appointment
-          </button>
-        </section>
-      </main>
-   )
-  }
+        <button
+          type="button"
+          onClick={() => {
+            setSubmitted(false)
+            setSubmittedBooking(null)
+          }}
+          className="mt-8 w-full rounded-2xl bg-blue-600 px-5 py-4 font-semibold text-white transition hover:bg-blue-700"
+        >
+          Book Another Appointment
+        </button>
+      </section>
+    </main>
+  )
+}
 
   if (businessError) {
   return (
@@ -451,4 +528,15 @@ function BusinessDetail({ icon, title, description }) {
   )
 }
 
+function ConfirmationRow({ label, value }) {
+  return (
+    <div className="flex flex-col gap-1 border-b border-[var(--ownly-border)] pb-3 last:border-b-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
+      <span className="text-sm text-[var(--ownly-muted)]">{label}</span>
+
+      <span className="font-medium text-[var(--ownly-text)] sm:text-right">
+        {value}
+      </span>
+    </div>
+  )
+}
 export default PublicBooking

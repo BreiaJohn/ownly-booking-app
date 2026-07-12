@@ -51,7 +51,7 @@ function Sidebar({ closeSidebar }) {
     }`
 
   return (
-    <aside className="flex h-screen w-72 flex-col overflow-y-auto border-r border-[var(--ownly-border)] bg-[var(--ownly-surface)] px-6 py-6 text-[var(--ownly-text)] transition-colors duration-200">
+    <aside className="flex h-[100dvh] w-72 flex-col overflow-y-auto border-r border-[var(--ownly-border)] bg-[var(--ownly-surface)] px-6 py-6 text-[var(--ownly-text)] transition-colors duration-200">
       <div className="mb-8 flex items-center justify-center md:justify-start">
         <button
           type="button"
@@ -112,13 +112,12 @@ function Sidebar({ closeSidebar }) {
         </NavLink>
       </nav>
 
-      <div className="mt-auto space-y-4 border-t border-[var(--ownly-border)] pt-5">
+      <div className="mt-auto space-y-4 border-t border-[var(--ownly-border)] bg-[var(--ownly-surface)] pb-4 pt-5">
         <div className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-3">
           <div>
             <p className="text-sm font-semibold text-[var(--ownly-text)]">
-              Dark Mode
-            </p>
-
+  {theme === "dark" ? "Dark Mode" : "Light Mode"}
+</p>
             <p className="text-xs text-[var(--ownly-muted)]">
               Change appearance
             </p>
