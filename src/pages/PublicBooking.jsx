@@ -1,58 +1,209 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
 import { supabase } from "../lib/supabase"
 import toast from "react-hot-toast"
 import logo from "../assets/ownly-logo.png"
 
-const services = [
-  {
-    name: "Silk Press",
-    description: "Smooth, sleek styling with a polished finish.",
-  },
-  {
-    name: "Braids",
-    description: "Protective braided styling customized for you.",
-  },
-  {
-    name: "Twists",
-    description: "A versatile protective style with a natural finish.",
-  },
-  {
-    name: "Loc Maintenance",
-    description: "Retwist and maintenance for healthy, refreshed locs.",
-  },
-  {
-    name: "Consultation",
-    description: "Discuss your goals before selecting a full service.",
-  },
-]
-
 function PublicBooking() {
   const { username } = useParams()
 
   const [business, setBusiness] = useState(null)
+  const [services, setServices] = useState([])
+  const [availability, setAvailability] = useState([])
 
   const [clientName, setClientName] = useState("")
-  const [service, setService] = useState("")
+  const [serviceId, setServiceId] = useState("")
   const [date, setDate] = useState("")
   const [time, setTime] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
   const [notes, setNotes] = useState("")
-  const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [businessError, setBusinessError] = useState("")
 
+  const [submitted, setSubmitted] = useState(false)
   const [submittedBooking, setSubmittedBooking] = useState(null)
 
-  const today = new Date().toISOString().split("T")[0]
+  const [pageLoading, setPageLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [businessError, setBusinessError] = useState("")
+
+  const [unavailableTimes, setUnavailableTimes] = useState([])
+  const [loadingTimes, setLoadingTimes] = useState(false)
+
+  const today = getLocalDateString(new Date())
 
   const fieldClass =
     "block w-full min-w-0 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
 
+  useEffect(() => {
+    fetchBookingPage()
+  }, [username])
+
+  useEffect(() => {
+  const fetchUnavailableTimes = async () => {
+    setUnavailableTimes([])
+    setTime("")
+
+    if (!business?.id || !date) {
+      return
+    }
+
+    setLoadingTimes(true)
+
+    try {
+      const { data, error } = await supabase.rpc(
+        "get_unavailable_times",
+        {
+          owner_id: business.id,
+          selected_date: date,
+        }
+      )
+
+      if (error) {
+        throw error
+      }
+
+      const unavailable = (data || []).map((item) =>
+        item.time_value.slice(0, 5)
+      )
+console.log("Unavailable times:", unavailable)
+
+      setUnavailableTimes(unavailable)
+    } catch (error) {
+      console.error(error)
+      toast.error("Could not load appointment availability.")
+    } finally {
+      setLoadingTimes(false)
+    }
+  }
+
+  fetchUnavailableTimes()
+}, [business?.id, date])
+
+  const fetchBookingPage = async () => {
+    setPageLoading(true)
+    setBusinessError("")
+    setBusiness(null)
+    setServices([])
+    setAvailability([])
+
+    if (!username) {
+      setBusinessError("This booking page could not be found.")
+      setPageLoading(false)
+      return
+    }
+
+    try {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select(
+  "id, business_name, username, business_category, description, logo_url"
+
+        )
+        .eq("username", username)
+        .eq("setup_complete", true)
+        .maybeSingle()
+
+      if (profileError) {
+        throw profileError
+      }
+
+      if (!profile) {
+        setBusinessError("This booking page could not be found.")
+        return
+      }
+
+      const [
+        { data: serviceData, error: serviceError },
+        { data: availabilityData, error: availabilityError },
+      ] = await Promise.all([
+        supabase
+          .from("services")
+          .select("id, name, description, price, duration, active")
+          .eq("user_id", profile.id)
+          .eq("active", true)
+          .order("created_at", { ascending: true }),
+
+        supabase
+          .from("availability")
+          .select(
+            "day_of_week, is_available, start_time, end_time"
+          )
+          .eq("user_id", profile.id)
+          .order("day_of_week", { ascending: true }),
+      ])
+
+      if (serviceError) {
+        throw serviceError
+      }
+
+      if (availabilityError) {
+        throw availabilityError
+      }
+
+      setBusiness(profile)
+      setServices(serviceData || [])
+      setAvailability(availabilityData || [])
+    } catch (error) {
+      console.error("Booking page error:", error)
+      setBusinessError("Unable to load this booking page.")
+    } finally {
+      setPageLoading(false)
+    }
+  }
+
+  const selectedService = useMemo(() => {
+    return services.find((item) => item.id === serviceId) || null
+  }, [services, serviceId])
+
+  const selectedDayAvailability = useMemo(() => {
+    if (!date) return null
+
+    const dayOfWeek = new Date(`${date}T00:00:00`).getDay()
+
+    return (
+      availability.find(
+        (day) => Number(day.day_of_week) === dayOfWeek
+      ) || null
+    )
+  }, [date, availability])
+
+const availableTimes = useMemo(() => {
+  if (
+    !selectedService ||
+    !selectedDayAvailability ||
+    !selectedDayAvailability.is_available
+  ) {
+    return []
+  }
+
+  const generatedSlots = generateTimeSlots(
+    selectedDayAvailability.start_time,
+    selectedDayAvailability.end_time,
+    Number(selectedService.duration)
+  )
+
+  return generatedSlots.filter(
+    (slot) => !unavailableTimes.includes(slot)
+  )
+}, [
+  selectedService,
+  selectedDayAvailability,
+  unavailableTimes,
+])
+
+  const handleServiceChange = (event) => {
+    setServiceId(event.target.value)
+    setTime("")
+  }
+
+  const handleDateChange = (event) => {
+    setDate(event.target.value)
+    setTime("")
+  }
+
   const resetForm = () => {
     setClientName("")
-    setService("")
+    setServiceId("")
     setDate("")
     setTime("")
     setPhone("")
@@ -60,282 +211,262 @@ function PublicBooking() {
     setNotes("")
   }
 
-useEffect(() => {
-  fetchBusiness()
-}, [username])
+  const handleBooking = async (event) => {
+    event.preventDefault()
 
-const fetchBusiness = async () => {
-  setBusinessError("")
-
-  const { data, error } = await supabase
-    .from("business_profiles")
-    .select("*")
-    .eq("username", username)
-    .eq("is_public", true)
-    .maybeSingle()
-
-  if (error) {
-    console.error(error)
-    setBusinessError("Unable to load this booking page.")
-    return
-  }
-
-  if (!data) {
-    setBusinessError("This booking page could not be found.")
-    return
-  }
-
-  setBusiness(data)
-}
-
-const formatBookingDate = (dateString) => {
-  if (!dateString) return ""
-
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  })
-}
-
-const formatBookingTime = (timeString) => {
-  if (!timeString) return ""
-
-  const [hours, minutes] = timeString.split(":")
-  const date = new Date()
-
-  date.setHours(Number(hours), Number(minutes))
-
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  })
-}
-
-  const handleBooking = async (e) => {
-    e.preventDefault()
-
-    if (!clientName || !service || !date || !time || !phone || !email) {
-      toast.error("Please complete all required fields")
+    if (
+      !business ||
+      !selectedService ||
+      !clientName.trim() ||
+      !date ||
+      !time ||
+      !phone.trim() ||
+      !email.trim()
+    ) {
+      toast.error("Please complete all required fields.")
       return
     }
 
-    setLoading(true)
-
-const { data: existingBooking, error: bookingCheckError } =
-  await supabase
-    .from("bookings")
-    .select("id")
-    .eq("user_id", business.user_id)
-    .eq("date", date)
-    .eq("time", time)
-    .maybeSingle()
-
-    if (bookingCheckError) {
-      console.log(bookingCheckError)
-      toast.error("Unable to check appointment availability")
-      setLoading(false)
+    if (
+      !selectedDayAvailability ||
+      !selectedDayAvailability.is_available
+    ) {
+      toast.error("The business is closed on that day.")
       return
     }
 
-    if (existingBooking) {
-      toast.error("That appointment time is no longer available")
-      setLoading(false)
+    if (!availableTimes.includes(time)) {
+      toast.error("Please choose an available appointment time.")
       return
     }
 
-    const { error } = await supabase.from("bookings").insert([
-  {
-    user_id: business.user_id,
-    client_name: clientName.trim(),
-    service,
-    date,
-    time,
-    email: email.trim(),
-    phone: phone.trim(),
-    notes: notes.trim(),
-    status: "Pending",
-    payment_status: "Pending",
-  },
-])
+    setSubmitting(true)
 
-    setSubmittedBooking({
-      clientName,
-      service,
+    const bookingDetails = {
+      clientName: clientName.trim(),
+      service: selectedService.name,
+      price: Number(selectedService.price),
+      duration: Number(selectedService.duration),
       date,
       time,
-      email,
-      phone,
-})
-
-    setLoading(false)
-
-    if (error) {
-      console.log(error)
-      toast.error("Failed to submit your booking")
-      return
+      email: email.trim(),
+      phone: phone.trim(),
     }
 
-    toast.success("Booking request submitted!")
-    setSubmitted(true)
-    resetForm()
+    try {
+      const { error } = await supabase.from("bookings").insert({
+        user_id: business.id,
+        client_name: bookingDetails.clientName,
+        service: bookingDetails.service,
+        date: bookingDetails.date,
+        time: bookingDetails.time,
+        email: bookingDetails.email,
+        phone: bookingDetails.phone,
+        notes: notes.trim(),
+        amount: bookingDetails.price,
+        status: "Pending",
+        payment_status: "Pending",
+
+      })
+
+      if (error) {
+        if (error.code === "23505") {
+          toast.error(
+            "That appointment time was just taken. Please choose another time."
+          )
+          setTime("")
+          return
+        }
+
+        throw error
+      }
+
+      setSubmittedBooking(bookingDetails)
+      setSubmitted(true)
+      resetForm()
+      toast.success("Booking request submitted!")
+    } catch (error) {
+      console.error("Booking submission error:", error)
+      toast.error(error.message || "Failed to submit your booking.")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-if (submitted && submittedBooking) {
-  return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--ownly-background)] px-4 py-10 text-[var(--ownly-text)] transition-colors duration-200">
-      <div className="pointer-events-none absolute left-[-8rem] top-[-8rem] h-96 w-96 rounded-full bg-blue-500/10 blur-[120px]" />
+  if (pageLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[var(--ownly-background)] px-4 text-[var(--ownly-text)]">
+        <div className="text-center">
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-blue-500/20 border-t-blue-500" />
 
-      <div className="pointer-events-none absolute bottom-[-10rem] right-[-8rem] h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-[140px]" />
-
-      <section className="relative w-full max-w-xl rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-7 text-center shadow-2xl transition-colors duration-200 sm:p-10">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-4xl text-green-600 dark:text-green-300">
-          ✓
+          <p className="mt-4 text-[var(--ownly-muted)]">
+            Loading booking page...
+          </p>
         </div>
+      </main>
+    )
+  }
 
-        <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
-          Appointment Requested
-        </p>
+  if (businessError || !business) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[var(--ownly-background)] px-4 text-[var(--ownly-text)]">
+        <section className="w-full max-w-md rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-8 text-center">
+          <h1 className="text-2xl font-bold">
+            Booking page unavailable
+          </h1>
 
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Request received!
-        </h1>
+          <p className="mt-3 text-[var(--ownly-muted)]">
+            {businessError || "This booking page could not be found."}
+          </p>
+        </section>
+      </main>
+    )
+  }
 
-        <p className="mx-auto mt-4 max-w-md text-[var(--ownly-muted)]">
-          Your request was sent to {business.business_name}. You’ll be
-          contacted once the appointment is confirmed.
-        </p>
+  if (submitted && submittedBooking) {
+    return (
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--ownly-background)] px-4 py-10 text-[var(--ownly-text)]">
+        <div className="pointer-events-none absolute left-[-8rem] top-[-8rem] h-96 w-96 rounded-full bg-blue-500/10 blur-[120px]" />
 
-        <div className="mt-8 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-5 text-left">
-          <h2 className="mb-4 font-semibold text-[var(--ownly-text)]">
-            Appointment details
-          </h2>
+        <div className="pointer-events-none absolute bottom-[-10rem] right-[-8rem] h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-[140px]" />
 
-          <div className="space-y-4">
-            <ConfirmationRow
-              label="Business"
-              value={business.business_name}
-            />
-
-            <ConfirmationRow
-              label="Service"
-              value={submittedBooking.service}
-            />
-
-            <ConfirmationRow
-              label="Date"
-              value={formatBookingDate(submittedBooking.date)}
-            />
-
-            <ConfirmationRow
-              label="Time"
-              value={formatBookingTime(submittedBooking.time)}
-            />
-
-            <ConfirmationRow
-              label="Name"
-              value={submittedBooking.clientName}
-            />
-
-            <ConfirmationRow
-              label="Email"
-              value={submittedBooking.email}
-            />
+        <section className="relative w-full max-w-xl rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-7 text-center shadow-2xl sm:p-10">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-500/30 bg-green-500/10 text-4xl text-green-500">
+            ✓
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            setSubmitted(false)
-            setSubmittedBooking(null)
-          }}
-          className="mt-8 w-full rounded-2xl bg-blue-600 px-5 py-4 font-semibold text-white transition hover:bg-blue-700"
-        >
-          Book Another Appointment
-        </button>
-      </section>
-    </main>
-  )
-}
+          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+            Appointment Requested
+          </p>
 
-  if (businessError) {
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Request received!
+          </h1>
+
+          <p className="mx-auto mt-4 max-w-md text-[var(--ownly-muted)]">
+            Your request was sent to {business.business_name}. You will
+            be contacted after the appointment is reviewed.
+          </p>
+
+          <div className="mt-8 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-5 text-left">
+            <h2 className="mb-4 font-semibold">
+              Appointment details
+            </h2>
+
+            <div className="space-y-4">
+              <ConfirmationRow
+                label="Business"
+                value={business.business_name}
+              />
+
+              <ConfirmationRow
+                label="Service"
+                value={submittedBooking.service}
+              />
+
+              <ConfirmationRow
+                label="Price"
+                value={`$${submittedBooking.price.toFixed(2)}`}
+              />
+
+              <ConfirmationRow
+                label="Duration"
+                value={formatDuration(submittedBooking.duration)}
+              />
+
+              <ConfirmationRow
+                label="Date"
+                value={formatBookingDate(submittedBooking.date)}
+              />
+
+              <ConfirmationRow
+                label="Time"
+                value={formatBookingTime(submittedBooking.time)}
+              />
+
+              <ConfirmationRow
+                label="Name"
+                value={submittedBooking.clientName}
+              />
+
+              <ConfirmationRow
+                label="Email"
+                value={submittedBooking.email}
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setSubmitted(false)
+              setSubmittedBooking(null)
+            }}
+            className="mt-8 w-full rounded-2xl bg-blue-600 px-5 py-4 font-semibold text-white transition hover:bg-blue-700"
+          >
+            Book Another Appointment
+          </button>
+        </section>
+      </main>
+    )
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--ownly-background)] px-4 text-[var(--ownly-text)]">
-      <div className="w-full max-w-md rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-8 text-center">
-        <h1 className="text-2xl font-bold">Booking page unavailable</h1>
-
-        <p className="mt-3 text-[var(--ownly-muted)]">
-          {businessError}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-  if (!business) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-white">
-      Loading business...
-    </div>
-  )
-}
-
-  return (
-    <main className="relative min-h-screen overflow-hidden bg-[var(--ownly-background)] px-4 py-8 text-[var(--ownly-text)] transition-colors duration-200 sm:px-6 lg:px-8">
+    <main className="relative min-h-screen overflow-hidden bg-[var(--ownly-background)] px-4 py-8 text-[var(--ownly-text)] sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute left-[-10rem] top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-blue-500/10 blur-[140px]" />
 
       <div className="pointer-events-none absolute bottom-[-12rem] right-[-10rem] h-[32rem] w-[32rem] rounded-full bg-purple-500/10 blur-[150px]" />
 
       <div className="relative mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <section className="flex flex-col rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-6 shadow-sm transition-colors duration-200 sm:p-8 lg:p-10">
+        <section className="flex flex-col rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-6 shadow-sm sm:p-8 lg:p-10">
           <div className="mb-10">
-            <img
-              src={logo}
-              alt="Ownly"
-              className="h-20 w-auto object-contain"
-            />
+           {business.logo_url ? (
+  <img
+    src={business.logo_url}
+    alt={`${business.business_name} logo`}
+    className="h-24 w-24 rounded-2xl object-contain"
+  />
+) : (
+  <img
+    src={logo}
+    alt="Ownly"
+    className="h-20 w-auto object-contain"
+  />
+)}
           </div>
 
           <div>
             <p className="mb-3 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
-  {business.business_name}
-</p>
+              {business.business_category || "Professional services"}
+            </p>
 
-<h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-  Book with {business.business_name}
-</h1>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Book with {business.business_name}
+            </h1>
 
-<p className="mt-5 max-w-lg text-lg leading-8 text-[var(--ownly-muted)]">
-  {business.description ||
-    "Select your preferred service, date, and time. Your appointment will be submitted for confirmation."}
-</p>
-
-{business.location && (
-  <p className="mt-4 text-sm text-[var(--ownly-muted)]">
-    📍 {business.location}
-  </p>
-)}
+            <p className="mt-5 max-w-lg text-lg leading-8 text-[var(--ownly-muted)]">
+              {business.description ||
+                "Select your preferred service, date, and time. Your appointment will be submitted for confirmation."}
+            </p>
           </div>
 
           <div className="mt-10 space-y-4">
             <BusinessDetail
               icon="✓"
-              title="Simple scheduling"
-              description="Choose the service and time that works for you."
+              title="Choose your service"
+              description="Select from the services this business currently offers."
             />
 
             <BusinessDetail
               icon="◷"
-              title="Quick confirmation"
-              description="The business will review and confirm your request."
+              title="Choose an available time"
+              description="Appointment options are based on the business schedule."
             />
 
             <BusinessDetail
               icon="🔒"
-              title="Your information is secure"
-              description="Your contact information is used only for your booking."
+              title="Secure booking"
+              description="Your contact details are used only for your appointment."
             />
           </div>
 
@@ -348,7 +479,7 @@ if (submitted && submittedBooking) {
 
         <form
           onSubmit={handleBooking}
-          className="rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 shadow-xl transition-colors duration-200 sm:p-8 lg:p-10"
+          className="rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 shadow-xl sm:p-8 lg:p-10"
         >
           <div className="mb-8">
             <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
@@ -360,7 +491,8 @@ if (submitted && submittedBooking) {
             </h2>
 
             <p className="mt-3 text-[var(--ownly-muted)]">
-              Fields marked required must be completed before submitting.
+              Choose a service first, then select an available date and
+              time.
             </p>
           </div>
 
@@ -368,26 +500,37 @@ if (submitted && submittedBooking) {
             <FormField label="Choose a service" required>
               <select
                 required
-                value={service}
-                onChange={(e) => setService(e.target.value)}
+                value={serviceId}
+                onChange={handleServiceChange}
                 className={`${fieldClass} appearance-none`}
               >
                 <option value="">Select a service</option>
 
                 {services.map((item) => (
-                  <option key={item.name} value={item.name}>
-                    {item.name}
+                  <option key={item.id} value={item.id}>
+                    {item.name} — ${Number(item.price).toFixed(2)}
                   </option>
                 ))}
               </select>
 
-              {service && (
-                <p className="mt-2 text-sm text-[var(--ownly-muted)]">
-                  {
-                    services.find((item) => item.name === service)
-                      ?.description
-                  }
-                </p>
+              {selectedService && (
+                <div className="mt-3 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-semibold">
+                      ${Number(selectedService.price).toFixed(2)}
+                    </span>
+
+                    <span className="text-sm text-[var(--ownly-muted)]">
+                      {formatDuration(selectedService.duration)}
+                    </span>
+                  </div>
+
+                  {selectedService.description && (
+                    <p className="mt-2 text-sm leading-6 text-[var(--ownly-muted)]">
+                      {selectedService.description}
+                    </p>
+                  )}
+                </div>
               )}
             </FormField>
 
@@ -398,29 +541,72 @@ if (submitted && submittedBooking) {
                   required
                   min={today}
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={handleDateChange}
+                  disabled={!selectedService}
                   style={{ colorScheme: "inherit" }}
                   className={fieldClass}
                 />
+
+                {date &&
+                  selectedDayAvailability &&
+                  !selectedDayAvailability.is_available && (
+                    <p className="mt-2 text-sm text-red-500">
+                      {business.business_name} is closed on this day.
+                    </p>
+                  )}
+
+                {date && !selectedDayAvailability && (
+                  <p className="mt-2 text-sm text-red-500">
+                    No availability has been set for this day.
+                  </p>
+                )}
               </FormField>
 
               <FormField label="Preferred time" required>
-                <input
-                  type="time"
+                <select
                   required
                   value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  style={{ colorScheme: "inherit" }}
-                  className={fieldClass}
-                />
+                  onChange={(event) => setTime(event.target.value)}
+                  disabled={
+  loadingTimes ||
+  !date ||
+  availableTimes.length === 0
+}
+                  className={`${fieldClass} appearance-none`}
+                >
+                  <option value="">
+  {loadingTimes
+    ? "Checking availability..."
+    : date
+      ? availableTimes.length > 0
+        ? "Select a time"
+        : "No times available"
+      : "Choose a date first"}
+</option>
+
+                  {availableTimes.map((slot) => (
+                    <option key={slot} value={slot}>
+                      {formatBookingTime(slot)}
+                    </option>
+                  ))}
+                </select>
               </FormField>
             </div>
 
+            {services.length === 0 && (
+              <div className="rounded-2xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-600">
+                This business has not added any services yet.
+              </div>
+            )}
+
             <div className="border-t border-[var(--ownly-border)] pt-6">
-              <h3 className="text-xl font-semibold">Your information</h3>
+              <h3 className="text-xl font-semibold">
+                Your information
+              </h3>
 
               <p className="mt-1 text-sm text-[var(--ownly-muted)]">
-                We’ll use this information to contact you about your booking.
+                The business will use this information to contact you
+                about your appointment.
               </p>
             </div>
 
@@ -431,7 +617,7 @@ if (submitted && submittedBooking) {
                 autoComplete="name"
                 placeholder="Enter your full name"
                 value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
+                onChange={(event) => setClientName(event.target.value)}
                 className={fieldClass}
               />
             </FormField>
@@ -444,7 +630,7 @@ if (submitted && submittedBooking) {
                   autoComplete="email"
                   placeholder="you@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(event) => setEmail(event.target.value)}
                   className={fieldClass}
                 />
               </FormField>
@@ -456,7 +642,7 @@ if (submitted && submittedBooking) {
                   autoComplete="tel"
                   placeholder="(555) 555-5555"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(event) => setPhone(event.target.value)}
                   className={fieldClass}
                 />
               </FormField>
@@ -466,7 +652,7 @@ if (submitted && submittedBooking) {
               <textarea
                 placeholder="Special requests, questions, or details..."
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={(event) => setNotes(event.target.value)}
                 rows={4}
                 className={`${fieldClass} resize-none`}
               />
@@ -474,15 +660,21 @@ if (submitted && submittedBooking) {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={
+                submitting ||
+                services.length === 0 ||
+                availableTimes.length === 0
+              }
               className="w-full rounded-2xl bg-blue-600 px-5 py-4 font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_0_25px_rgba(37,99,235,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? "Submitting Booking..." : "Request Appointment"}
+              {submitting
+                ? "Submitting Booking..."
+                : "Request Appointment"}
             </button>
 
             <p className="text-center text-xs leading-5 text-[var(--ownly-subtle)]">
-              Submitting this form sends an appointment request. Your
-              appointment is not final until it is confirmed.
+              Your appointment is not final until the business confirms
+              your request.
             </p>
           </div>
         </form>
@@ -491,11 +683,102 @@ if (submitted && submittedBooking) {
   )
 }
 
+function generateTimeSlots(startTime, endTime, duration) {
+  if (!startTime || !endTime || !duration) {
+    return []
+  }
+
+  const startMinutes = timeToMinutes(startTime)
+  const endMinutes = timeToMinutes(endTime)
+  const slots = []
+
+  let currentMinutes = startMinutes
+
+  while (currentMinutes + duration <= endMinutes) {
+    slots.push(minutesToTime(currentMinutes))
+    currentMinutes += 30
+  }
+
+  return slots
+}
+
+function timeToMinutes(timeString) {
+  const [hours, minutes] = timeString.slice(0, 5).split(":").map(Number)
+
+  return hours * 60 + minutes
+}
+
+function minutesToTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0"
+  )}`
+}
+
+function getLocalDateString(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+
+  return `${year}-${month}-${day}`
+}
+
+function formatBookingDate(dateString) {
+  if (!dateString) return ""
+
+  return new Date(`${dateString}T00:00:00`).toLocaleDateString(
+    "en-US",
+    {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }
+  )
+}
+
+function formatBookingTime(timeString) {
+  if (!timeString) return ""
+
+  const [hours, minutes] = timeString.slice(0, 5).split(":")
+  const date = new Date()
+
+  date.setHours(Number(hours), Number(minutes), 0, 0)
+
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  })
+}
+
+function formatDuration(minutes) {
+  const numericMinutes = Number(minutes)
+
+  if (numericMinutes < 60) {
+    return `${numericMinutes} minutes`
+  }
+
+  const hours = Math.floor(numericMinutes / 60)
+  const remainingMinutes = numericMinutes % 60
+
+  if (remainingMinutes === 0) {
+    return `${hours} ${hours === 1 ? "hour" : "hours"}`
+  }
+
+  return `${hours} ${
+    hours === 1 ? "hour" : "hours"
+  } ${remainingMinutes} minutes`
+}
+
 function FormField({ label, required = false, children }) {
   return (
     <div>
       <label className="mb-2 block text-sm font-medium text-[var(--ownly-text)]">
         {label}
+
         {required && (
           <span className="ml-1 text-red-500" aria-hidden="true">
             *
@@ -516,9 +799,7 @@ function BusinessDetail({ icon, title, description }) {
       </div>
 
       <div>
-        <h3 className="font-semibold text-[var(--ownly-text)]">
-          {title}
-        </h3>
+        <h3 className="font-semibold">{title}</h3>
 
         <p className="mt-1 text-sm leading-6 text-[var(--ownly-muted)]">
           {description}
@@ -531,12 +812,13 @@ function BusinessDetail({ icon, title, description }) {
 function ConfirmationRow({ label, value }) {
   return (
     <div className="flex flex-col gap-1 border-b border-[var(--ownly-border)] pb-3 last:border-b-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-sm text-[var(--ownly-muted)]">{label}</span>
-
-      <span className="font-medium text-[var(--ownly-text)] sm:text-right">
-        {value}
+      <span className="text-sm text-[var(--ownly-muted)]">
+        {label}
       </span>
+
+      <span className="font-medium sm:text-right">{value}</span>
     </div>
   )
 }
+
 export default PublicBooking

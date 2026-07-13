@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import DashboardLayout from "../layouts/DashboardLayout"
 import { supabase } from "../lib/supabase"
+import BookingLinkCard from "../components/BookingLinkCard"
 
 function Dashboard() {
   const [bookings, setBookings] = useState([])
@@ -75,6 +76,7 @@ function Dashboard() {
             Today’s Overview
           </h3>
 
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <OverviewCard
               icon="📅"
@@ -102,6 +104,10 @@ function Dashboard() {
             />
           </div>
         </section>
+
+       <div className="mb-6">
+          <BookingLinkCard />
+        </div>
 
         <section className="bg-[var(--ownly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
           <h3 className="text-[var(--ownly-muted)] font-semibold mb-5">
