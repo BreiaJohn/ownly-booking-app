@@ -70,24 +70,6 @@ function PublicBooking() {
   throw error
 }
 
-const { error: emailError } = await supabase.functions.invoke(
-  "hyper-service",
-  {
-    body: {
-      clientEmail: bookingDetails.email,
-      clientName: bookingDetails.clientName,
-      businessName: business.business_name,
-      service: bookingDetails.service,
-      date: formatBookingDate(bookingDetails.date),
-      time: formatBookingTime(bookingDetails.time),
-    },
-  }
-)
-
-if (emailError) {
-  console.error("Booking email error:", emailError)
-}
-
       const unavailable = (data || []).map((item) =>
         item.time_value.slice(0, 5)
       )
@@ -119,56 +101,59 @@ console.log("Unavailable times:", unavailable)
     }
 
     try {
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select(
-  "id, business_name, username, business_category, description, logo_url, instagram, facebook, tiktok, website, google_review_link"
+const { data: profileData, error: profileError } = await supabase
+  .from("profiles")
+  .select(`
+    id,
+    business_name,
+    username,
+    phone,
+    business_email,
+    description,
+    business_category,
+    logo_url
+  `)
+  .eq("username", username)
+  .single()
 
-        )
-        .eq("username", username)
-        .eq("setup_complete", true)
-        .maybeSingle()
+if (profileError) {
+  throw profileError
+}
 
-      if (profileError) {
-        throw profileError
-      }
+if (!profileData) {
+  setBusinessError("This booking page could not be found.")
+  return
+}
 
-      if (!profile) {
-        setBusinessError("This booking page could not be found.")
-        return
-      }
+const [
+  { data: serviceData, error: serviceError },
+  { data: availabilityData, error: availabilityError },
+] = await Promise.all([
+  supabase
+    .from("services")
+    .select("id, name, description, price, duration, active")
+    .eq("user_id", profileData.id)
+    .eq("active", true)
+    .order("created_at", { ascending: true }),
 
-      const [
-        { data: serviceData, error: serviceError },
-        { data: availabilityData, error: availabilityError },
-      ] = await Promise.all([
-        supabase
-          .from("services")
-          .select("id, name, description, price, duration, active")
-          .eq("user_id", profile.id)
-          .eq("active", true)
-          .order("created_at", { ascending: true }),
+  supabase
+    .from("availability")
+    .select("day_of_week, is_available, start_time, end_time")
+    .eq("user_id", profileData.id)
+    .order("day_of_week", { ascending: true }),
+])
 
-        supabase
-          .from("availability")
-          .select(
-            "day_of_week, is_available, start_time, end_time"
-          )
-          .eq("user_id", profile.id)
-          .order("day_of_week", { ascending: true }),
-      ])
+if (serviceError) {
+  throw serviceError
+}
 
-      if (serviceError) {
-        throw serviceError
-      }
+if (availabilityError) {
+  throw availabilityError
+}
 
-      if (availabilityError) {
-        throw availabilityError
-      }
-
-      setBusiness(profile)
-      setServices(serviceData || [])
-      setAvailability(availabilityData || [])
+setBusiness(profileData)
+setServices(serviceData || [])
+setAvailability(availabilityData || [])
     } catch (error) {
       console.error("Booking page error:", error)
       setBusinessError("Unable to load this booking page.")
@@ -289,7 +274,7 @@ const availableTimes = useMemo(() => {
         phone: bookingDetails.phone,
         notes: notes.trim(),
         amount: bookingDetails.price,
-        status: "Pending",
+        status: "Confirmed",
         payment_status: "Pending",
 
       })
@@ -308,14 +293,17 @@ const availableTimes = useMemo(() => {
 
       const { data: emailData, error: emailError } =
   await supabase.functions.invoke("hyper-service", {
-    body: {
-      clientEmail: bookingDetails.email,
-      clientName: bookingDetails.clientName,
-      businessName: business.business_name,
-      service: bookingDetails.service,
-      date: formatBookingDate(bookingDetails.date),
-      time: formatBookingTime(bookingDetails.time),
-    },
+   body: {
+  clientEmail: bookingDetails.email,
+  clientName: bookingDetails.clientName,
+  clientPhone: bookingDetails.phone,
+  businessEmail: business.business_email,
+  businessName: business.business_name,
+  service: bookingDetails.service,
+  date: formatBookingDate(bookingDetails.date),
+  time: formatBookingTime(bookingDetails.time),
+  notes: notes.trim(),
+},
   })
 
 console.log("EMAIL FUNCTION DATA:", emailData)
@@ -325,7 +313,7 @@ if (emailError) {
   console.error("Booking email error:", emailError)
   toast.error("Booking saved, but the confirmation email was not sent.")
 } else {
-  toast.success("Booking request submitted and email sent!")
+  toast.success("You're booked! A confirmation email is on its way.")
 }
 
 setSubmittedBooking(bookingDetails)
@@ -382,16 +370,16 @@ resetForm()
           </div>
 
           <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
-            Appointment Requested
+            Appointment Confirmed
           </p>
 
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Request received!
+            You’re booked!
           </h1>
 
           <p className="mx-auto mt-4 max-w-md text-[var(--ownly-muted)]">
-            Your request was sent to {business.business_name}. You will
-            be contacted after the appointment is reviewed.
+            Your appointment with {business.business_name} has been reserved.
+A confirmation email has been sent with your appointment details.
           </p>
 
           <div className="mt-8 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-5 text-left">
@@ -538,8 +526,7 @@ resetForm()
             </h2>
 
             <p className="mt-3 text-[var(--ownly-muted)]">
-              Choose a service first, then select an available date and
-              time.
+              Choose a service, pick an available time, and instantly reserve your appointment.
             </p>
           </div>
 
@@ -716,12 +703,11 @@ resetForm()
             >
               {submitting
                 ? "Submitting Booking..."
-                : "Request Appointment"}
+                : "Book Appointment"}
             </button>
 
             <p className="text-center text-xs leading-5 text-[var(--ownly-subtle)]">
-              Your appointment is not final until the business confirms
-              your request.
+              Your selected appointment time will be reserved immediately.
             </p>
           </div>
         </form>
