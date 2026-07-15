@@ -58,9 +58,35 @@ function PublicBooking() {
         }
       )
 
-      if (error) {
-        throw error
-      }
+    if (error) {
+  if (error.code === "23505") {
+    toast.error(
+      "That appointment time was just taken. Please choose another time."
+    )
+    setTime("")
+    return
+  }
+
+  throw error
+}
+
+const { error: emailError } = await supabase.functions.invoke(
+  "hyper-service",
+  {
+    body: {
+      clientEmail: bookingDetails.email,
+      clientName: bookingDetails.clientName,
+      businessName: business.business_name,
+      service: bookingDetails.service,
+      date: formatBookingDate(bookingDetails.date),
+      time: formatBookingTime(bookingDetails.time),
+    },
+  }
+)
+
+if (emailError) {
+  console.error("Booking email error:", emailError)
+}
 
       const unavailable = (data || []).map((item) =>
         item.time_value.slice(0, 5)
@@ -96,7 +122,7 @@ console.log("Unavailable times:", unavailable)
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select(
-  "id, business_name, username, business_category, description, logo_url"
+  "id, business_name, username, business_category, description, logo_url, instagram, facebook, tiktok, website, google_review_link"
 
         )
         .eq("username", username)
@@ -190,7 +216,6 @@ const availableTimes = useMemo(() => {
   selectedDayAvailability,
   unavailableTimes,
 ])
-
   const handleServiceChange = (event) => {
     setServiceId(event.target.value)
     setTime("")
@@ -281,10 +306,31 @@ const availableTimes = useMemo(() => {
         throw error
       }
 
-      setSubmittedBooking(bookingDetails)
-      setSubmitted(true)
-      resetForm()
-      toast.success("Booking request submitted!")
+      const { data: emailData, error: emailError } =
+  await supabase.functions.invoke("hyper-service", {
+    body: {
+      clientEmail: bookingDetails.email,
+      clientName: bookingDetails.clientName,
+      businessName: business.business_name,
+      service: bookingDetails.service,
+      date: formatBookingDate(bookingDetails.date),
+      time: formatBookingTime(bookingDetails.time),
+    },
+  })
+
+console.log("EMAIL FUNCTION DATA:", emailData)
+console.log("EMAIL FUNCTION ERROR:", emailError)
+
+if (emailError) {
+  console.error("Booking email error:", emailError)
+  toast.error("Booking saved, but the confirmation email was not sent.")
+} else {
+  toast.success("Booking request submitted and email sent!")
+}
+
+setSubmittedBooking(bookingDetails)
+setSubmitted(true)
+resetForm()
     } catch (error) {
       console.error("Booking submission error:", error)
       toast.error(error.message || "Failed to submit your booking.")
@@ -448,6 +494,7 @@ const availableTimes = useMemo(() => {
               {business.description ||
                 "Select your preferred service, date, and time. Your appointment will be submitted for confirmation."}
             </p>
+            <SocialLinks business={business} />
           </div>
 
           <div className="mt-10 space-y-4">
@@ -683,6 +730,21 @@ const availableTimes = useMemo(() => {
   )
 }
 
+function normalizeExternalUrl(url) {
+  if (!url) return ""
+
+  const trimmedUrl = url.trim()
+
+  if (
+    trimmedUrl.startsWith("http://") ||
+    trimmedUrl.startsWith("https://")
+  ) {
+    return trimmedUrl
+  }
+
+  return `https://${trimmedUrl}`
+}
+
 function generateTimeSlots(startTime, endTime, duration) {
   if (!startTime || !endTime || !duration) {
     return []
@@ -787,6 +849,47 @@ function FormField({ label, required = false, children }) {
       </label>
 
       {children}
+    </div>
+  )
+}
+
+function SocialLinks({ business }) {
+  const links = [
+    {
+      label: "Instagram",
+      url: business.instagram,
+    },
+    {
+      label: "Facebook",
+      url: business.facebook,
+    },
+    {
+      label: "TikTok",
+      url: business.tiktok,
+    },
+    {
+      label: "Website",
+      url: business.website,
+    },
+  ].filter((item) => item.url)
+
+  if (links.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="mt-6 flex flex-wrap gap-3">
+      {links.map((item) => (
+        <a
+          key={item.label}
+          href={normalizeExternalUrl(item.url)}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-2 text-sm font-semibold text-[var(--ownly-text)] transition hover:border-blue-500/40 hover:text-[var(--ownly-primary)]"
+        >
+          {item.label}
+        </a>
+      ))}
     </div>
   )
 }

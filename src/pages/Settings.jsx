@@ -14,6 +14,13 @@ function Settings() {
   const [appointmentLength, setAppointmentLength] = useState("30")
   const [bufferTime, setBufferTime] = useState("0")
 
+  const [instagram, setInstagram] = useState("")
+const [facebook, setFacebook] = useState("")
+const [tiktok, setTiktok] = useState("")
+const [website, setWebsite] = useState("")
+const [googleReviewLink, setGoogleReviewLink] = useState("")
+const [savingSocials, setSavingSocials] = useState(false)
+
   const [blockedDate, setBlockedDate] = useState("")
   const [blockedTime, setBlockedTime] = useState("")
   const [blockedReason, setBlockedReason] = useState("")
@@ -31,6 +38,7 @@ const fieldClass =
     if (session?.user?.id) {
       fetchSettings()
       fetchBlockedTimes()
+      fetchSocialLinks()
     }
   }, [session])
 
@@ -53,6 +61,27 @@ const fieldClass =
       setBufferTime(data.buffer_time || "0")
     }
   }
+
+  const fetchSocialLinks = async () => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "instagram, facebook, tiktok, website, google_review_link"
+    )
+    .eq("id", session.user.id)
+    .single()
+
+  if (error) {
+    console.error("Social links error:", error)
+    return
+  }
+
+  setInstagram(data?.instagram || "")
+  setFacebook(data?.facebook || "")
+  setTiktok(data?.tiktok || "")
+  setWebsite(data?.website || "")
+  setGoogleReviewLink(data?.google_review_link || "")
+}
 
   const fetchBlockedTimes = async () => {
     const { data, error } = await supabase
@@ -92,6 +121,34 @@ const fieldClass =
     toast.success("Settings saved!")
   }
 
+
+    const handleSaveSocialLinks = async () => {
+  setSavingSocials(true)
+
+  try {
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        instagram: instagram.trim(),
+        facebook: facebook.trim(),
+        tiktok: tiktok.trim(),
+        website: website.trim(),
+        google_review_link: googleReviewLink.trim(),
+      })
+      .eq("id", session.user.id)
+
+    if (error) {
+      throw error
+    }
+
+    toast.success("Social links saved!")
+  } catch (error) {
+    console.error("Social links save error:", error)
+    toast.error("Could not save your social links.")
+  } finally {
+    setSavingSocials(false)
+  }
+}
   const handleAddBlockedTime = async () => {
     if (!blockedDate || !blockedTime) {
       toast.error("Choose a date and time to block")
@@ -172,6 +229,131 @@ const fieldClass =
             </button>
           </div>
         </Card>
+
+    <Card>
+  <div className="mb-6">
+    <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+      Business Profile
+    </p>
+
+    <h2 className="text-2xl font-bold text-[var(--ownly-text)] md:text-3xl">
+      Social Media & Reviews
+    </h2>
+
+    <p className="mt-2 max-w-2xl text-[var(--ownly-muted)]">
+      Add links clients can use to view your work, visit your website,
+      or leave a review.
+    </p>
+  </div>
+
+  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+    <div>
+      <label
+        htmlFor="instagram"
+        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+      >
+        Instagram
+      </label>
+
+      <input
+        id="instagram"
+        type="url"
+        value={instagram}
+        onChange={(event) => setInstagram(event.target.value)}
+        placeholder="https://instagram.com/yourbusiness"
+        className={fieldClass}
+      />
+    </div>
+
+    <div>
+      <label
+        htmlFor="facebook"
+        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+      >
+        Facebook
+      </label>
+
+      <input
+        id="facebook"
+        type="url"
+        value={facebook}
+        onChange={(event) => setFacebook(event.target.value)}
+        placeholder="https://facebook.com/yourbusiness"
+        className={fieldClass}
+      />
+    </div>
+
+    <div>
+      <label
+        htmlFor="tiktok"
+        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+      >
+        TikTok
+      </label>
+
+      <input
+        id="tiktok"
+        type="url"
+        value={tiktok}
+        onChange={(event) => setTiktok(event.target.value)}
+        placeholder="https://tiktok.com/@yourbusiness"
+        className={fieldClass}
+      />
+    </div>
+
+    <div>
+      <label
+        htmlFor="website"
+        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+      >
+        Website
+      </label>
+
+      <input
+        id="website"
+        type="url"
+        value={website}
+        onChange={(event) => setWebsite(event.target.value)}
+        placeholder="https://yourbusiness.com"
+        className={fieldClass}
+      />
+    </div>
+
+    <div className="md:col-span-2">
+      <label
+        htmlFor="googleReviewLink"
+        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+      >
+        Google review link
+      </label>
+
+      <input
+        id="googleReviewLink"
+        type="url"
+        value={googleReviewLink}
+        onChange={(event) =>
+          setGoogleReviewLink(event.target.value)
+        }
+        placeholder="Paste your Google review link"
+        className={fieldClass}
+      />
+
+      <p className="mt-2 text-xs text-[var(--ownly-muted)]">
+        This will later power the “Leave a Review” button clients see
+        after completed appointments.
+      </p>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    onClick={handleSaveSocialLinks}
+    disabled={savingSocials}
+    className={`${buttonClass} mt-6 disabled:cursor-not-allowed disabled:opacity-60`}
+  >
+    {savingSocials ? "Saving..." : "Save Social Links"}
+  </button>
+</Card>
 
         <section className="w-full overflow-hidden rounded-3xl border border-[#334155] bg-white/5 p-5 shadow-sm backdrop-blur-md sm:p-6 md:p-8">
           <div className="mb-8">

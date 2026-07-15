@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import DashboardLayout from "../layouts/DashboardLayout"
 import BookingForm from "../components/BookingForm"
 import { supabase } from "../lib/supabase"
+import toast from "react-hot-toast"
 
 function Bookings() {
   const [selectedDate, setSelectedDate] = useState(
@@ -11,6 +12,9 @@ function Bookings() {
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [calendarOpen, setCalendarOpen] = useState(true)
   const [activeTab, setActiveTab] = useState("availability")
+  const [updatingStatus, setUpdatingStatus] = useState(false)
+
+  const [showCancelModal, setShowCancelModal] = useState(false)
 
   const getMonthDates = (dateString) => {
     const date = new Date(dateString)
@@ -28,6 +32,7 @@ function Bookings() {
 
     const dates = []
     const current = new Date(startDate)
+
 
     while (current <= endDate) {
       dates.push(current.toISOString().split("T")[0])
@@ -76,6 +81,39 @@ function Bookings() {
   useEffect(() => {
     fetchMonthBookings()
   }, [selectedDate])
+
+  const updateBookingStatus = async (newStatus) => {
+    if (!selectedBooking?.id || updatingStatus) return
+
+    setUpdatingStatus(true)
+
+    try {
+      const { data, error } = await supabase
+        .from("bookings")
+        .update({ status: newStatus })
+        .eq("id", selectedBooking.id)
+        .select()
+        .single()
+
+      if (error) {
+        throw error
+      }
+
+      setMonthBookings((currentBookings) =>
+        currentBookings.map((booking) =>
+          booking.id === data.id ? data : booking
+        )
+      )
+
+      setSelectedBooking(data)
+      toast.success(`Booking marked as ${newStatus}.`)
+    } catch (error) {
+      console.error("Booking status update error:", error)
+      toast.error(error.message || "Could not update this booking.")
+    } finally {
+      setUpdatingStatus(false)
+    }
+  }
 
   const goToPreviousMonth = () => {
     const current = new Date(selectedDate)
@@ -446,9 +484,15 @@ function Bookings() {
 
                 <InfoCard
                   label="Amount"
-                  value={`$${selectedBooking.amount || 0}`}
+                  value={`$${Number(selectedBooking.amount || 0).toFixed(2)}`}
                 />
               </div>
+
+              <BookingStatusActions
+                status={selectedBooking.status || "Pending"}
+                updating={updatingStatus}
+                onChange={updateBookingStatus}
+              />
             </div>
           </div>
         )}
@@ -541,6 +585,88 @@ function BookingCards({
           </div>
         </button>
       ))}
+    </div>
+  )
+}
+
+function BookingStatusActions({ status, updating, onChange }) {
+  if (status === "Completed") {
+    return (
+      <div className="mt-6 rounded-2xl border border-purple-500/25 bg-purple-500/10 p-4 text-center">
+        <p className="font-semibold text-purple-600 dark:text-purple-300">
+          This appointment is complete.
+        </p>
+      </div>
+    )
+  }
+
+  if (status === "Cancelled") {
+    return (
+      <div className="mt-6 space-y-3">
+        <div className="rounded-2xl border border-red-500/25 bg-red-500/10 p-4 text-center">
+          <p className="font-semibold text-red-600 dark:text-red-300">
+            This appointment is cancelled.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          disabled={updating}
+          onClick={() => {
+  const confirmed = window.confirm(
+    "Are you sure you want to cancel this appointment?"
+  )
+
+  if (confirmed) {
+    onChange("Cancelled")
+  }
+}}
+          className="w-full rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 font-semibold text-[var(--ownly-primary)] transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Restore to Pending
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-6 border-t border-[var(--ownly-border)] pt-6">
+      <p className="mb-3 text-sm font-medium text-[var(--ownly-muted)]">
+        Manage appointment
+      </p>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {status === "Pending" && (
+          <button
+            type="button"
+            disabled={updating}
+            onClick={() => onChange("Confirmed")}
+            className="rounded-2xl border border-green-500/30 bg-green-500/10 px-4 py-3 font-semibold text-green-600 transition hover:bg-green-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:text-green-300"
+          >
+            {updating ? "Updating..." : "Confirm Appointment"}
+          </button>
+        )}
+
+        {status === "Confirmed" && (
+          <button
+            type="button"
+            disabled={updating}
+            onClick={() => onChange("Completed")}
+            className="rounded-2xl border border-purple-500/30 bg-purple-500/10 px-4 py-3 font-semibold text-purple-600 transition hover:bg-purple-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:text-purple-300"
+          >
+            {updating ? "Updating..." : "Mark Completed"}
+          </button>
+        )}
+
+        <button
+          type="button"
+          disabled={updating}
+          onClick={() => onChange("Cancelled")}
+          className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 font-semibold text-red-600 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:text-red-300"
+        >
+          {updating ? "Updating..." : "Cancel Appointment"}
+        </button>
+      </div>
     </div>
   )
 }
