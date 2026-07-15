@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase"
 import toast from "react-hot-toast"
 import logo from "../assets/ownly-logo.png"
 
+
 function PublicBooking() {
   const { username } = useParams()
 
@@ -252,79 +253,46 @@ const availableTimes = useMemo(() => {
 
     setSubmitting(true)
 
-    const bookingDetails = {
-      clientName: clientName.trim(),
-      service: selectedService.name,
-      price: Number(selectedService.price),
-      duration: Number(selectedService.duration),
-      date,
-      time,
-      email: email.trim(),
-      phone: phone.trim(),
-    }
-
-    try {
-      const { error } = await supabase.from("bookings").insert({
-        user_id: business.id,
-        client_name: bookingDetails.clientName,
-        service: bookingDetails.service,
-        date: bookingDetails.date,
-        time: bookingDetails.time,
-        email: bookingDetails.email,
-        phone: bookingDetails.phone,
-        notes: notes.trim(),
-        amount: bookingDetails.price,
-        status: "Confirmed",
-        payment_status: "Pending",
-
-      })
-
-      if (error) {
-        if (error.code === "23505") {
-          toast.error(
-            "That appointment time was just taken. Please choose another time."
-          )
-          setTime("")
-          return
-        }
-
-        throw error
-      }
-
-      const { data: emailData, error: emailError } =
-  await supabase.functions.invoke("hyper-service", {
-   body: {
-  clientEmail: bookingDetails.email,
-  clientName: bookingDetails.clientName,
-  clientPhone: bookingDetails.phone,
-  businessEmail: business.business_email,
-  businessName: business.business_name,
-  service: bookingDetails.service,
-  date: formatBookingDate(bookingDetails.date),
-  time: formatBookingTime(bookingDetails.time),
-  notes: notes.trim(),
-},
-  })
-
-console.log("EMAIL FUNCTION DATA:", emailData)
-console.log("EMAIL FUNCTION ERROR:", emailError)
-
-if (emailError) {
-  console.error("Booking email error:", emailError)
-  toast.error("Booking saved, but the confirmation email was not sent.")
-} else {
-  toast.success("You're booked! A confirmation email is on its way.")
+const bookingDetails = {
+  clientName: clientName.trim(),
+  service: selectedService.name,
+  price: Number(selectedService.price),
+  duration: Number(selectedService.duration),
+  date,
+  time,
+  email: email.trim(),
+  phone: phone.trim(),
 }
 
-setSubmittedBooking(bookingDetails)
-setSubmitted(true)
-resetForm()
-    } catch (error) {
-      console.error("Booking submission error:", error)
-      toast.error(error.message || "Failed to submit your booking.")
-    } finally {
-      setSubmitting(false)
+try {
+  const { data, error } = await supabase.functions.invoke(
+    "create-checkout-session",
+    {
+      body: {
+        serviceName: bookingDetails.service,
+        amount: Math.round(bookingDetails.price * 100),
+        businessName: business.business_name,
+      },
     }
+  )
+
+  console.log("CHECKOUT DATA:", data)
+  console.log("CHECKOUT ERROR:", error)
+
+  if (error) {
+    throw error
+  }
+
+  if (!data?.url) {
+    throw new Error("Stripe did not return a checkout URL.")
+  }
+
+  window.location.href = data.url
+} catch (error) {
+  console.error("Checkout error:", error)
+  toast.error(error.message || "Unable to start payment.")
+  setSubmitting(false)
+}
   }
 
   if (pageLoading) {
