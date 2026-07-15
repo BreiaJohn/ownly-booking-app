@@ -16,6 +16,8 @@ import PublicBooking from "./pages/PublicBooking"
 import SetupServices from "./pages/SetupServices"
 import SetupAvailability from "./pages/SetupAvailability"
 
+import PaymentSuccess from "./pages/PaymentSuccess"
+
 import { Toaster } from "react-hot-toast"
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
     location.pathname.startsWith("/clients") ||
     location.pathname.startsWith("/payments") ||
     location.pathname.startsWith("/settings") ||
+    location.pathname.startsWith("/payment-success") ||
     location.pathname.startsWith("/book")
 
   return (
@@ -45,6 +48,7 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           <Route path="/signup" element={<Signup />} />
+
 
           <Route
             path="/setup"
@@ -72,6 +76,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/payment-success" element={<PaymentSuccess />} />
 
           <Route
             path="/bookings"

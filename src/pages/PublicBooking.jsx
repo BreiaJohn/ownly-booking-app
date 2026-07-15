@@ -265,32 +265,64 @@ const bookingDetails = {
 }
 
 try {
-  const { data, error } = await supabase.functions.invoke(
-    "create-checkout-session",
-    {
-      body: {
-        serviceName: bookingDetails.service,
-        amount: Math.round(bookingDetails.price * 100),
-        businessName: business.business_name,
-      },
-    }
-  )
+  const { data: booking, error: bookingError } = await supabase
+  .from("bookings")
+  .insert({
+    user_id: business.id,
+    client_name: bookingDetails.clientName,
+    service: bookingDetails.service,
+    date: bookingDetails.date,
+    time: bookingDetails.time,
+    email: bookingDetails.email,
+    phone: bookingDetails.phone,
+    notes: notes.trim(),
+    amount: bookingDetails.price,
+    status: "Pending Payment",
+    payment_status: "Pending",
+  })
+  .select("id")
+  .single()
 
-  console.log("CHECKOUT DATA:", data)
-  console.log("CHECKOUT ERROR:", error)
+if (bookingError) {
+  throw bookingError
+}
 
-  if (error) {
-    throw error
+const { data, error } = await supabase.functions.invoke(
+  "create-checkout-session",
+  {
+    body: {
+      bookingId: booking.id,
+      serviceName: bookingDetails.service,
+      amount: Math.round(bookingDetails.price * 100),
+      businessName: business.business_name,
+      customerEmail: bookingDetails.email,
+    },
   }
+)
 
-  if (!data?.url) {
-    throw new Error("Stripe did not return a checkout URL.")
-  }
+if (error) {
+  await supabase
+    .from("bookings")
+    .delete()
+    .eq("id", booking.id)
 
-  window.location.href = data.url
+  throw error
+}
+
+if (!data?.url) {
+  await supabase
+    .from("bookings")
+    .delete()
+    .eq("id", booking.id)
+
+  throw new Error("Stripe did not return a checkout URL.")
+}
+
+window.location.href = data.url
 } catch (error) {
   console.error("Checkout error:", error)
   toast.error(error.message || "Unable to start payment.")
+} finally {
   setSubmitting(false)
 }
   }

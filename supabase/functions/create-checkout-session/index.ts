@@ -1,46 +1,113 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
+import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import Stripe from "npm:stripe"
 
-// Setup type definitions for built-in Supabase Runtime APIs
-import "@supabase/functions-js/edge-runtime.d.ts";
-import { withSupabase } from "@supabase/server";
+const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY")
 
-console.log("Hello from Functions!");
+if (!stripeSecretKey) {
+  throw new Error("STRIPE_SECRET_KEY is not set")
+}
 
-// This endpoint uses 'publishable' | 'secret' access, apiKey is required.
-// Use publishable for Client-facing, key-validated endpoints
-// Use secret for Server-to-server, internal calls
-export default {
-  fetch: withSupabase({ auth: ["publishable", "secret"] }, async (req, ctx) => {
-    // Called by another service with a secret key
-    // ctx.supabaseAdmin bypasses RLS — use for privileged operations
-    /*
-    if (ctx.authMode === "secret") {
-      const { user_id } = await req.json();
-      const { data } = await ctx.supabaseAdmin.auth.admin.getUserById(user_id);
+const stripe = new Stripe(stripeSecretKey)
 
-      return Response.json({
-        email: data?.user?.email,
-      });
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      headers: corsHeaders,
+    })
+  }
+
+  try {
+    const {
+      bookingId,
+      serviceName,
+      amount,
+      businessName,
+      customerEmail,
+    } = await req.json()
+
+    if (!bookingId) {
+      throw new Error("Booking ID is required")
     }
-    */
 
-    const { name } = await req.json();
+    if (!serviceName) {
+      throw new Error("Service name is required")
+    }
 
-    return Response.json({
-      message: `Hello ${name}!`,
-    });
-  }),
-};
+    if (!amount || Number(amount) <= 0) {
+      throw new Error("A valid amount is required")
+    }
 
-/* To invoke locally:
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
 
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
+      client_reference_id: bookingId,
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/create-checkout-session' \
-    --header 'apiKey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH' \
-    --data '{"name":"Functions"}'
+      customer_email: customerEmail || undefined,
 
-*/
+      metadata: {
+        booking_id: bookingId,
+      },
+
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: serviceName,
+              description: businessName
+                ? `Appointment with ${businessName}`
+                : "Appointment booking",
+            },
+            unit_amount: Math.round(Number(amount)),
+          },
+          quantity: 1,
+        },
+      ],
+
+      success_url:
+        "http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}",
+
+      cancel_url:
+        "http://localhost:5173/payment-cancelled",
+    })
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        url: session.url,
+      }),
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+  } catch (error: unknown) {
+    console.error("Checkout session error:", error)
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to create checkout session",
+      }),
+      {
+        status: 500,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+  }
+})
