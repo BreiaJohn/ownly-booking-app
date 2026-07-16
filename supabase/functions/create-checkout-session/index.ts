@@ -71,7 +71,11 @@ Deno.serve(async (req) => {
       ],
 
       success_url:
-        "http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}",
+        success_url:
+  "https://ownly-booking-app.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}",
+
+cancel_url:
+   "https://ownly-booking-app.vercel.app/book/geekinwziahhhh",
 
       cancel_url:
         "http://localhost:5173/payment-cancelled",

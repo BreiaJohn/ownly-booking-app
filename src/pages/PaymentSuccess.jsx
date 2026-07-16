@@ -17,8 +17,8 @@ function PaymentSuccess() {
         </h1>
 
         <p className="mx-auto mt-4 max-w-md text-slate-600">
-          We received your test payment. Your appointment confirmation
-          will be completed next.
+              Your payment was received and your appointment is confirmed.
+              A confirmation email will be sent shortly.
         </p>
 
         <Link
