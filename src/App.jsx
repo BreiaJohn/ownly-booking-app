@@ -16,6 +16,8 @@ import PublicBooking from "./pages/PublicBooking"
 import SetupServices from "./pages/SetupServices"
 import SetupAvailability from "./pages/SetupAvailability"
 
+import Beta from "./pages/Beta"
+
 import PaymentSuccess from "./pages/PaymentSuccess"
 
 import { Toaster } from "react-hot-toast"
@@ -123,6 +125,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/beta" element={<Beta />} />
 
           <Route path="/book" element={<PublicBooking />} />
 
