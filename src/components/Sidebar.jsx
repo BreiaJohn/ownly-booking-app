@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom"
-import logo from "../assets/ownly-logo.png"
+import Logo from "./Logo"
 import { useTheme } from "../context/ThemeContext"
 import { useAuth } from "../context/AuthContext"
 import { supabase } from "../lib/supabase"
@@ -16,7 +16,7 @@ function Sidebar({ closeSidebar }) {
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
     user?.email?.split("@")[0] ||
-    "Ownly User"
+    "<Yorly User>"
 
   const initials = displayName
     .split(" ")
@@ -46,12 +46,12 @@ function Sidebar({ closeSidebar }) {
   const linkClass = ({ isActive }) =>
     `rounded-2xl px-4 py-3 font-medium transition-all duration-300 ${
       isActive
-        ? "border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] text-[var(--ownly-text)] shadow-sm"
-        : "text-[var(--ownly-muted)] hover:translate-x-1 hover:bg-[var(--ownly-surface-soft)] hover:text-[var(--ownly-text)]"
+        ? "border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] text-[var(--yorly-text)] shadow-sm"
+        : "text-[var(--yorly-muted)] hover:translate-x-1 hover:bg-[var(--yorly-surface-soft)] hover:text-[var(--yorly-text)]"
     }`
 
   return (
-    <aside className="flex h-[100dvh] w-72 flex-col overflow-y-auto border-r border-[var(--ownly-border)] bg-[var(--ownly-surface)] px-6 py-6 text-[var(--ownly-text)] transition-colors duration-200">
+    <aside className="flex h-[100dvh] w-72 flex-col overflow-y-auto border-r border-[var(--yorly-border)] bg-[var(--yorly-surface)] px-6 py-6 text-[var(--yorly-text)] transition-colors duration-200">
       <div className="mb-8 flex items-center justify-center md:justify-start">
         <button
           type="button"
@@ -59,14 +59,10 @@ function Sidebar({ closeSidebar }) {
             navigate("/")
             closeSidebar?.()
           }}
-          aria-label="Go to Ownly home page"
+          aria-label="Go to Yorly home page"
           className="transition duration-300 hover:scale-105"
         >
-          <img
-            src={logo}
-            alt="Ownly Logo"
-            className="h-20 w-auto object-contain"
-          />
+        <Logo className="h-16 w-auto" />
         </button>
       </div>
 
@@ -112,13 +108,13 @@ function Sidebar({ closeSidebar }) {
         </NavLink>
       </nav>
 
-      <div className="mt-auto space-y-4 border-t border-[var(--ownly-border)] bg-[var(--ownly-surface)] pb-4 pt-5">
-        <div className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-3">
+      <div className="mt-auto space-y-4 border-t border-[var(--yorly-border)] bg-[var(--yorly-surface)] pb-4 pt-5">
+        <div className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-4 py-3">
           <div>
-            <p className="text-sm font-semibold text-[var(--ownly-text)]">
+            <p className="text-sm font-semibold text-[var(--yorly-text)]">
   {theme === "dark" ? "Dark Mode" : "Light Mode"}
 </p>
-            <p className="text-xs text-[var(--ownly-muted)]">
+            <p className="text-xs text-[var(--yorly-muted)]">
               Change appearance
             </p>
           </div>
@@ -140,18 +136,18 @@ function Sidebar({ closeSidebar }) {
           </button>
         </div>
 
-        <div className="rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
+        <div className="rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-4">
           <div className="mb-4 flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-blue-500/30 bg-blue-500/10 font-semibold text-[var(--ownly-primary)]">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-blue-500/30 bg-blue-500/10 font-semibold text-[var(--yorly-primary)]">
               {initials}
             </div>
 
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-[var(--ownly-text)]">
+              <p className="truncate text-sm font-semibold text-[var(--yorly-text)]">
                 {displayName}
               </p>
 
-              <p className="truncate text-xs text-[var(--ownly-muted)]">
+              <p className="truncate text-xs text-[var(--yorly-muted)]">
                 {user?.email || "Business owner"}
               </p>
             </div>
@@ -166,8 +162,8 @@ function Sidebar({ closeSidebar }) {
           </button>
         </div>
 
-        <p className="text-center text-xs text-[var(--ownly-subtle)]">
-          Ownly v1.0
+        <p className="text-center text-xs text-[var(--yorly-subtle)]">
+          Yorly v1.0
         </p>
       </div>
     </aside>

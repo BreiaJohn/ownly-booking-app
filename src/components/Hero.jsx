@@ -10,10 +10,10 @@ function Hero() {
           </p>
 
           <h1 className="text-5xl md:text-6xl font-bold leading-tight max-w-3xl">
-            Own your bookings.
-            <br />
-            Own your business.
-          </h1>
+  Book with ease.
+  <br />
+  Grow with Yorly.
+</h1>
 
           <p className="mt-8 text-lg text-[#94A3B8] max-w-xl leading-relaxed">
             A premium booking experience for independent professionals to manage clients,

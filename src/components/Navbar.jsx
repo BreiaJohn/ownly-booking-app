@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import logo from "../assets/ownly-logo.png"
+import Logo from "./Logo"
 
 function Navbar() {
   const navigate = useNavigate()
@@ -13,11 +13,8 @@ function Navbar() {
           onClick={() => navigate("/")}
           className="flex items-center justify-center cursor-pointer"
         >
-          <img
-            src={logo}
-            alt="Ownly"
-            className="h-24 md:h-32 w-auto"
-          />
+         <Logo className="h-14 w-auto" />
+
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm text-[#94A3B8]">

@@ -2,7 +2,7 @@ import { useState } from "react"
 import { supabase } from "../lib/supabase"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
-import logo from "../assets/ownly-logo.png"
+import Logo from "../components/Logo"
 
 function Login() {
   const navigate = useNavigate()
@@ -40,41 +40,37 @@ function Login() {
   }
 
   const fieldClass =
-    "w-full rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-5 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+    "w-full rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-5 py-4 text-[var(--yorly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--yorly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--ownly-background)] px-4 py-10 text-[var(--ownly-text)] transition-colors duration-200">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--yorly-background)] px-4 py-10 text-[var(--yorly-text)] transition-colors duration-200">
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[140px]" />
 
       <form
         onSubmit={handleLogin}
-        className="relative w-full max-w-md rounded-[2rem] border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-7 shadow-2xl transition-colors duration-200 sm:p-8 md:p-10"
+        className="relative w-full max-w-md rounded-[2rem] border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-7 shadow-2xl transition-colors duration-200 sm:p-8 md:p-10"
       >
         <div className="mb-8 flex justify-center">
           <button
             type="button"
             onClick={() => navigate("/")}
-            aria-label="Return to Ownly home page"
+            aria-label="Return to Yorly home page"
             className="transition duration-300 hover:scale-105"
           >
-            <img
-              src={logo}
-              alt="Ownly"
-              className="h-20 w-auto object-contain"
-            />
+            <Logo className="h-16 w-auto" />
           </button>
         </div>
 
         <div className="mb-8">
-          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
             Welcome Back
           </p>
 
-          <h1 className="text-4xl font-bold tracking-tight text-[var(--ownly-text)]">
+          <h1 className="text-4xl font-bold tracking-tight text-[var(--yorly-text)]">
             Login
           </h1>
 
-          <p className="mt-3 text-[var(--ownly-muted)]">
+          <p className="mt-3 text-[var(--yorly-muted)]">
             Sign in to manage your bookings, clients, and payments.
           </p>
         </div>
@@ -83,7 +79,7 @@ function Login() {
           <div>
             <label
               htmlFor="email"
-              className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+              className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
             >
               Email
             </label>
@@ -102,7 +98,7 @@ function Login() {
           <div>
             <label
               htmlFor="password"
-              className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+              className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
             >
               Password
             </label>
@@ -129,7 +125,7 @@ function Login() {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="w-full rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] py-4 font-semibold text-[var(--ownly-text)] transition hover:border-blue-500/40"
+            className="w-full rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] py-4 font-semibold text-[var(--yorly-text)] transition hover:border-blue-500/40"
           >
             Back to Home
           </button>

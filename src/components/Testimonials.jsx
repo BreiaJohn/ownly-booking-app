@@ -4,7 +4,7 @@ function Testimonials() {
   const reviews = [
     {
       quote:
-        "Ownly completely changed how I manage my appointments and clients.",
+        "Yorly completely changed how I manage my appointments and clients.",
       name: "Jasmine Carter",
       role: "Beauty Professional",
     },

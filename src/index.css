@@ -42,10 +42,10 @@
 }
 .react-datepicker {
   box-shadow: 0 0 40px rgba(59, 130, 246, 0.16) !important;
-  animation: ownly-calendar-pop 0.18s ease-out !important;
+  animation: yorly-calendar-pop 0.18s ease-out !important;
 }
 
-@keyframes ownly-calendar-pop {
+@keyframes yorly-calendar-pop {
   from {
     opacity: 0;
     transform: translateY(8px) scale(0.98);

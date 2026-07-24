@@ -63,7 +63,7 @@ function Signup() {
       <section className="w-full max-w-md rounded-3xl border border-blue-400/20 bg-[#0F172A] p-6 shadow-2xl sm:p-8">
         <div className="mb-8 text-center">
           <p className="mb-2 text-sm font-semibold uppercase tracking-[0.25em] text-blue-400">
-            Ownly
+            yorly
           </p>
 
           <h1 className="text-3xl font-bold text-white">

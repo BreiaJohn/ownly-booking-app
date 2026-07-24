@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import logo from "../assets/ownly-logo.png"
+import logo from "../assets/yorly.png"
 
 function MobileNavbar() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -17,7 +17,7 @@ function MobileNavbar() {
 
         <img
           src={logo}
-          alt="Ownly Logo"
+          alt="Yorly Logo"
           className="h-14 w-auto object-contain"
         />
 
@@ -43,7 +43,7 @@ function MobileNavbar() {
 
             <img
               src={logo}
-              alt="Ownly Logo"
+              alt="Yorly Logo"
               className="h-20 w-auto object-contain mb-10"
             />
 

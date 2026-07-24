@@ -231,9 +231,9 @@ function Bookings() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen w-full overflow-x-hidden bg-[var(--ownly-background)] text-[var(--ownly-text)] transition-colors duration-200">
+      <div className="min-h-screen w-full overflow-x-hidden bg-[var(--yorly-background)] text-[var(--yorly-text)] transition-colors duration-200">
         <header className="mb-8">
-          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+          <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
             Schedule
           </p>
 
@@ -241,20 +241,20 @@ function Bookings() {
             Bookings
           </h1>
 
-          <p className="mt-3 text-[var(--ownly-muted)]">
+          <p className="mt-3 text-[var(--yorly-muted)]">
             Manage your appointments and clients.
           </p>
         </header>
 
-        <section className="w-full rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-4 shadow-sm transition-colors duration-200 sm:p-6">
-          <div className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-1">
+        <section className="w-full rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-4 shadow-sm transition-colors duration-200 sm:p-6">
+          <div className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-1">
             <button
               type="button"
               onClick={() => setActiveTab("availability")}
               className={`rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${
                 activeTab === "availability"
-                  ? "border border-blue-500/40 bg-blue-500/15 text-[var(--ownly-text)] shadow-sm"
-                  : "text-[var(--ownly-muted)] hover:bg-blue-500/10 hover:text-[var(--ownly-text)]"
+                  ? "border border-blue-500/40 bg-blue-500/15 text-[var(--yorly-text)] shadow-sm"
+                  : "text-[var(--yorly-muted)] hover:bg-blue-500/10 hover:text-[var(--yorly-text)]"
               }`}
             >
               Availability
@@ -265,8 +265,8 @@ function Bookings() {
               onClick={() => setActiveTab("recent")}
               className={`rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200 ${
                 activeTab === "recent"
-                  ? "border border-blue-500/40 bg-blue-500/15 text-[var(--ownly-text)] shadow-sm"
-                  : "text-[var(--ownly-muted)] hover:bg-blue-500/10 hover:text-[var(--ownly-text)]"
+                  ? "border border-blue-500/40 bg-blue-500/15 text-[var(--yorly-text)] shadow-sm"
+                  : "text-[var(--yorly-muted)] hover:bg-blue-500/10 hover:text-[var(--yorly-text)]"
               }`}
             >
               Recent
@@ -275,13 +275,13 @@ function Bookings() {
 
           {activeTab === "availability" && (
             <>
-              <div className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-3 transition-colors duration-200 sm:p-6">
+              <div className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-3 transition-colors duration-200 sm:p-6">
                 <div className="mb-6 grid grid-cols-[44px_1fr_44px] items-center gap-3">
                   <button
                     type="button"
                     onClick={goToPreviousMonth}
                     aria-label="Previous month"
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] transition hover:border-blue-500/50 hover:bg-blue-500/10"
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] text-[var(--yorly-text)] transition hover:border-blue-500/50 hover:bg-blue-500/10"
                   >
                     ←
                   </button>
@@ -289,10 +289,10 @@ function Bookings() {
                   <button
                     type="button"
                     onClick={() => setCalendarOpen(!calendarOpen)}
-                    className="rounded-xl px-3 py-2 text-center text-lg font-semibold text-[var(--ownly-text)] transition hover:bg-blue-500/10 sm:text-xl"
+                    className="rounded-xl px-3 py-2 text-center text-lg font-semibold text-[var(--yorly-text)] transition hover:bg-blue-500/10 sm:text-xl"
                   >
                     {selectedMonthLabel}{" "}
-                    <span className="text-[var(--ownly-primary)]">
+                    <span className="text-[var(--yorly-primary)]">
                       {calendarOpen ? "⌃" : "⌄"}
                     </span>
                   </button>
@@ -301,7 +301,7 @@ function Bookings() {
                     type="button"
                     onClick={goToNextMonth}
                     aria-label="Next month"
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] transition hover:border-blue-500/50 hover:bg-blue-500/10"
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] text-[var(--yorly-text)] transition hover:border-blue-500/50 hover:bg-blue-500/10"
                   >
                     →
                   </button>
@@ -309,7 +309,7 @@ function Bookings() {
 
                 {calendarOpen && (
                   <>
-                    <div className="mb-3 grid grid-cols-7 gap-1 text-center text-xs text-[var(--ownly-muted)] sm:gap-2">
+                    <div className="mb-3 grid grid-cols-7 gap-1 text-center text-xs text-[var(--yorly-muted)] sm:gap-2">
                       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                         (day) => (
                           <p key={day}>{day}</p>
@@ -329,18 +329,18 @@ function Bookings() {
                             onClick={() => selectDay(date)}
                             className={`flex min-h-12 flex-col items-center justify-center rounded-xl border p-1 transition-all duration-200 sm:min-h-14 sm:rounded-2xl sm:p-2 ${
                               selected
-                                ? "border-blue-500/60 bg-blue-500/15 text-[var(--ownly-text)] shadow-sm"
+                                ? "border-blue-500/60 bg-blue-500/15 text-[var(--yorly-text)] shadow-sm"
                                 : "border-transparent hover:border-blue-500/20 hover:bg-blue-500/10"
                             } ${
                               isCurrentMonth(date)
-                                ? "text-[var(--ownly-text)]"
-                                : "text-[var(--ownly-subtle)] opacity-60"
+                                ? "text-[var(--yorly-text)]"
+                                : "text-[var(--yorly-subtle)] opacity-60"
                             }`}
                           >
                             <span
                               className={`flex text-sm font-semibold ${
                                 isToday(date) && !selected
-                                  ? "h-7 w-7 items-center justify-center rounded-full border border-blue-500/40 bg-blue-500/10 text-[var(--ownly-primary)]"
+                                  ? "h-7 w-7 items-center justify-center rounded-full border border-blue-500/40 bg-blue-500/10 text-[var(--yorly-primary)]"
                                   : ""
                               }`}
                             >
@@ -368,11 +368,11 @@ function Bookings() {
               <div className="mt-6">
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="mb-1 text-sm text-[var(--ownly-muted)]">
+                    <p className="mb-1 text-sm text-[var(--yorly-muted)]">
                       Selected day
                     </p>
 
-                    <h3 className="break-words text-xl font-semibold leading-tight text-[var(--ownly-text)]">
+                    <h3 className="break-words text-xl font-semibold leading-tight text-[var(--yorly-text)]">
                       {selectedDayLabel}
                     </h3>
                   </div>
@@ -383,7 +383,7 @@ function Bookings() {
                       const form = document.getElementById("create-booking")
                       form?.scrollIntoView({ behavior: "smooth" })
                     }}
-                    className="w-full rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm font-semibold text-[var(--ownly-primary)] transition hover:border-blue-500/50 hover:bg-blue-500/20 sm:w-auto"
+                    className="w-full rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm font-semibold text-[var(--yorly-primary)] transition hover:border-blue-500/50 hover:bg-blue-500/20 sm:w-auto"
                   >
                     + Booking
                   </button>
@@ -403,12 +403,12 @@ function Bookings() {
           )}
 
           {activeTab === "recent" && (
-            <div className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4 transition-colors duration-200 sm:p-6">
-              <h2 className="text-2xl font-semibold text-[var(--ownly-text)]">
+            <div className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-4 transition-colors duration-200 sm:p-6">
+              <h2 className="text-2xl font-semibold text-[var(--yorly-text)]">
                 Recent Appointments
               </h2>
 
-              <p className="mb-5 mt-1 text-[var(--ownly-muted)]">
+              <p className="mb-5 mt-1 text-[var(--yorly-muted)]">
                 Your most recent bookings.
               </p>
 
@@ -427,7 +427,7 @@ function Bookings() {
 
         {selectedBooking && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
-            <div className="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 text-[var(--ownly-text)] shadow-2xl transition-colors duration-200 sm:p-6">
+            <div className="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-5 text-[var(--yorly-text)] shadow-2xl transition-colors duration-200 sm:p-6">
               <div className="mb-6 flex items-start justify-between gap-4">
                 <div className="flex min-w-0 items-center gap-4">
                   <Avatar
@@ -440,7 +440,7 @@ function Bookings() {
                       {selectedBooking.client_name}
                     </h2>
 
-                    <p className="mt-1 truncate text-[var(--ownly-muted)]">
+                    <p className="mt-1 truncate text-[var(--yorly-muted)]">
                       {selectedBooking.service}
                     </p>
                   </div>
@@ -450,7 +450,7 @@ function Bookings() {
                   type="button"
                   onClick={() => setSelectedBooking(null)}
                   aria-label="Close booking details"
-                  className="text-2xl text-[var(--ownly-muted)] transition hover:text-[var(--ownly-text)]"
+                  className="text-2xl text-[var(--yorly-muted)] transition hover:text-[var(--yorly-text)]"
                 >
                   ×
                 </button>
@@ -510,7 +510,7 @@ function Bookings() {
 
 function Avatar({ name, getInitials }) {
   return (
-    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-blue-500/30 bg-blue-500/10 text-xl font-semibold text-[var(--ownly-primary)]">
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-blue-500/30 bg-blue-500/10 text-xl font-semibold text-[var(--yorly-primary)]">
       {getInitials(name)}
     </div>
   )
@@ -527,12 +527,12 @@ function BookingCards({
 }) {
   if (bookings.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-5 text-center">
-        <p className="font-semibold text-[var(--ownly-text)]">
+      <div className="rounded-2xl border border-dashed border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-5 text-center">
+        <p className="font-semibold text-[var(--yorly-text)]">
           Nothing scheduled
         </p>
 
-        <p className="mt-1 text-sm text-[var(--ownly-muted)]">
+        <p className="mt-1 text-sm text-[var(--yorly-muted)]">
           {emptyMessage}
         </p>
       </div>
@@ -557,15 +557,15 @@ function BookingCards({
             />
 
             <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-[var(--ownly-text)]">
+              <p className="truncate font-semibold text-[var(--yorly-text)]">
                 {booking.client_name || "No name"}
               </p>
 
-              <p className="truncate text-sm text-[var(--ownly-muted)]">
+              <p className="truncate text-sm text-[var(--yorly-muted)]">
                 {booking.service || "No service"}
               </p>
 
-              <div className="mt-2 flex flex-col gap-1 text-xs text-[var(--ownly-muted)]">
+              <div className="mt-2 flex flex-col gap-1 text-xs text-[var(--yorly-muted)]">
                 <span>{formatShortDate(booking.date)}</span>
                 <span>{booking.time || "No time"}</span>
               </div>
@@ -580,7 +580,7 @@ function BookingCards({
                 {booking.status || "Pending"}
               </span>
 
-              <span className="text-xl text-[var(--ownly-muted)]">›</span>
+              <span className="text-xl text-[var(--yorly-muted)]">›</span>
             </div>
           </div>
         </button>
@@ -621,7 +621,7 @@ function BookingStatusActions({ status, updating, onChange }) {
     onChange("Cancelled")
   }
 }}
-          className="w-full rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 font-semibold text-[var(--ownly-primary)] transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 font-semibold text-[var(--yorly-primary)] transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Restore to Pending
         </button>
@@ -630,8 +630,8 @@ function BookingStatusActions({ status, updating, onChange }) {
   }
 
   return (
-    <div className="mt-6 border-t border-[var(--ownly-border)] pt-6">
-      <p className="mb-3 text-sm font-medium text-[var(--ownly-muted)]">
+    <div className="mt-6 border-t border-[var(--yorly-border)] pt-6">
+      <p className="mb-3 text-sm font-medium text-[var(--yorly-muted)]">
         Manage appointment
       </p>
 
@@ -673,10 +673,10 @@ function BookingStatusActions({ status, updating, onChange }) {
 
 function InfoCard({ label, value }) {
   return (
-    <div className="rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
-      <p className="text-sm text-[var(--ownly-muted)]">{label}</p>
+    <div className="rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-4">
+      <p className="text-sm text-[var(--yorly-muted)]">{label}</p>
 
-      <p className="mt-1 break-words text-[var(--ownly-text)]">{value}</p>
+      <p className="mt-1 break-words text-[var(--yorly-text)]">{value}</p>
     </div>
   )
 }

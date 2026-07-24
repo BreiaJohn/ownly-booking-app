@@ -18,13 +18,13 @@ function DashboardLayout({ children }) {
   }, [])
 
   return (
-    <div className="relative flex min-h-screen overflow-x-hidden bg-[var(--ownly-background)] text-[var(--ownly-text)] transition-colors duration-200">
+    <div className="relative flex min-h-screen overflow-x-hidden bg-[var(--yorly-background)] text-[var(--yorly-text)] transition-colors duration-200">
       {/* Mobile menu button */}
       <button
         type="button"
         onClick={() => setSidebarOpen(true)}
         aria-label="Open navigation menu"
-        className="fixed bottom-6 left-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] shadow-lg transition-colors duration-200 md:hidden"
+        className="fixed bottom-6 left-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] text-[var(--yorly-text)] shadow-lg transition-colors duration-200 md:hidden"
       >
         ☰
       </button>
@@ -47,7 +47,7 @@ function DashboardLayout({ children }) {
       </div>
 
       {/* Main content */}
-      <main className="min-h-screen min-w-0 flex-1 overflow-x-hidden bg-[var(--ownly-background)] px-4 pb-28 pt-8 transition-colors duration-200 md:p-6">
+      <main className="min-h-screen min-w-0 flex-1 overflow-x-hidden bg-[var(--yorly-background)] px-4 pb-28 pt-8 transition-colors duration-200 md:p-6">
         <div className="w-full max-w-full overflow-x-hidden">
           {children}
         </div>
@@ -63,7 +63,7 @@ function DashboardLayout({ children }) {
             })
           }
           aria-label="Scroll to top"
-          className="fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] text-[var(--ownly-text)] shadow-lg transition-colors duration-200 md:hidden"
+          className="fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] text-[var(--yorly-text)] shadow-lg transition-colors duration-200 md:hidden"
         >
           ↑
         </button>

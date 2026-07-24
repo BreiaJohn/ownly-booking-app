@@ -1,25 +1,25 @@
 :root {
-  --ownly-background: #f4f7fb;
-  --ownly-surface: #ffffff;
-  --ownly-surface-soft: #f8fafc;
-  --ownly-border: #d7e0ec;
-  --ownly-text: #0f172a;
-  --ownly-muted: #64748b;
-  --ownly-subtle: #94a3b8;
-  --ownly-primary: #2563eb;
+  --yorly-background: #f4f7fb;
+  --yorly-surface: #ffffff;
+  --yorly-surface-soft: #f8fafc;
+  --yorly-border: #d7e0ec;
+  --yorly-text: #0f172a;
+  --yorly-muted: #64748b;
+  --yorly-subtle: #94a3b8;
+  --yorly-primary: #2563eb;
 
   color-scheme: light;
 }
 
 html.dark {
-  --ownly-background: #0f172a;
-  --ownly-surface: #111827;
-  --ownly-surface-soft: #020617;
-  --ownly-border: #334155;
-  --ownly-text: #ffffff;
-  --ownly-muted: #94a3b8;
-  --ownly-subtle: #64748b;
-  --ownly-primary: #3b82f6;
+  --yorly-background: #0f172a;
+  --yorly-surface: #111827;
+  --yorly-surface-soft: #020617;
+  --yorly-border: #334155;
+  --yorly-text: #ffffff;
+  --yorly-muted: #94a3b8;
+  --yorly-subtle: #64748b;
+  --yorly-primary: #3b82f6;
 
   color-scheme: dark;
 }
@@ -32,8 +32,8 @@ body,
 
 body {
   margin: 0;
-  background: var(--ownly-background);
-  color: var(--ownly-text);
+  background: var(--yorly-background);
+  color: var(--yorly-text);
   transition:
     background-color 200ms ease,
     color 200ms ease;

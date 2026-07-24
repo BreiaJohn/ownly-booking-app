@@ -310,7 +310,7 @@ function Setup() {
       <div className="mx-auto w-full max-w-3xl">
         <header className="mb-8 text-center">
           <p className="text-sm font-bold uppercase tracking-[0.35em] text-blue-400">
-            Ownly
+            yorly
           </p>
 
           <h1 className="mt-4 text-3xl font-bold sm:text-4xl">

@@ -21,7 +21,7 @@ function BookingForm() {
   const [isSaved, setIsSaved] = useState(false)
 
   const fieldClass =
-    "block w-full min-w-0 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+    "block w-full min-w-0 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-4 py-4 text-[var(--yorly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--yorly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
 
   const timeSlots = generateTimeSlots(
     businessSettings?.start_time || "09:00",
@@ -150,18 +150,18 @@ function BookingForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-6 w-full max-w-full overflow-hidden rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-5 text-[var(--ownly-text)] shadow-sm transition-colors duration-200 sm:p-6"
+      className="mt-6 w-full max-w-full overflow-hidden rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-5 text-[var(--yorly-text)] shadow-sm transition-colors duration-200 sm:p-6"
     >
       <div className="mb-6">
-        <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+        <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
           New Appointment
         </p>
 
-        <h2 className="text-2xl font-bold text-[var(--ownly-text)]">
+        <h2 className="text-2xl font-bold text-[var(--yorly-text)]">
           Create Booking
         </h2>
 
-        <p className="mt-2 text-sm text-[var(--ownly-muted)]">
+        <p className="mt-2 text-sm text-[var(--yorly-muted)]">
           Add a new client appointment to your calendar.
         </p>
       </div>
@@ -202,7 +202,7 @@ function BookingForm() {
             dateFormat="MMM d, yyyy"
             className={fieldClass}
             wrapperClassName="w-full"
-            calendarClassName="ownly-datepicker"
+            calendarClassName="yorly-datepicker"
           />
         </div>
 

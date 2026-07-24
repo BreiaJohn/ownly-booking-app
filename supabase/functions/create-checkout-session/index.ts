@@ -44,42 +44,38 @@ Deno.serve(async (req) => {
     }
 
     const session = await stripe.checkout.sessions.create({
-      mode: "payment",
+  mode: "payment",
 
-      client_reference_id: bookingId,
+  client_reference_id: bookingId,
 
-      customer_email: customerEmail || undefined,
+  customer_email: customerEmail || undefined,
 
-      metadata: {
-        booking_id: bookingId,
-      },
+  metadata: {
+    booking_id: bookingId,
+  },
 
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: serviceName,
-              description: businessName
-                ? `Appointment with ${businessName}`
-                : "Appointment booking",
-            },
-            unit_amount: Math.round(Number(amount)),
-          },
-          quantity: 1,
+  line_items: [
+    {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: serviceName,
+          description: businessName
+            ? `Appointment with ${businessName}`
+            : "Appointment booking",
         },
-      ],
+        unit_amount: Math.round(Number(amount)),
+      },
+      quantity: 1,
+    },
+  ],
 
-      success_url:
-        success_url:
-  "https://ownly-booking-app.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}",
+  success_url:
+    "https://yorly-booking-app.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}",
 
-cancel_url:
-   "https://ownly-booking-app.vercel.app/book/geekinwziahhhh",
-
-      cancel_url:
-        "http://localhost:5173/payment-cancelled",
-    })
+  cancel_url:
+    "https://yorly-booking-app.vercel.app/book/geekinwziahhhh",
+})
 
     return new Response(
       JSON.stringify({

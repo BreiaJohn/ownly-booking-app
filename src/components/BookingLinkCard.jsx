@@ -61,8 +61,8 @@ function BookingLinkCard() {
 
   if (loading) {
     return (
-      <section className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-6">
-        <p className="text-[var(--ownly-muted)]">
+      <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6">
+        <p className="text-[var(--yorly-muted)]">
           Loading booking link...
         </p>
       </section>
@@ -71,16 +71,16 @@ function BookingLinkCard() {
 
   if (!profile?.username) {
     return (
-      <section className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-6 shadow-sm">
-        <p className="text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+      <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6 shadow-sm">
+        <p className="text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
           Your Booking Page
         </p>
 
-        <h2 className="mt-2 text-2xl font-bold text-[var(--ownly-text)]">
+        <h2 className="mt-2 text-2xl font-bold text-[var(--yorly-text)]">
           Finish setting up your business
         </h2>
 
-        <p className="mt-2 text-[var(--ownly-muted)]">
+        <p className="mt-2 text-[var(--yorly-muted)]">
           Add a booking username before sharing your page with clients.
         </p>
 
@@ -95,18 +95,18 @@ function BookingLinkCard() {
   }
 
   return (
-    <section className="rounded-3xl border border-[var(--ownly-border)] bg-[var(--ownly-surface)] p-6 shadow-sm">
+    <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6 shadow-sm">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+          <p className="text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
             Your Booking Page
           </p>
 
-          <h2 className="mt-2 text-2xl font-bold text-[var(--ownly-text)]">
+          <h2 className="mt-2 text-2xl font-bold text-[var(--yorly-text)]">
             Share {profile.business_name || "your business"}
           </h2>
 
-          <p className="mt-2 max-w-2xl text-[var(--ownly-muted)]">
+          <p className="mt-2 max-w-2xl text-[var(--yorly-muted)]">
             Send this link to clients or add it to Instagram, Facebook,
             and your website.
           </p>
@@ -119,12 +119,12 @@ function BookingLinkCard() {
         )}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] p-4">
-        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--ownly-muted)]">
+      <div className="mt-5 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--yorly-muted)]">
           Booking link
         </p>
 
-        <p className="mt-2 break-all text-sm font-medium text-[var(--ownly-text)]">
+        <p className="mt-2 break-all text-sm font-medium text-[var(--yorly-text)]">
           {bookingUrl}
         </p>
       </div>
@@ -142,7 +142,7 @@ function BookingLinkCard() {
           href={bookingUrl}
           target="_blank"
           rel="noreferrer"
-          className="rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-5 py-3 text-center font-semibold text-[var(--ownly-text)] transition hover:border-blue-500/40 hover:bg-blue-500/5"
+          className="rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-5 py-3 text-center font-semibold text-[var(--yorly-text)] transition hover:border-blue-500/40 hover:bg-blue-500/5"
         >
           Open Booking Page
         </a>

@@ -46,33 +46,33 @@ function Dashboard() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-[var(--ownly-background)] text-[var(--ownly-text)]">
-        <div className="bg-[var(--ownly-surface)] backdrop-blur-md border border-[#1E293B] rounded-2xl px-5 py-4 mb-6">
+      <div className="min-h-screen bg-[var(--yorly-background)] text-[var(--yorly-text)]">
+        <div className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-2xl px-5 py-4 mb-6">
           <input
             type="text"
             placeholder="Search anything..."
-            className="w-full bg-transparent outline-none text-[var(--ownly-text)] placeholder:text-[#64748B]"
+            className="w-full bg-transparent outline-none text-[var(--yorly-text)] placeholder:text-[#64748B]"
           />
         </div>
 
-        <section className="bg-[var(--ownly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6 flex items-center justify-between">
+        <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-semibold">
               Welcome back, Breia 👋
             </h2>
 
-            <p className="text-[var(--ownly-muted)] mt-2">
+            <p className="text-[var(--yorly-muted)] mt-2">
               Here’s what’s happening today.
             </p>
           </div>
 
-          <div className="bg-[#A68A72] text-[var(--ownly-text)] w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold">
+          <div className="bg-[#A68A72] text-[var(--yorly-text)] w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold">
             BJ
           </div>
         </section>
 
-        <section className="bg-[var(--ownly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
-          <h3 className="text-[var(--ownly-muted)] font-semibold mb-5">
+        <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
+          <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
             Today’s Overview
           </h3>
 
@@ -109,8 +109,8 @@ function Dashboard() {
           <BookingLinkCard />
         </div>
 
-        <section className="bg-[var(--ownly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
-          <h3 className="text-[var(--ownly-muted)] font-semibold mb-5">
+        <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
+          <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
             Quick Actions
           </h3>
 
@@ -138,14 +138,14 @@ function Dashboard() {
           </div>
         </section>
 
-        <section className="bg-[var(--ownly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6">
-          <h3 className="text-[var(--ownly-muted)] font-semibold mb-5">
+        <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6">
+          <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
             Recent Activity
           </h3>
 
           <div className="space-y-5">
             {recentBookings.length === 0 ? (
-              <p className="text-[var(--ownly-muted)]">
+              <p className="text-[var(--yorly-muted)]">
                 No recent activity yet.
               </p>
             ) : (
@@ -171,7 +171,7 @@ function Dashboard() {
 function OverviewCard({ icon, value, label, isRevenue }) {
   return (
     <div
-      className={`bg-[var(--ownly-background)] border border-[#334155] rounded-2xl p-4 min-w-0 overflow-hidden ${
+      className={`bg-[var(--yorly-background)] border border-[#334155] rounded-2xl p-4 min-w-0 overflow-hidden ${
         isRevenue ? "bg-emerald-500/10 border-emerald-500/30" : ""
       }`}
     >
@@ -187,7 +187,7 @@ function OverviewCard({ icon, value, label, isRevenue }) {
         {value}
       </p>
 
-      <p className="text-[var(--ownly-muted)] mt-2 text-sm leading-tight">
+      <p className="text-[var(--yorly-muted)] mt-2 text-sm leading-tight">
         {label}
       </p>
     </div>
@@ -197,7 +197,7 @@ function ActionCard({ to, icon, label, color }) {
   return (
     <Link
       to={to}
-      className="group w-full bg-[var(--ownly-background)] border border-[#334155] rounded-2xl px-4 py-4 flex items-center justify-between hover:border-[#A68A72] hover:bg-[#111C33] transition duration-300"
+      className="group w-full bg-[var(--yorly-background)] border border-[#334155] rounded-2xl px-4 py-4 flex items-center justify-between hover:border-[#A68A72] hover:bg-[#111C33] transition duration-300"
     >
       <div className="flex items-center gap-4">
         <div
@@ -206,7 +206,7 @@ function ActionCard({ to, icon, label, color }) {
           {icon}
         </div>
 
-        <span className="text-[var(--ownly-text)] font-medium whitespace-nowrap">
+        <span className="text-[var(--yorly-text)] font-medium whitespace-nowrap">
           {label}
         </span>
       </div>
@@ -226,11 +226,11 @@ function ActivityItem({ color, title, subtitle, time }) {
 
         <div>
           <p className="font-medium">{title}</p>
-          <p className="text-[var(--ownly-muted)]">{subtitle}</p>
+          <p className="text-[var(--yorly-muted)]">{subtitle}</p>
         </div>
       </div>
 
-      <p className="text-[var(--ownly-muted)] text-sm">{time}</p>
+      <p className="text-[var(--yorly-muted)] text-sm">{time}</p>
     </div>
   )
 }

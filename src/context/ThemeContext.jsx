@@ -4,7 +4,7 @@ const ThemeContext = createContext(null)
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("ownly-theme")
+    const savedTheme = localStorage.getItem("yorly-theme")
     return savedTheme === "light" ? "light" : "dark"
   })
 
@@ -12,7 +12,7 @@ export function ThemeProvider({ children }) {
     const root = document.documentElement
 
     root.classList.toggle("dark", theme === "dark")
-    localStorage.setItem("ownly-theme", theme)
+    localStorage.setItem("yorly-theme", theme)
   }, [theme])
 
   const toggleTheme = () => {

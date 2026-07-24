@@ -29,10 +29,10 @@ const [savingSocials, setSavingSocials] = useState(false)
   const { theme, toggleTheme } = useTheme()
 
 const fieldClass =
-  "block w-full min-w-0 appearance-none rounded-2xl border border-[var(--ownly-border)] bg-[var(--ownly-surface-soft)] px-4 py-4 text-[var(--ownly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--ownly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+  "block w-full min-w-0 appearance-none rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-4 py-4 text-[var(--yorly-text)] outline-none transition-colors duration-200 placeholder:text-[var(--yorly-muted)] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
 
   const buttonClass =
-    "w-full rounded-2xl border border-white/20 bg-white/10 py-4 font-semibold text-[var(--ownly-text)] transition duration-300 hover:border-blue-400/50 hover:bg-white/15 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]"
+    "w-full rounded-2xl border border-white/20 bg-white/10 py-4 font-semibold text-[var(--yorly-text)] transition duration-300 hover:border-blue-400/50 hover:bg-white/15 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]"
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -193,21 +193,21 @@ const fieldClass =
 
   return (
   <DashboardLayout>
-    <div className="min-h-screen w-full overflow-x-hidden bg-[var(--ownly-background)] px-4 py-6 text-[var(--ownly-text)] transition-colors duration-200 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[var(--yorly-background)] px-4 py-6 text-[var(--yorly-text)] transition-colors duration-200 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
 
         <Card>
           <div className="flex items-center justify-between gap-5">
             <div>
-              <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+              <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
                 Appearance
               </p>
 
-              <h2 className="text-xl font-bold text-[var(--ownly-text)] sm:text-2xl">
+              <h2 className="text-xl font-bold text-[var(--yorly-text)] sm:text-2xl">
                 Dark Mode
               </h2>
 
-              <p className="mt-2 text-sm text-[var(--ownly-muted)]">
+              <p className="mt-2 text-sm text-[var(--yorly-muted)]">
                 Switch between light and dark appearance.
               </p>
             </div>
@@ -232,15 +232,15 @@ const fieldClass =
 
     <Card>
   <div className="mb-6">
-    <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+    <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
       Business Profile
     </p>
 
-    <h2 className="text-2xl font-bold text-[var(--ownly-text)] md:text-3xl">
+    <h2 className="text-2xl font-bold text-[var(--yorly-text)] md:text-3xl">
       Social Media & Reviews
     </h2>
 
-    <p className="mt-2 max-w-2xl text-[var(--ownly-muted)]">
+    <p className="mt-2 max-w-2xl text-[var(--yorly-muted)]">
       Add links clients can use to view your work, visit your website,
       or leave a review.
     </p>
@@ -250,7 +250,7 @@ const fieldClass =
     <div>
       <label
         htmlFor="instagram"
-        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+        className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
       >
         Instagram
       </label>
@@ -268,7 +268,7 @@ const fieldClass =
     <div>
       <label
         htmlFor="facebook"
-        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+        className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
       >
         Facebook
       </label>
@@ -286,7 +286,7 @@ const fieldClass =
     <div>
       <label
         htmlFor="tiktok"
-        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+        className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
       >
         TikTok
       </label>
@@ -304,7 +304,7 @@ const fieldClass =
     <div>
       <label
         htmlFor="website"
-        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+        className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
       >
         Website
       </label>
@@ -322,7 +322,7 @@ const fieldClass =
     <div className="md:col-span-2">
       <label
         htmlFor="googleReviewLink"
-        className="mb-2 block text-sm font-medium text-[var(--ownly-muted)]"
+        className="mb-2 block text-sm font-medium text-[var(--yorly-muted)]"
       >
         Google review link
       </label>
@@ -338,7 +338,7 @@ const fieldClass =
         className={fieldClass}
       />
 
-      <p className="mt-2 text-xs text-[var(--ownly-muted)]">
+      <p className="mt-2 text-xs text-[var(--yorly-muted)]">
         This will later power the “Leave a Review” button clients see
         after completed appointments.
       </p>
@@ -357,15 +357,15 @@ const fieldClass =
 
         <section className="w-full overflow-hidden rounded-3xl border border-[#334155] bg-white/5 p-5 shadow-sm backdrop-blur-md sm:p-6 md:p-8">
           <div className="mb-8">
-            <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+            <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
               Availability
             </p>
 
-            <h1 className="text-3xl font-bold text-[var(--ownly-text)]text-[var(--ownly-text)] md:text-5xl">
+            <h1 className="text-3xl font-bold text-[var(--yorly-text)] md:text-5xl">
               Settings
             </h1>
 
-              <p className="mt-3 max-w-xl text-[var(--ownly-muted)]">
+              <p className="mt-3 max-w-xl text-[var(--yorly-muted)]">
                 Customize your booking hours, appointment length, buffer time,
                 and unavailable slots.
               </p>
@@ -444,15 +444,15 @@ const fieldClass =
 
           <Card>
             <div className="mb-6">
-              <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--ownly-primary)]">
+              <p className="mb-2 text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
                 Calendar Control
               </p>
 
-              <h2 className="text-2xl font-bold text-[var(--ownly-text)] md:text-3xl">
+              <h2 className="text-2xl font-bold text-[var(--yorly-text)] md:text-3xl">
                 Block Time
               </h2>
 
-              <p className="mt-2 text-[var(--ownly-muted)]">
+              <p className="mt-2 text-[var(--yorly-muted)]">
                 Block specific dates and times so clients cannot book them.
               </p>
             </div>
@@ -511,7 +511,7 @@ const fieldClass =
 
             <div className="mt-6 space-y-3">
               {blockedList.length === 0 ? (
-                <p className="text-sm text-[var(--ownly-muted)]">
+                <p className="text-sm text-[var(--yorly-muted)]">
                   No blocked times yet.
                 </p>
               ) : (
@@ -521,11 +521,11 @@ const fieldClass =
                     className="flex flex-col gap-4 rounded-2xl border border-[#334155] bg-[#020617]/60 p-4 md:flex-row md:items-center md:justify-between"
                   >
                     <div>
-                      <p className="font-semibold text-[var(--ownly-text)]">
+                      <p className="font-semibold text-[var(--yorly-text)]">
                         {blocked.date}
                       </p>
 
-                      <p className="text-[var(--ownly-muted)]">{blocked.time}</p>
+                      <p className="text-[var(--yorly-muted)]">{blocked.time}</p>
 
                       {blocked.reason && (
                         <p className="text-sm text-[#64748B]">
