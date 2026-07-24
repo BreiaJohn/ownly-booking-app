@@ -28,6 +28,7 @@ function App() {
   const shouldHideNavbar =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/signup") ||
+    location.pathname.startsWith("/beta") ||
     location.pathname.startsWith("/setup") ||
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/bookings") ||

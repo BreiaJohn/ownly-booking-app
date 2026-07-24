@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom"
 import Logo from "../components/Logo"
 
+import dashboardScreenshot from "../assets/screenshots/dashboard.png"
+import bookingScreenshot from "../assets/screenshots/booking-page.png"
+import mobileScreenshot from "../assets/screenshots/mobile-booking.png"
+
 export default function Beta() {
   const idealBusinesses = [
     "Hair stylists and barbers",
@@ -13,7 +17,7 @@ export default function Beta() {
   ]
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-white">
+   <main className="min-h-screen bg-[#020817] text-white">
       {/* Header */}
       <header className="border-b border-slate-200 dark:border-slate-800">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
@@ -58,120 +62,177 @@ export default function Beta() {
           </a>
         </div>
       </section>
+{/* Product preview */}
+<section className="relative overflow-hidden px-6 pb-24 pt-16">
+  <div className="pointer-events-none absolute left-1/2 top-24 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[120px]" />
 
-      {/* Benefits */}
-      <section className="bg-slate-50 px-6 py-20 dark:bg-slate-900">
-        <div className="mx-auto max-w-6xl">
-          <div className="text-center">
-            <p className="font-semibold text-blue-600">Founding beta members</p>
-            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-              What you’ll receive
-            </h2>
-          </div>
+  <div className="relative mx-auto max-w-7xl">
+    <div className="mx-auto max-w-3xl text-center">
+      <span className="inline-flex rounded-full border border-blue-500/20 bg-blue-500/5 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-purple-400">
+        🚀 Now accepting our first 5 founding businesses
+      </span>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Lifetime free access",
-                description:
-                  "Use Yorly without a monthly subscription as one of our first beta businesses.",
-              },
-              {
-                title: "Direct founder support",
-                description:
-                  "Get personal help with setup, onboarding, and any questions you have.",
-              },
-              {
-                title: "Help shape Yorly",
-                description:
-                  "Your feedback will directly influence the tools and features we build next.",
-              },
-            ].map((benefit) => (
-              <article
-                key={benefit.title}
-                className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-950"
-              >
-                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-xl dark:bg-blue-950">
-                  ✓
-                </div>
+      <h2 className="mt-7 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+        Everything you need to manage{" "}
+        <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          your bookings
+        </span>
+      </h2>
 
-                <h3 className="text-xl font-bold">{benefit.title}</h3>
+      <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+        Give your clients an easy way to book while keeping your appointments,
+        services, clients, and payments organized.
+      </p>
+    </div>
 
-                <p className="mt-3 leading-7 text-slate-600 dark:text-slate-400">
-                  {benefit.description}
-                </p>
-              </article>
-            ))}
+    <div className="mt-14 space-y-6">
+      {/* Dashboard */}
+      <article
+  className="
+    overflow-hidden
+    rounded-[2rem]
+    border
+    border-slate-700/70
+    bg-[#0d172b]
+    shadow-2xl
+    shadow-black/20
+    transition-all
+    duration-300
+    hover:-translate-y-1
+    hover:border-blue-500/40
+    hover:shadow-[0_20px_60px_rgba(59,130,246,.15)]
+  "
+>
+        <div className="p-5">
+          <div className="overflow-hidden rounded-[1.4rem] bg-[#050b18]">
+            <img
+              src={dashboardScreenshot}
+              alt="Yorly business dashboard"
+              className="block h-auto w-full"
+            />
           </div>
         </div>
-      </section>
 
-      {/* Who it is for */}
-      <section className="px-6 py-20">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
+        <div className="grid gap-5 px-7 pb-9 pt-4 md:grid-cols-[auto_1fr] md:items-start md:px-10">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-700 text-xl">
+            ▣
+          </div>
+
           <div>
-            <p className="font-semibold text-purple-600">Who we’re looking for</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-purple-400">
+              Run your business
+            </p>
 
-            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-              Business owners who book clients by appointment
-            </h2>
+            <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+              Manage everything from one dashboard
+            </h3>
 
-            <p className="mt-5 leading-8 text-slate-600 dark:text-slate-300">
-              The best beta testers are willing to set up their real services,
-              share their Yorly booking link with clients, and provide honest
-              feedback about the experience.
+            <p className="mt-3 max-w-3xl leading-7 text-slate-400">
+              Keep track of appointments, clients, payments, services, and
+              availability without jumping between multiple tools.
             </p>
           </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-7 dark:border-slate-800 dark:bg-slate-900">
-            <ul className="grid gap-4 sm:grid-cols-2">
-              {idealBusinesses.map((business) => (
-                <li key={business} className="flex items-start gap-3">
-                  <span className="mt-1 text-blue-500">●</span>
-                  <span className="font-medium">{business}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
-      </section>
+      </article>
 
-      {/* Expectations */}
-      <section className="bg-slate-50 px-6 py-20 dark:bg-slate-900">
-        <div className="mx-auto max-w-4xl">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              What we ask from beta testers
-            </h2>
+      <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+        {/* Desktop booking */}
+        <article
+  className="
+    overflow-hidden
+    rounded-[2rem]
+    border
+    border-slate-700/70
+    bg-[#0d172b]
+    shadow-2xl
+    shadow-black/20
+    transition-all
+    duration-300
+    hover:-translate-y-1
+    hover:border-blue-500/40
+    hover:shadow-[0_20px_60px_rgba(59,130,246,.15)]
+  "
+>
+          <div className="p-5">
+            <div className="overflow-hidden rounded-[1.4rem] bg-[#050b18]">
+              <img
+                src={bookingScreenshot}
+                alt="Yorly desktop booking page"
+                className="block h-auto w-full"
+              />
+            </div>
+          </div>
 
-            <p className="mt-4 text-slate-600 dark:text-slate-300">
-              You don’t need to be technical. We only ask that you actively use
-              Yorly and share honest feedback.
+          <div className="px-7 pb-9 pt-4 sm:px-9">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-700 text-xl">
+              ◫
+            </div>
+
+            <p className="text-sm font-bold uppercase tracking-wider text-purple-400">
+              Share one link
+            </p>
+
+            <h3 className="mt-2 text-2xl font-bold text-white">
+              Let clients book in seconds
+            </h3>
+
+            <p className="mt-3 max-w-xl leading-7 text-slate-400">
+              Clients can choose a service, select an available time, and submit
+              their booking without the back-and-forth.
             </p>
           </div>
+        </article>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2">
-            {[
-              "Complete your business profile",
-              "Add your real services and availability",
-              "Share your booking link with clients",
-              "Report anything confusing or broken",
-              "Provide feedback about your experience",
-              "Allow us to improve the platform during beta",
-            ].map((item) => (
-              <div
-                key={item}
-                className="flex items-center gap-4 rounded-xl bg-white p-5 shadow-sm dark:bg-slate-950"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 font-bold text-green-700">
-                  ✓
-                </span>
-                <span className="font-medium">{item}</span>
-              </div>
-            ))}
+        {/* Mobile booking */}
+       <article
+  className="
+    overflow-hidden
+    rounded-[2rem]
+    border
+    border-slate-700/70
+    bg-[#0d172b]
+    shadow-2xl
+    shadow-black/20
+    transition-all
+    duration-300
+    hover:-translate-y-1
+    hover:border-blue-500/40
+    hover:shadow-[0_20px_60px_rgba(59,130,246,.15)]
+  "
+>
+          <div className="p-5">
+            <div className="flex justify-center overflow-hidden rounded-[1.4rem] bg-[#050b18] px-6 pt-6">
+              <img
+                src={mobileScreenshot}
+                alt="Yorly mobile booking experience"
+                className="block max-h-[620px] w-auto max-w-full"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+
+          <div className="px-7 pb-9 pt-4">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-xl">
+              ▯
+            </div>
+
+            <p className="text-sm font-bold uppercase tracking-wider text-blue-400">
+              Mobile ready
+            </p>
+
+            <h3 className="mt-2 text-2xl font-bold text-white">
+              Built for clients on the go
+            </h3>
+
+            <p className="mt-3 leading-7 text-slate-400">
+              Yorly gives clients a smooth booking experience from their phone,
+              tablet, or computer.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Application */}
       <section id="apply" className="px-6 py-24">
