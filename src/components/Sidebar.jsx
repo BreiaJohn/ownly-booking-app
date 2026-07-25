@@ -1,9 +1,10 @@
 import { NavLink, useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
+
 import Logo from "./Logo"
 import { useTheme } from "../context/ThemeContext"
 import { useAuth } from "../context/AuthContext"
 import { supabase } from "../lib/supabase"
-import toast from "react-hot-toast"
 
 function Sidebar({ closeSidebar }) {
   const navigate = useNavigate()
@@ -16,10 +17,11 @@ function Sidebar({ closeSidebar }) {
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
     user?.email?.split("@")[0] ||
-    "<Yorly User>"
+    "Yorly User"
 
   const initials = displayName
     .split(" ")
+    .filter(Boolean)
     .map((word) => word[0])
     .join("")
     .slice(0, 2)
@@ -33,8 +35,8 @@ function Sidebar({ closeSidebar }) {
     const { error } = await supabase.auth.signOut()
 
     if (error) {
+      console.error("Logout error:", error)
       toast.error("Unable to log out")
-      console.log(error)
       return
     }
 
@@ -51,7 +53,7 @@ function Sidebar({ closeSidebar }) {
     }`
 
   return (
-    <aside className="flex h-[100dvh] w-72 flex-col overflow-y-auto border-r border-[var(--yorly-border)] bg-[var(--yorly-surface)] px-6 py-6 text-[var(--yorly-text)] transition-colors duration-200">
+    <aside className="flex h-[100dvh] w-72 flex-col overflow-y-auto border-r border-[var(--yorly-border)] bg-[var(--yorly-surface)] px-6 py-6 text-[var(--yorly-text)]">
       <div className="mb-8 flex items-center justify-center md:justify-start">
         <button
           type="button"
@@ -62,7 +64,7 @@ function Sidebar({ closeSidebar }) {
           aria-label="Go to Yorly home page"
           className="transition duration-300 hover:scale-105"
         >
-        <Logo className="h-16 w-auto" />
+          <Logo className="h-16 w-auto" />
         </button>
       </div>
 
@@ -84,28 +86,28 @@ function Sidebar({ closeSidebar }) {
         </NavLink>
 
         <NavLink
-  to="/clients"
-  className={linkClass}
-  onClick={handleNavigation}
->
-  Clients
-</NavLink>
+          to="/clients"
+          className={linkClass}
+          onClick={handleNavigation}
+        >
+          Clients
+        </NavLink>
 
-<NavLink
-  to="/services"
-  className={linkClass}
-  onClick={handleNavigation}
->
-  Services
-</NavLink>
+        <NavLink
+          to="/services"
+          className={linkClass}
+          onClick={handleNavigation}
+        >
+          Services
+        </NavLink>
 
-<NavLink
-  to="/payments"
-  className={linkClass}
-  onClick={handleNavigation}
->
-  Payments
-</NavLink>
+        <NavLink
+          to="/payments"
+          className={linkClass}
+          onClick={handleNavigation}
+        >
+          Payments
+        </NavLink>
 
         <NavLink
           to="/settings"
@@ -116,12 +118,13 @@ function Sidebar({ closeSidebar }) {
         </NavLink>
       </nav>
 
-      <div className="mt-auto space-y-4 border-t border-[var(--yorly-border)] bg-[var(--yorly-surface)] pb-4 pt-5">
+      <div className="mt-auto space-y-4 border-t border-[var(--yorly-border)] pt-5">
         <div className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-4 py-3">
           <div>
-            <p className="text-sm font-semibold text-[var(--yorly-text)]">
-  {theme === "dark" ? "Dark Mode" : "Light Mode"}
-</p>
+            <p className="text-sm font-semibold">
+              {theme === "dark" ? "Dark Mode" : "Light Mode"}
+            </p>
+
             <p className="text-xs text-[var(--yorly-muted)]">
               Change appearance
             </p>
@@ -132,12 +135,12 @@ function Sidebar({ closeSidebar }) {
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
             aria-pressed={theme === "dark"}
-            className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-200 ${
+            className={`relative h-8 w-14 shrink-0 rounded-full transition-colors ${
               theme === "dark" ? "bg-blue-500" : "bg-slate-300"
             }`}
           >
             <span
-              className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow-md transition-all duration-200 ${
+              className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow-md transition-all ${
                 theme === "dark" ? "left-7" : "left-1"
               }`}
             />
@@ -151,7 +154,7 @@ function Sidebar({ closeSidebar }) {
             </div>
 
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-[var(--yorly-text)]">
+              <p className="truncate text-sm font-semibold">
                 {displayName}
               </p>
 
@@ -164,7 +167,7 @@ function Sidebar({ closeSidebar }) {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-600 transition hover:border-red-500/40 hover:bg-red-500/20 dark:text-red-300"
+            className="w-full rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-500/20 dark:text-red-300"
           >
             Log Out
           </button>

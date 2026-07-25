@@ -1,4 +1,5 @@
-import { Routes, Route, useLocation } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
+import { Toaster } from "react-hot-toast"
 
 import Navbar from "./components/Navbar"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -6,66 +7,62 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
+import Beta from "./pages/Beta"
+
 import Setup from "./pages/Setup"
+import SetupServices from "./pages/SetupServices"
+import SetupAvailability from "./pages/SetupAvailability"
+
 import Dashboard from "./pages/Dashboard"
 import Bookings from "./pages/Bookings"
 import Services from "./pages/Services"
 import Clients from "./pages/Clients"
 import Payments from "./pages/Payments"
 import Settings from "./pages/Settings"
+
 import PublicBooking from "./pages/PublicBooking"
-import SetupServices from "./pages/SetupServices"
-import SetupAvailability from "./pages/SetupAvailability"
-
-
-import Beta from "./pages/Beta"
-
 import PaymentSuccess from "./pages/PaymentSuccess"
-
-import { Toaster } from "react-hot-toast"
 
 function App() {
   const location = useLocation()
 
-  const shouldHideNavbar =
-    location.pathname.startsWith("/login") ||
-    location.pathname.startsWith("/signup") ||
-    location.pathname.startsWith("/beta") ||
-    location.pathname.startsWith("/setup") ||
-    location.pathname.startsWith("/dashboard") ||
-    location.pathname.startsWith("/bookings") ||
-    location.pathname.startsWith("/clients") ||
-    location.pathname.startsWith("/payments") ||
-    location.pathname.startsWith("/settings") ||
-    location.pathname.startsWith("/payment-success") ||
-    location.pathname.startsWith("/services") ||
-    location.pathname.startsWith("/book")
+  const routesWithoutNavbar = [
+    "/login",
+    "/signup",
+    "/beta",
+    "/setup",
+    "/dashboard",
+    "/bookings",
+    "/services",
+    "/clients",
+    "/payments",
+    "/settings",
+    "/payment-success",
+    "/book",
+  ]
 
+  const shouldHideNavbar = routesWithoutNavbar.some((route) =>
+    location.pathname.startsWith(route)
+  )
 
   return (
     <>
       <Toaster position="top-right" />
 
-      <div className="min-h-screen overflow-x-hidden bg-[#F7F4EF]">
+      <div className="min-h-screen overflow-x-hidden bg-[var(--yorly-bg)]">
         {!shouldHideNavbar && <Navbar />}
 
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
-
           <Route path="/login" element={<Login />} />
-
           <Route path="/signup" element={<Signup />} />
+          <Route path="/beta" element={<Beta />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/book" element={<PublicBooking />} />
+          <Route path="/book/:username" element={<PublicBooking />} />
 
-          <Route
-  path="/services"
-  element={
-    <ProtectedRoute>
-      <SetupServices />
-    </ProtectedRoute>
-  }
-/>
-
-
+          {/* Setup routes */}
           <Route
             path="/setup"
             element={
@@ -76,14 +73,24 @@ function App() {
           />
 
           <Route
-  path="/setup/services"
-  element={
-    <ProtectedRoute>
-      <SetupServices />
-    </ProtectedRoute>
-  }
-/>
+            path="/setup/services"
+            element={
+              <ProtectedRoute>
+                <SetupServices />
+              </ProtectedRoute>
+            }
+          />
 
+          <Route
+            path="/setup/availability"
+            element={
+              <ProtectedRoute>
+                <SetupAvailability />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Dashboard routes */}
           <Route
             path="/dashboard"
             element={
@@ -93,13 +100,20 @@ function App() {
             }
           />
 
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-
           <Route
             path="/bookings"
             element={
               <ProtectedRoute>
                 <Bookings />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/services"
+            element={
+              <ProtectedRoute>
+                <Services />
               </ProtectedRoute>
             }
           />
@@ -112,15 +126,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route
-  path="/setup/availability"
-  element={
-    <ProtectedRoute>
-      <SetupAvailability />
-    </ProtectedRoute>
-  }
-/>
 
           <Route
             path="/payments"
@@ -139,12 +144,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route path="/beta" element={<Beta />} />
-
-          <Route path="/book" element={<PublicBooking />} />
-
-          <Route path="/book/:username" element={<PublicBooking />} />
         </Routes>
       </div>
     </>
