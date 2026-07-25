@@ -3,13 +3,25 @@ import { Link } from "react-router-dom"
 import DashboardLayout from "../layouts/DashboardLayout"
 import { supabase } from "../lib/supabase"
 import BookingLinkCard from "../components/BookingLinkCard"
+import { useAuth } from "../context/AuthContext"
 
 function Dashboard() {
-  const [bookings, setBookings] = useState([])
+  const { session } = useAuth()
+  const user = session?.user
 
-  useEffect(() => {
-    fetchBookings()
-  }, [])
+  const [bookings, setBookings] = useState([])
+  const [businessProfile, setBusinessProfile] = useState(null)
+  const [profileLoading, setProfileLoading] = useState(true)
+
+useEffect(() => {
+  if (!user?.id) {
+    setProfileLoading(false)
+    return
+  }
+
+  fetchBookings()
+  fetchBusinessProfile()
+}, [user?.id])
 
   const fetchBookings = async () => {
     const { data, error } = await supabase
@@ -24,6 +36,23 @@ function Dashboard() {
 
     setBookings(data)
   }
+
+  const fetchBusinessProfile = async () => {
+  const { data, error } = await supabase
+    .from("business_profiles")
+    .select("username")
+    .eq("user_id", user.id)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Unable to load business profile:", error)
+    setProfileLoading(false)
+    return
+  }
+
+  setBusinessProfile(data)
+  setProfileLoading(false)
+}
 
   const today = new Date().toISOString().split("T")[0]
 
@@ -57,9 +86,14 @@ function Dashboard() {
 
         <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-semibold">
-              Welcome back, Breia 👋
-            </h2>
+           <h2 className="text-2xl font-semibold">
+  Welcome back,{" "}
+  {user?.user_metadata?.full_name?.split(" ")[0] ||
+    user?.user_metadata?.name?.split(" ")[0] ||
+    user?.email?.split("@")[0] ||
+    "there"}{" "}
+  👋
+</h2>
 
             <p className="text-[var(--yorly-muted)] mt-2">
               Here’s what’s happening today.
@@ -105,9 +139,11 @@ function Dashboard() {
           </div>
         </section>
 
-       <div className="mb-6">
-          <BookingLinkCard />
-        </div>
+   {!profileLoading && !businessProfile?.username && (
+  <div className="mb-6">
+    <BookingLinkCard />
+  </div>
+)}
 
         <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
           <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
