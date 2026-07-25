@@ -146,12 +146,15 @@ if (availabilityError) {
 setBusiness(profileData)
 setServices(serviceData || [])
 setAvailability(availabilityData || [])
-    } catch (error) {
-      console.error("Booking page error:", error)
-      setBusinessError("Unable to load this booking page.")
-    } finally {
-      setPageLoading(false)
-    }
+   } catch (error) {
+  console.error("Booking page error:", error)
+
+  setBusinessError(
+    error?.message || "Unable to load this booking page."
+  )
+} finally {
+  setPageLoading(false)
+}
   }
 
   const selectedService = useMemo(() => {
