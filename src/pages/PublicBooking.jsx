@@ -103,7 +103,7 @@ console.log("Unavailable times:", unavailable)
 
     try {
 const { data: profileData, error: profileError } = await supabase
-  .from("public_profiles")
+  .from("profiles")
   .select("*")
   .eq("username", username)
   .single()
