@@ -104,20 +104,7 @@ console.log("Unavailable times:", unavailable)
     try {
 const { data: profileData, error: profileError } = await supabase
   .from("public_profiles")
-  .select(`
-    id,
-    business_name,
-    username,
-    phone,
-    business_email,
-    description,
-    business_category,
-    logo_url,
-    instagram,
-    facebook,
-    tiktok,
-    website
-  `)
+  .select("*")
   .eq("username", username)
   .single()
 
