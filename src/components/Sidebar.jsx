@@ -84,20 +84,28 @@ function Sidebar({ closeSidebar }) {
         </NavLink>
 
         <NavLink
-          to="/clients"
-          className={linkClass}
-          onClick={handleNavigation}
-        >
-          Clients
-        </NavLink>
+  to="/clients"
+  className={linkClass}
+  onClick={handleNavigation}
+>
+  Clients
+</NavLink>
 
-        <NavLink
-          to="/payments"
-          className={linkClass}
-          onClick={handleNavigation}
-        >
-          Payments
-        </NavLink>
+<NavLink
+  to="/services"
+  className={linkClass}
+  onClick={handleNavigation}
+>
+  Services
+</NavLink>
+
+<NavLink
+  to="/payments"
+  className={linkClass}
+  onClick={handleNavigation}
+>
+  Payments
+</NavLink>
 
         <NavLink
           to="/settings"
