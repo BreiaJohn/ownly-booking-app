@@ -22,23 +22,29 @@ function BookingLinkCard() {
   }, [user?.id])
 
   const fetchBusinessProfile = async () => {
-    setLoading(true)
+  setLoading(true)
 
-    const { data, error } = await supabase
-      .from("business_profiles")
-      .select("username, business_name")
-      .eq("user_id", user.id)
-      .maybeSingle()
 
-    if (error) {
-      console.error("Unable to load booking profile:", error)
-      setLoading(false)
-      return
-    }
+  console.log("Logged-in user:", user)
 
-    setProfile(data)
+  const { data, error } = await supabase
+    .from("business_profiles")
+    .select("username, business_name")
+    .eq("user_id", user.id)
+    .maybeSingle()
+
+  console.log("Business profile data:", data)
+  console.log("Business profile error:", error)
+
+  if (error) {
+    console.error("Unable to load booking profile:", error)
     setLoading(false)
+    return
   }
+
+  setProfile(data)
+  setLoading(false)
+}
 
   const username = profile?.username?.trim()
 
