@@ -63,16 +63,7 @@ function App() {
           <Route path="/book/:username" element={<PublicBooking />} />
 
           {/* Setup routes */}
-          <Route
-            path="/setup"
-            element={
-              <ProtectedRoute>
-                <Setup />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
+    <Route
             path="/setup/services"
             element={
               <ProtectedRoute>
