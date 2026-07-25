@@ -10,14 +10,8 @@ function Dashboard() {
 
 
 useEffect(() => {
-  if (!user?.id) {
-    setProfileLoading(false)
-    return
-  }
-
   fetchBookings()
-  fetchBusinessProfile()
-}, [user?.id])
+}, [])
 
   const fetchBookings = async () => {
     const { data, error } = await supabase
