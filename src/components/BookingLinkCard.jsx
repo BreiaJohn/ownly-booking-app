@@ -1,92 +1,93 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { supabase } from "../lib/supabase"
-import { useAuth } from "../context/AuthContext"
 import toast from "react-hot-toast"
+
+import { useAuth } from "../context/AuthContext"
+import { supabase } from "../lib/supabase"
 
 function BookingLinkCard() {
   const { session } = useAuth()
+  const user = session?.user
 
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (!session?.user?.id) {
-        setProfile(null)
-        setLoading(false)
-        return
-      }
-
-      setLoading(true)
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("username, business_name, setup_complete")
-        .eq("id", session.user.id)
-        .maybeSingle()
-
-      if (error) {
-        console.error("Booking link profile error:", error)
-        toast.error("Unable to load your booking link.")
-        setLoading(false)
-        return
-      }
-
-      setProfile(data)
+    if (!user?.id) {
       setLoading(false)
-    }
-
-    fetchProfile()
-  }, [session?.user?.id])
-
-  const bookingUrl = profile?.username
-    ? `${window.location.origin}/book/${profile.username}`
-    : ""
-
-  const copyBookingLink = async () => {
-    if (!bookingUrl) {
-      toast.error("Finish setting up your booking username first.")
       return
     }
 
+    fetchBusinessProfile()
+  }, [user?.id])
+
+  const fetchBusinessProfile = async () => {
+    setLoading(true)
+
+    const { data, error } = await supabase
+      .from("business_profiles")
+      .select("username, business_name")
+      .eq("user_id", user.id)
+      .maybeSingle()
+
+    if (error) {
+      console.error("Unable to load booking profile:", error)
+      setLoading(false)
+      return
+    }
+
+    setProfile(data)
+    setLoading(false)
+  }
+
+  const username = profile?.username?.trim()
+
+  const bookingUrl = username
+    ? `${window.location.origin}/book/${username}`
+    : ""
+
+  const copyBookingLink = async () => {
+    if (!bookingUrl) return
+
     try {
       await navigator.clipboard.writeText(bookingUrl)
-      toast.success("Booking link copied!")
+      toast.success("Booking link copied")
     } catch (error) {
-      console.error(error)
-      toast.error("Unable to copy booking link.")
+      console.error("Unable to copy booking link:", error)
+      toast.error("Unable to copy booking link")
     }
   }
 
   if (loading) {
     return (
       <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6">
-        <p className="text-[var(--yorly-muted)]">
-          Loading booking link...
-        </p>
+        <div className="animate-pulse space-y-4">
+          <div className="h-4 w-36 rounded bg-[var(--yorly-surface-soft)]" />
+          <div className="h-8 w-72 rounded bg-[var(--yorly-surface-soft)]" />
+          <div className="h-12 w-full max-w-xl rounded bg-[var(--yorly-surface-soft)]" />
+        </div>
       </section>
     )
   }
 
-  if (!profile?.username) {
+  if (!username) {
     return (
-      <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6 shadow-sm">
-        <p className="text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
+      <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6 md:p-8">
+        <p className="text-sm font-semibold text-[var(--yorly-primary)]">
           Your Booking Page
         </p>
 
-        <h2 className="mt-2 text-2xl font-bold text-[var(--yorly-text)]">
+        <h2 className="mt-3 text-2xl font-bold md:text-3xl">
           Finish setting up your business
         </h2>
 
-        <p className="mt-2 text-[var(--yorly-muted)]">
+        <p className="mt-3 max-w-2xl text-[var(--yorly-muted)]">
           Add a booking username before sharing your page with clients.
         </p>
 
         <Link
           to="/setup"
-          className="mt-5 inline-flex rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700"
+          className="mt-6 inline-flex rounded-xl bg-[var(--yorly-primary)] px-6 py-3 font-semibold text-white transition hover:opacity-90"
         >
           Complete Setup
         </Link>
@@ -95,57 +96,60 @@ function BookingLinkCard() {
   }
 
   return (
-    <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6 shadow-sm">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold tracking-wide text-[var(--yorly-primary)]">
-            Your Booking Page
-          </p>
+    <section className="rounded-3xl border border-[var(--yorly-border)] bg-[var(--yorly-surface)] p-6 md:p-8">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-sm font-semibold text-[var(--yorly-primary)]">
+              Your Booking Page
+            </p>
 
-          <h2 className="mt-2 text-2xl font-bold text-[var(--yorly-text)]">
-            Share {profile.business_name || "your business"}
+            <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+              Live
+            </span>
+          </div>
+
+          <h2 className="mt-3 text-2xl font-bold md:text-3xl">
+            {profile?.business_name || "Your Yorly page"}
           </h2>
 
-          <p className="mt-2 max-w-2xl text-[var(--yorly-muted)]">
-            Send this link to clients or add it to Instagram, Facebook,
-            and your website.
+          <p className="mt-2 text-[var(--yorly-muted)]">
+            Share this link with clients so they can book your services.
           </p>
         </div>
 
-        {profile.setup_complete && (
-          <span className="w-fit rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-semibold text-green-400">
-            Live
-          </span>
-        )}
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-500/10 text-2xl text-[var(--yorly-primary)]">
+          ↗
+        </div>
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] p-4">
+      <div className="mt-6 rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-background)] p-4">
         <p className="text-xs font-semibold uppercase tracking-wider text-[var(--yorly-muted)]">
           Booking link
         </p>
 
-        <p className="mt-2 break-all text-sm font-medium text-[var(--yorly-text)]">
+        <p className="mt-2 break-all font-medium">
           {bookingUrl}
         </p>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <button
           type="button"
           onClick={copyBookingLink}
-          className="rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700"
+          className="inline-flex flex-1 items-center justify-center rounded-xl bg-[var(--yorly-primary)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
         >
           Copy Link
         </button>
 
-        <a
-          href={bookingUrl}
+        <Link
+          to={`/book/${username}`}
           target="_blank"
-          rel="noreferrer"
-          className="rounded-2xl border border-[var(--yorly-border)] bg-[var(--yorly-surface-soft)] px-5 py-3 text-center font-semibold text-[var(--yorly-text)] transition hover:border-blue-500/40 hover:bg-blue-500/5"
+          rel="noopener noreferrer"
+          className="inline-flex flex-1 items-center justify-center rounded-xl border border-[var(--yorly-border)] px-5 py-3 text-sm font-semibold transition hover:bg-[var(--yorly-surface-soft)]"
         >
-          Open Booking Page
-        </a>
+          Preview Page
+        </Link>
       </div>
     </section>
   )

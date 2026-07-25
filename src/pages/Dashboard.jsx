@@ -6,12 +6,8 @@ import BookingLinkCard from "../components/BookingLinkCard"
 import { useAuth } from "../context/AuthContext"
 
 function Dashboard() {
-  const { session } = useAuth()
-  const user = session?.user
-
   const [bookings, setBookings] = useState([])
-  const [businessProfile, setBusinessProfile] = useState(null)
-  const [profileLoading, setProfileLoading] = useState(true)
+
 
 useEffect(() => {
   if (!user?.id) {
@@ -37,22 +33,7 @@ useEffect(() => {
     setBookings(data)
   }
 
-  const fetchBusinessProfile = async () => {
-  const { data, error } = await supabase
-    .from("business_profiles")
-    .select("username")
-    .eq("user_id", user.id)
-    .maybeSingle()
 
-  if (error) {
-    console.error("Unable to load business profile:", error)
-    setProfileLoading(false)
-    return
-  }
-
-  setBusinessProfile(data)
-  setProfileLoading(false)
-}
 
   const today = new Date().toISOString().split("T")[0]
 
@@ -139,40 +120,40 @@ useEffect(() => {
           </div>
         </section>
 
-   {!profileLoading && !businessProfile?.username && (
-  <div className="mb-6">
-    <BookingLinkCard />
+
+
+        <div className="mb-6">
+  <BookingLinkCard />
+</div>
+
+<section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
+  <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
+    Quick Actions
+  </h3>
+
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <ActionCard
+      to="/bookings"
+      icon="+"
+      label="New Booking"
+      color="bg-[#B08968]/25 text-[#F3D9C1]"
+    />
+
+    <ActionCard
+      to="/clients"
+      icon="👥"
+      label="View Clients"
+      color="bg-[#2E5E4E]/25 text-[#9EE6C3]"
+    />
+
+    <ActionCard
+      to="/payments"
+      icon="$"
+      label="View Payments"
+      color="bg-[#5B4B8A]/25 text-[#C7B8FF]"
+    />
   </div>
-)}
-
-        <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6 mb-6">
-          <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
-            Quick Actions
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <ActionCard
-              to="/bookings"
-              icon="+"
-              label="New Booking"
-              color="bg-[#B08968]/25 text-[#F3D9C1]"
-            />
-
-            <ActionCard
-              to="/clients"
-              icon="👥"
-              label="View Clients"
-              color="bg-[#2E5E4E]/25 text-[#9EE6C3]"
-            />
-
-            <ActionCard
-              to="/payments"
-              icon="$"
-              label="View Payments"
-              color="bg-[#5B4B8A]/25 text-[#C7B8FF]"
-            />
-          </div>
-        </section>
+</section>
 
         <section className="bg-[var(--yorly-surface)] backdrop-blur-md border border-[#1E293B] rounded-3xl p-6">
           <h3 className="text-[var(--yorly-muted)] font-semibold mb-5">
