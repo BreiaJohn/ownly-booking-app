@@ -106,7 +106,11 @@ const { data: profileData, error: profileError } = await supabase
   .from("profiles")
   .select("*")
   .eq("username", username)
-  .single()
+  .maybeSingle()
+
+console.log("Username:", username)
+console.log("Profile:", profileData)
+console.log("Profile Error:", profileError)
 
 if (profileError) {
   throw profileError
@@ -146,7 +150,7 @@ if (availabilityError) {
 setBusiness(profileData)
 setServices(serviceData || [])
 setAvailability(availabilityData || [])
-   } catch (error) {
+} catch (error) {
   console.error("Booking page error:", error)
 
   setBusinessError(
