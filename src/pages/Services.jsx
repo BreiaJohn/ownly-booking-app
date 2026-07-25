@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 import { useAuth } from "../context/AuthContext"
 import toast from "react-hot-toast"
+import Sidebar from "../components/Sidebar"
 
 const emptyService = {
   name: "",
@@ -22,6 +23,7 @@ function Services() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingService, setEditingService] = useState(null)
   const [formData, setFormData] = useState(emptyService)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (user?.id) {
@@ -236,42 +238,75 @@ function Services() {
     }).format(Number(price || 0))
   }
 
-  if (loading) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-300 border-t-purple-600" />
-      </div>
-    )
-  }
-
+if (loading) {
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-8">
-      {/* Header */}
-      <section className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-h-screen bg-[var(--yorly-bg)] text-[var(--yorly-text)]">
+      <div className="fixed inset-y-0 left-0 z-50 hidden md:block">
+        <Sidebar />
+      </div>
+
+      <main className="flex min-h-screen items-center justify-center md:ml-72">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--yorly-border)] border-t-[var(--yorly-primary)]" />
+      </main>
+    </div>
+  )
+}
+
+
+ return (
+  <div className="min-h-screen bg-[var(--yorly-bg)] text-[var(--yorly-text)]">
+    {sidebarOpen && (
+      <button
+        type="button"
+        aria-label="Close sidebar"
+        onClick={() => setSidebarOpen(false)}
+        className="fixed inset-0 z-40 bg-black/60 md:hidden"
+      />
+    )}
+
+    <div
+      className={`fixed inset-y-0 left-0 z-50 transition-transform duration-300 md:translate-x-0 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
+      <Sidebar closeSidebar={() => setSidebarOpen(false)} />
+    </div>
+
+    <main className="min-h-screen md:ml-72">
+      <header className="flex items-center justify-between border-b border-[var(--yorly-border)] px-5 py-5 md:px-8">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-purple-500">
+          <p className="text-sm font-semibold text-[var(--yorly-primary)]">
             Your offerings
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
+          <h1 className="mt-1 text-2xl font-bold md:text-3xl">
             Services
           </h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
-            Manage the services clients can view and book through your Yorly
-            page.
-          </p>
         </div>
 
         <button
           type="button"
-          onClick={openAddModal}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-600/20 transition hover:bg-purple-700"
+          onClick={() => setSidebarOpen(true)}
+          className="rounded-xl border border-[var(--yorly-border)] px-4 py-2 text-sm font-semibold md:hidden"
         >
-          <span className="text-lg leading-none">+</span>
-          Add service
+          Menu
         </button>
-      </section>
+      </header>
+
+      <div className="px-5 py-8 md:px-8">
+        <div className="mx-auto w-full max-w-6xl space-y-8">
+
+     {/* Actions */}
+<section className="flex justify-start sm:justify-end">
+  <button
+    type="button"
+    onClick={openAddModal}
+    className="inline-flex items-center gap-2 rounded-xl bg-[var(--yorly-primary)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+  >
+    <span className="text-lg leading-none">+</span>
+    Add Service
+  </button>
+</section>
 
       {/* Service count */}
       {services.length > 0 && (
@@ -588,7 +623,10 @@ function Services() {
           </div>
         </div>
       )}
-    </div>
+        </div>
+      </div>
+    </main>
+  </div>
   )
 }
 
