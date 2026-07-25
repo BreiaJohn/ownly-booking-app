@@ -48,9 +48,9 @@ function BookingLinkCard() {
 
   const username = profile?.username?.trim()
 
-  const bookingUrl = username
-    ? `${window.location.origin}/book/${username}`
-    : ""
+ const bookingUrl = username
+  ? `${window.location.origin}/book/${username}`
+  : ""
 
   const copyBookingLink = async () => {
     if (!bookingUrl) return
@@ -149,13 +149,13 @@ function BookingLinkCard() {
         </button>
 
         <Link
-          to={`/book/${username}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex flex-1 items-center justify-center rounded-xl border border-[var(--yorly-border)] px-5 py-3 text-sm font-semibold transition hover:bg-[var(--yorly-surface-soft)]"
-        >
-          Preview Page
-        </Link>
+  to={`/book/${username}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex flex-1 items-center justify-center rounded-xl border border-[var(--yorly-border)] px-5 py-3 text-sm font-semibold transition hover:bg-[var(--yorly-surface-soft)]"
+>
+  Preview Page
+</Link>
       </div>
     </section>
   )
