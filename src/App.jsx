@@ -16,6 +16,7 @@ import PublicBooking from "./pages/PublicBooking"
 import SetupServices from "./pages/SetupServices"
 import SetupAvailability from "./pages/SetupAvailability"
 
+
 import Beta from "./pages/Beta"
 
 import PaymentSuccess from "./pages/PaymentSuccess"
@@ -36,7 +37,9 @@ function App() {
     location.pathname.startsWith("/payments") ||
     location.pathname.startsWith("/settings") ||
     location.pathname.startsWith("/payment-success") ||
+    location.pathname.startsWith("/services") ||
     location.pathname.startsWith("/book")
+
 
   return (
     <>
@@ -51,6 +54,15 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           <Route path="/signup" element={<Signup />} />
+
+          <Route
+  path="/services"
+  element={
+    <ProtectedRoute>
+      <SetupServices />
+    </ProtectedRoute>
+  }
+/>
 
 
           <Route
