@@ -7,6 +7,8 @@ import { useAuth } from "../context/AuthContext"
 
 function Dashboard() {
   const [bookings, setBookings] = useState([])
+  const { session } = useAuth()
+  const user = session?.user
 
 
 useEffect(() => {
