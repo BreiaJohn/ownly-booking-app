@@ -129,7 +129,7 @@ const [
   supabase
     .from("services")
     .select("id, name, description, price, duration, active")
-    .eq("owner_id", profileData.user_id)
+    .eq("user_id", profileData.user_id)
     .eq("active", true)
     .order("created_at", { ascending: true }),
 
