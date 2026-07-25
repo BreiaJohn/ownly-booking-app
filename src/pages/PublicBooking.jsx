@@ -54,7 +54,7 @@ function PublicBooking() {
       const { data, error } = await supabase.rpc(
         "get_unavailable_times",
         {
-          owner_id: business.id,
+          owner_id: business.user_id,
           selected_date: date,
         }
       )
@@ -103,9 +103,10 @@ console.log("Unavailable times:", unavailable)
 
     try {
 const { data: profileData, error: profileError } = await supabase
-  .from("profiles")
+  .from("business_profiles")
   .select("*")
   .eq("username", username)
+  .eq("is_public", true)
   .maybeSingle()
 
 console.log("Username:", username)
@@ -128,14 +129,14 @@ const [
   supabase
     .from("services")
     .select("id, name, description, price, duration, active")
-    .eq("user_id", profileData.id)
+    .eq("owner_id", profileData.user_id)
     .eq("active", true)
     .order("created_at", { ascending: true }),
 
   supabase
     .from("availability")
     .select("day_of_week, is_available, start_time, end_time")
-    .eq("user_id", profileData.id)
+    .eq("user_id", profileData.user_id)
     .order("day_of_week", { ascending: true }),
 ])
 
@@ -266,7 +267,7 @@ try {
   const { data: booking, error: bookingError } = await supabase
   .from("bookings")
   .insert({
-    user_id: business.id,
+    user_id: business.user_id,
     client_name: bookingDetails.clientName,
     service: bookingDetails.service,
     date: bookingDetails.date,
