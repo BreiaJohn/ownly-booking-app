@@ -266,19 +266,20 @@ const bookingDetails = {
 try {
   const { data: booking, error: bookingError } = await supabase
   .from("bookings")
-  .insert({
-    user_id: business.user_id,
-    client_name: bookingDetails.clientName,
-    service: bookingDetails.service,
-    date: bookingDetails.date,
-    time: bookingDetails.time,
-    email: bookingDetails.email,
-    phone: bookingDetails.phone,
-    notes: notes.trim(),
-    amount: bookingDetails.price,
-    status: "Pending Payment",
-    payment_status: "Pending",
-  })
+.insert({
+  user_id: business.user_id,
+  client_name: bookingDetails.clientName,
+  service: bookingDetails.service,
+  service_id: serviceId,
+  date: bookingDetails.date,
+  time: bookingDetails.time,
+  email: bookingDetails.email,
+  phone: bookingDetails.phone,
+  notes: notes.trim(),
+  amount: bookingDetails.price,
+  status: "Pending Payment",
+  payment_status: "Pending",
+})
   .select("id")
   .single()
 

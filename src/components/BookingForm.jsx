@@ -65,19 +65,26 @@ function BookingForm() {
     setBusinessSettings(data)
   }
 
-  const fetchBookedTimes = async () => {
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("time")
-      .eq("date", date)
+const fetchBookedTimes = async () => {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(`
+      time,
+      service,
+      services (
+        duration
+      )
+    `)
+    .eq("date", date)
+    .eq("user_id", session.user.id)
 
-    if (error) {
-      console.log(error)
-      return
-    }
-
-    setBookedTimes((data || []).map((booking) => booking.time))
+  if (error) {
+    console.log(error)
+    return
   }
+
+  console.log("Bookings with durations:", data)
+}
 
   const fetchBlockedTimes = async () => {
     const { data, error } = await supabase
