@@ -295,32 +295,32 @@ const { data, error } = await supabase.functions.invoke(
       amount: Math.round(bookingDetails.price * 100),
       businessName: business.business_name,
       customerEmail: bookingDetails.email,
+      username: business.username,
     },
   }
 )
 
 if (error) {
-  await supabase
-    .from("bookings")
-    .delete()
-    .eq("id", booking.id)
-
   throw error
 }
 
 if (!data?.url) {
-  await supabase
-    .from("bookings")
-    .delete()
-    .eq("id", booking.id)
-
   throw new Error("Stripe did not return a checkout URL.")
 }
 
 window.location.href = data.url
 } catch (error) {
   console.error("Checkout error:", error)
-  toast.error(error.message || "Unable to start payment.")
+
+  if (error?.code === "23505") {
+    toast.error(
+      "That appointment time was just taken. Please choose another time."
+    )
+    setTime("")
+    return
+  }
+
+  toast.error(error?.message || "Unable to start payment.")
 } finally {
   setSubmitting(false)
 }
