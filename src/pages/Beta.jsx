@@ -55,7 +55,7 @@ export default function Beta() {
           </p>
 
           <a
-            href="#apply"
+         href="mailto:hello@yorly.co?subject=Yorly%20Beta%20Tester%20Application"
             className="mt-9 inline-flex rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:scale-[1.02]"
           >
             Apply to become a beta tester
@@ -250,12 +250,12 @@ export default function Beta() {
             and why you’re interested in joining the beta.
           </p>
 
-          <a
-            href="mailto:Breiamj4@gmail.com?subject=Yorly Beta Tester Application"
-            className="mt-8 inline-flex rounded-xl bg-white px-8 py-4 font-bold text-blue-700 transition hover:scale-[1.02]"
-          >
-            Apply for the Yorly beta
-          </a>
+<a
+  href="mailto:hello@yorly.co?subject=Yorly%20Beta%20Tester%20Application"
+  className="mt-8 inline-flex rounded-xl bg-white px-8 py-4 font-bold text-blue-700 transition hover:scale-[1.02]"
+>
+  Apply for the Yorly beta
+</a>
 
           <p className="mt-5 text-sm text-blue-100">
             Applications are reviewed personally.
