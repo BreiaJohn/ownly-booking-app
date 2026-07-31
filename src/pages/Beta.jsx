@@ -1,11 +1,80 @@
+import { useState } from "react"
 import { Link } from "react-router-dom"
+import toast from "react-hot-toast"
+
 import Logo from "../components/Logo"
+import { supabase } from "../lib/supabase"
 
 import dashboardScreenshot from "../assets/screenshots/dashboard.png"
 import bookingScreenshot from "../assets/screenshots/booking-page.png"
 import mobileScreenshot from "../assets/screenshots/mobile-booking.png"
 
 export default function Beta() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    businessName: "",
+    businessType: "",
+    goals: "",
+  })
+
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (
+      !formData.fullName.trim() ||
+      !formData.email.trim() ||
+      !formData.businessType.trim() ||
+      !formData.goals.trim()
+    ) {
+      toast.error("Please complete all required fields")
+      return
+    }
+
+    setSubmitting(true)
+
+    try {
+      const { error } = await supabase.from("beta_applications").insert({
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        business_name: formData.businessName.trim() || null,
+        business_type: formData.businessType.trim(),
+        goals: formData.goals.trim(),
+      })
+
+      if (error) throw error
+
+      setSubmitted(true)
+
+      setFormData({
+        fullName: "",
+        email: "",
+        businessName: "",
+        businessType: "",
+        goals: "",
+      })
+
+      toast.success("Your beta application was submitted!")
+    } catch (error) {
+      console.error("Beta application error:", error)
+      toast.error("We couldn't submit your application. Please try again.")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   const idealBusinesses = [
     "Hair stylists and barbers",
     "Nail and lash technicians",
@@ -54,12 +123,12 @@ export default function Beta() {
             powerful booking experience.
           </p>
 
-          <a
-         href="mailto:hello@yorly.co?subject=Yorly%20Beta%20Tester%20Application"
-            className="mt-9 inline-flex rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:scale-[1.02]"
-          >
-            Apply to become a beta tester
-          </a>
+      <a
+  href="#apply"
+  className="mt-9 inline-flex rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:scale-[1.02]"
+>
+  Apply to become a beta tester
+</a>
         </div>
       </section>
 {/* Product preview */}
@@ -235,33 +304,185 @@ export default function Beta() {
 </section>
 
       {/* Application */}
-      <section id="apply" className="px-6 py-24">
-        <div className="mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-blue-600 to-purple-700 px-7 py-14 text-center text-white shadow-xl sm:px-14">
-          <p className="font-semibold text-blue-100">
-            Three spots are currently available
+<section id="apply" className="scroll-mt-24 px-6 py-24">
+  <div className="mx-auto max-w-3xl">
+    <div className="rounded-[2rem] border border-slate-700 bg-[#0d172b] p-7 shadow-xl sm:p-10">
+      <div className="mx-auto mb-10 max-w-2xl text-center">
+        <p className="font-semibold text-purple-400">
+          Three spots are currently available
+        </p>
+
+        <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+          Ready to grow with Yorly?
+        </h2>
+
+        <p className="mx-auto mt-5 max-w-xl leading-7 text-slate-400">
+          Tell us a little about your business and what you need from a booking
+          platform.
+        </p>
+      </div>
+
+      {submitted ? (
+        <div className="rounded-2xl border border-green-800 bg-green-950/40 p-8 text-center">
+          <div className="text-4xl">🎉</div>
+
+          <h3 className="mt-4 text-2xl font-bold text-white">
+            Your application is in!
+          </h3>
+
+          <p className="mt-3 text-slate-300">
+            Thank you for your interest in testing Yorly. We’ll review your
+            application and contact you soon.
           </p>
 
-          <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-            Ready to grow with Yorly?
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-xl leading-7 text-blue-50">
-            Send us a message with your name, business name, type of service,
-            and why you’re interested in joining the beta.
-          </p>
-
-<a
-  href="mailto:hello@yorly.co?subject=Yorly%20Beta%20Tester%20Application"
-  className="mt-8 inline-flex rounded-xl bg-white px-8 py-4 font-bold text-blue-700 transition hover:scale-[1.02]"
->
-  Apply for the Yorly beta
-</a>
-
-          <p className="mt-5 text-sm text-blue-100">
-            Applications are reviewed personally.
-          </p>
+          <button
+            type="button"
+            onClick={() => setSubmitted(false)}
+            className="mt-6 font-semibold text-blue-400 transition hover:text-blue-300"
+          >
+            Submit another application
+          </button>
         </div>
-      </section>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="fullName"
+                className="mb-2 block text-sm font-semibold text-slate-200"
+              >
+                Full name *
+              </label>
+
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+                autoComplete="name"
+                placeholder="Your full name"
+                className="w-full rounded-xl border border-slate-700 bg-[#050b18] px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-semibold text-slate-200"
+              >
+                Email address *
+              </label>
+
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+                placeholder="you@example.com"
+                className="w-full rounded-xl border border-slate-700 bg-[#050b18] px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="businessName"
+                className="mb-2 block text-sm font-semibold text-slate-200"
+              >
+                Business name
+              </label>
+
+              <input
+                id="businessName"
+                name="businessName"
+                type="text"
+                value={formData.businessName}
+                onChange={handleChange}
+                placeholder="Optional"
+                className="w-full rounded-xl border border-slate-700 bg-[#050b18] px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="businessType"
+                className="mb-2 block text-sm font-semibold text-slate-200"
+              >
+                Business type *
+              </label>
+
+              <select
+                id="businessType"
+                name="businessType"
+                value={formData.businessType}
+                onChange={handleChange}
+                required
+                className="w-full rounded-xl border border-slate-700 bg-[#050b18] px-4 py-3 text-white outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              >
+                <option value="">Select your business type</option>
+                <option value="Hair stylist">Hair stylist</option>
+                <option value="Barber">Barber</option>
+                <option value="Nail technician">Nail technician</option>
+                <option value="Lash technician">Lash technician</option>
+                <option value="Tattoo artist">Tattoo artist</option>
+                <option value="Esthetician">Esthetician</option>
+                <option value="Makeup artist">Makeup artist</option>
+                <option value="Photographer">Photographer</option>
+                <option value="Personal trainer">Personal trainer</option>
+                <option value="Pet groomer">Pet groomer</option>
+                <option value="Consultant or coach">
+                  Consultant or coach
+                </option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="goals"
+              className="mb-2 block text-sm font-semibold text-slate-200"
+            >
+              What are you hoping Yorly helps you with? *
+            </label>
+
+            <textarea
+              id="goals"
+              name="goals"
+              value={formData.goals}
+              onChange={handleChange}
+              required
+              rows={5}
+              placeholder="Tell us about your current booking process and what you would like to improve."
+              className="w-full resize-none rounded-xl border border-slate-700 bg-[#050b18] px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-bold text-white shadow-lg transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+          >
+            {submitting
+              ? "Submitting application..."
+              : "Apply for the Yorly beta"}
+          </button>
+
+          <p className="text-center text-xs text-slate-500">
+            Your information will only be used to contact you about the Yorly
+            beta.
+          </p>
+        </form>
+      )}
+    </div>
+  </div>
+</section>
 
       <footer className="border-t border-slate-200 px-6 py-8 text-center text-sm text-slate-500 dark:border-slate-800">
         © {new Date().getFullYear()} Yorly. Built for business.
